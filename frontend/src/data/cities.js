@@ -9,6 +9,7 @@ export const cities = [
   { en: "Dortmund", de: "Dortmund", fa: "دورتموند" },
   { en: "Essen", de: "Essen", fa: "اسن" },
   { en: "Leipzig", de: "Leipzig", fa: "لایپزیگ" },
+  { en: "Munich", de: "München", fa: "مونیخ" },
   { en: "Bremen", de: "Bremen", fa: "برمن" },
   { en: "Dresden", de: "Dresden", fa: "درسدن" },
   { en: "Hannover", de: "Hannover", fa: "هانوفر" },
