@@ -35,8 +35,22 @@
     }
   },
 
-
-
+"citySearch": {
+  "title": "جستجو بر اساس شهر",
+  "subtitle": "کسب‌وکارها را در شهر خود پیدا کنید",
+  "placeholder": "نام شهر را وارد کنید...",
+  "resultsFor": "شهرهای مطابق با \"{{query}}\" ({{count}} مورد یافت شد)"
+}
+,
+"categorySearch": {
+  "title": "جستجو بر اساس دسته‌بندی",
+  "subtitle": "مرور دسته‌ها و زیر دسته‌ها",
+  "placeholder": "نام دسته را وارد کنید...",
+  "resultsFor": "نتایج مطابق با \"{{query}}\" ({{count}} مورد یافت شد)",
+  "inCategory": "در {{category}}",
+  "service": "خدمت"
+}
+,
 
 
   "events": {

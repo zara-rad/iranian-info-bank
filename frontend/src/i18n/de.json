@@ -33,8 +33,21 @@
       "service": "Dienstleistung"
     }
   },
-
-
+"citySearch": {
+  "title": "Suche nach Stadt",
+  "subtitle": "Finden Sie Unternehmen in Ihrer Stadt",
+  "placeholder": "Stadtname eingeben...",
+  "resultsFor": "Städte passend zu \"{{query}}\" ({{count}} gefunden)"
+},
+"categorySearch": {
+  "title": "Suche nach Kategorie",
+  "subtitle": "Durchsuchen Sie Kategorien und Unterkategorien",
+  "placeholder": "Kategorie eingeben...",
+  "resultsFor": "Ergebnisse passend zu \"{{query}}\" ({{count}} gefunden)",
+  "inCategory": "in {{category}}",
+  "service": "Dienstleistung"
+}
+,
 
 
 

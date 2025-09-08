@@ -33,8 +33,22 @@
       "service": "service"
     }
   },
+  "citySearch": {
+  "title": "Search by City",
+  "subtitle": "Find businesses in your city",
+  "placeholder": "Type city name...",
+  "resultsFor": "Cities matching \"{{query}}\" ({{count}} found)"
+},
 
-
+"categorySearch": {
+  "title": "Search by Category",
+  "subtitle": "Browse categories & subcategories",
+  "placeholder": "Type category...",
+  "resultsFor": "Results matching \"{{query}}\" ({{count}} found)",
+  "inCategory": "in {{category}}",
+  "service": "service"
+}
+,
 
 
 

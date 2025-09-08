@@ -5,6 +5,11 @@ import SearchBarInput from "./SearchBarInput";
 import SearchBarFilters from "./SearchBarFilters";
 import SearchBarSuggestionsDropdown from "./SearchBarSuggestionsDropdown";
 
+// ✅ Import external data
+import { cities } from "../../data/cities";
+import { categories } from "../../data/categories";
+import { useTranslation } from "react-i18next";
+
 const SearchBar = ({ isGlobal = false }) => {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -15,198 +20,46 @@ const SearchBar = ({ isGlobal = false }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // German cities
-  const germanCities = [
-    "Berlin",
-    "Hamburg",
-    "München",
-    "Köln",
-    "Frankfurt am Main",
-    "Stuttgart",
-    "Düsseldorf",
-    "Dortmund",
-    "Essen",
-    "Leipzig",
-    "Bremen",
-    "Dresden",
-    "Hannover",
-    "Nürnberg",
-    "Duisburg",
-    "Bochum",
-    "Wuppertal",
-    "Bielefeld",
-    "Bonn",
-    "Münster",
-    "Karlsruhe",
-    "Mannheim",
-    "Augsburg",
-    "Wiesbaden",
-    "Gelsenkirchen",
-    "Mönchengladbach",
-    "Braunschweig",
-    "Chemnitz",
-    "Kiel",
-    "Aachen",
-    "Halle",
-    "Magdeburg",
-    "Freiburg",
-    "Krefeld",
-    "Lübeck",
-    "Oberhausen",
-    "Erfurt",
-    "Mainz",
-    "Rostock",
-    "Kassel",
-    "Hagen",
-    "Potsdam",
-    "Saarbrücken",
-  ];
-
-  // Categories with subcategories
-  const categories = [
-    {
-      id: 1,
-      name: "Medical & Healthcare",
-      nameGerman: "Medizin & Gesundheit",
-      namePersian: "پزشکی و مراقبت از سلامت",
-      subcategories: [
-        {
-          id: 11,
-          name: "General Practitioners",
-          nameGerman: "Hausärzte",
-          namePersian: "پزشک عمومی",
-        },
-        {
-          id: 12,
-          name: "Specialists",
-          nameGerman: "Fachärzte",
-          namePersian: "متخصصان",
-        },
-        {
-          id: 13,
-          name: "Dentists & Orthodontists",
-          nameGerman: "Zahnärzte & Kieferorthopäden",
-          namePersian: "دندانپزشک و ارتودنتیست",
-        },
-        {
-          id: 14,
-          name: "Pharmacies",
-          nameGerman: "Apotheken",
-          namePersian: "داروخانه",
-        },
-      ],
-    },
-
-    {
-      id: 2,
-      name: "Beauty & Wellness",
-      nameGerman: "Schönheit & Wellness",
-      namePersian: "زیبایی و سلامتی",
-      subcategories: [
-        {
-          id: 21,
-          name: "Hairdressers & Barber Shops",
-          nameGerman: "Friseure & Barbershops",
-          namePersian: "آرایشگاه مردانه و زنانه",
-        },
-        {
-          id: 22,
-          name: "Beauty Salons",
-          nameGerman: "Kosmetikstudios",
-          namePersian: "سالن زیبایی",
-        },
-        {
-          id: 23,
-          name: "Massage & Spa Centers",
-          nameGerman: "Massage & Spa Zentren",
-          namePersian: "مراکز ماساژ و اسپا",
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "Construction & Handwerk",
-      nameGerman: "Bau & Handwerk",
-      namePersian: "ساختمان و صنایع دستی",
-      subcategories: [
-        {
-          id: 31,
-          name: "Electricians",
-          nameGerman: "Elektriker",
-          namePersian: "برقکار",
-        },
-        {
-          id: 32,
-          name: "Plumbers",
-          nameGerman: "Klempner",
-          namePersian: "لوله‌کش",
-        },
-        {
-          id: 33,
-          name: "Painters & Decorators",
-          nameGerman: "Maler & Dekorateure",
-          namePersian: "نقاش و دکوراتور",
-        },
-      ],
-    },
-
-    {
-      id: 4,
-      name: "Gastronomy & Restaurants",
-      nameGerman: "Gastronomie & Restaurants",
-      namePersian: "رستوران‌ها و غذاخوری‌ها",
-      subcategories: [
-        {
-          id: 41,
-          name: "Persian Restaurants",
-          nameGerman: "Persische Restaurants",
-          namePersian: "رستوران‌های ایرانی",
-        },
-        {
-          id: 42,
-          name: "Cafés & Coffee Shops",
-          nameGerman: "Cafés & Kaffeehäuser",
-          namePersian: "کافه و قهوه‌خانه",
-        },
-        {
-          id: 43,
-          name: "Bakeries",
-          nameGerman: "Bäckereien",
-          namePersian: "نانوایی",
-        },
-      ],
-    },
-  ];
-
   useEffect(() => {
     if (query.length > 0) {
       let cityMatches = [];
       let categoryMatches = [];
       let subcategoryMatches = [];
 
+      // 🔹 Cities (EN, DE, FA)
       if (searchType === "all" || searchType === "city") {
-        cityMatches = germanCities
-          .filter((city) => city.toLowerCase().includes(query.toLowerCase()))
+        cityMatches = cities
+          .filter(
+            (city) =>
+              city.en.toLowerCase().includes(query.toLowerCase()) ||
+              city.de.toLowerCase().includes(query.toLowerCase()) ||
+              city.fa.includes(query) // ✅ Farsi support
+          )
           .map((city) => ({
             type: "city",
-            name: city,
-            displayName: city,
-            action: () => navigate(`/city/${encodeURIComponent(city)}`),
+            name: city.en,
+            nameGerman: city.de,
+            namePersian: city.fa,
+            displayName: city.en,
+            action: () => navigate(`/city/${encodeURIComponent(city.en)}`),
           }))
           .slice(0, 5);
       }
 
+      // 🔹 Categories (EN, DE, FA)
       if (searchType === "all" || searchType === "category") {
         categoryMatches = categories
           .filter(
             (c) =>
               c.name.toLowerCase().includes(query.toLowerCase()) ||
-              c.nameGerman.toLowerCase().includes(query.toLowerCase())
+              c.nameGerman.toLowerCase().includes(query.toLowerCase()) ||
+              c.namePersian.includes(query)
           )
           .map((c) => ({
             type: "category",
             name: c.name,
             nameGerman: c.nameGerman,
+            namePersian: c.namePersian,
             displayName: c.name,
             id: c.id,
             subcategories: c.subcategories,
@@ -214,25 +67,31 @@ const SearchBar = ({ isGlobal = false }) => {
           }))
           .slice(0, 3);
 
+        // 🔹 Subcategories (EN, DE, FA)
         categories.forEach((c) => {
           const matchingSubcategories = c.subcategories.filter(
             (sub) =>
               sub.name.toLowerCase().includes(query.toLowerCase()) ||
-              sub.nameGerman.toLowerCase().includes(query.toLowerCase())
+              sub.nameGerman.toLowerCase().includes(query.toLowerCase()) ||
+              sub.namePersian.includes(query)
           );
+
           matchingSubcategories.forEach((sub) => {
             subcategoryMatches.push({
               type: "subcategory",
               name: sub.name,
               nameGerman: sub.nameGerman,
+              namePersian: sub.namePersian,
               displayName: sub.name,
               categoryName: c.name,
               categoryId: c.id,
               id: sub.id,
-              action: () => navigate(`/category/${c.id}/subcategory/${sub.id}`),
+              action: () =>
+                navigate(`/category/${c.id}/subcategory/${sub.id}`),
             });
           });
         });
+
         subcategoryMatches = subcategoryMatches.slice(0, 5);
       }
 
