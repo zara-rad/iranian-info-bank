@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Phone, Mail, MapPin, Send, MessageCircle, Clock, Users } from 'lucide-react'
 import Breadcrumb from '../components/Breadcrumb'
-import GlobalSearch from '../components/GlobalSearch'
+import GlobalSearch from '../components/global-search/GlobalSearch.jsx'
 import toast from 'react-hot-toast'
 
 const Contact = () => {

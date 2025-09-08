@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Tag, Building, MapPin, Phone, Mail, Globe } from 'lucide-react'
 import { categories } from '../data/categories'
 import Breadcrumb from '../components/Breadcrumb'
-import GlobalSearch from '../components/GlobalSearch'
+import GlobalSearch from '../components/global-search/GlobalSearch.jsx'
 
 const SubcategoryPage = () => {
   const { categoryId, subcategoryId } = useParams()

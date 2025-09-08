@@ -14,7 +14,7 @@ import CityPage from './pages/CityPage'
 import CategoryPage from './pages/CategoryPage'
 import SubcategoryPage from './pages/SubcategoryPage'
 import EventDetail from './pages/EventDetail'
-import GlobalSearch from './components/GlobalSearch'
+// import GlobalSearch from './components/global-search/GlobalSearch.jsx'
 import Dashboard from './pages/Dashboard'
 import BusinessDashboard from './pages/BusinessDashboard'
 

@@ -4,7 +4,7 @@ import { MapPin, Building } from 'lucide-react'
 import { categories as allCategories } from '../data/categories'
 import Breadcrumb from '../components/Breadcrumb'
 import CategoryCard from '../components/CategoryCard'
-import GlobalSearch from '../components/GlobalSearch'
+import GlobalSearch from '../components/global-search/GlobalSearch.jsx'
 
 const CityPage = () => {
   const { cityName } = useParams()

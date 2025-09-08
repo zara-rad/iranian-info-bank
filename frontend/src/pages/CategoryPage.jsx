@@ -4,7 +4,7 @@ import { Tag, Building } from 'lucide-react'
 import { categories } from '../data/categories'
 import Breadcrumb from '../components/Breadcrumb'
 import { Link } from 'react-router-dom'
-import GlobalSearch from '../components/GlobalSearch'
+import GlobalSearch from '../components/global-search/GlobalSearch.jsx'
 
 const CategoryPage = () => {
   const { categoryId } = useParams()

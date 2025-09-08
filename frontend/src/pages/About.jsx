@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Heart, Users, MapPin, Target, Globe, Handshake } from 'lucide-react'
 import Breadcrumb from '../components/Breadcrumb'
-import GlobalSearch from '../components/GlobalSearch'
+import GlobalSearch from '../components/global-search/GlobalSearch.jsx'
 
 const About = () => {
   const { t } = useTranslation()

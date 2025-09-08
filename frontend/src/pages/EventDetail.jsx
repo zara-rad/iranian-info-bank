@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Calendar, MapPin, Phone, Mail, Globe, Clock, Euro, Users, ArrowLeft } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import Breadcrumb from '../components/Breadcrumb'
-import GlobalSearch from '../components/GlobalSearch'
+import GlobalSearch from '../components/global-search/GlobalSearch.jsx'
 
 const EventDetail = () => {
   const { eventId } = useParams()

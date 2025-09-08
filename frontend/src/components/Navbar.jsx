@@ -1,47 +1,47 @@
-import React, { useState } from 'react'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
-import { Menu, X, Globe, User, LogOut, Phone, Mail } from 'lucide-react'
-import { useAuth } from '../utils/AuthContext'
-import SearchBar from './SearchBar'
-import GlobalSearch from './GlobalSearch'
+import React, { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Menu, X, Globe, User, LogOut, Phone, Mail } from "lucide-react";
+import { useAuth } from "../utils/AuthContext";
+// import SearchBar from "../components/search-bar/SearchBar.jsx";
+// import GlobalSearch from "../components/global-search/GlobalSearch.jsx";
 
 const Navbar = () => {
-  const { t, i18n } = useTranslation()
-  const { user, logout } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isLangOpen, setIsLangOpen] = useState(false)
+  const { t, i18n } = useTranslation();
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLangOpen, setIsLangOpen] = useState(false);
 
   const languages = [
-    { code: 'en', name: 'English', flag: '🇬🇧' },
-    { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-    { code: 'fa', name: 'فارسی', flag: '🇮🇷' }
-  ]
+    { code: "en", name: "English", flag: "" },
+    { code: "de", name: "Deutsch", flag: "" },
+    { code: "fa", name: "فارسی", flag: "" },
+  ];
 
   const changeLanguage = (lang) => {
-    i18n.changeLanguage(lang)
-    setIsLangOpen(false)
-    if (lang === 'fa') {
-      document.body.setAttribute('dir', 'rtl')
-      document.body.classList.add('rtl')
+    i18n.changeLanguage(lang);
+    setIsLangOpen(false);
+    if (lang === "fa") {
+      document.body.setAttribute("dir", "rtl");
+      document.body.classList.add("rtl");
     } else {
-      document.body.setAttribute('dir', 'ltr')
-      document.body.classList.remove('rtl')
+      document.body.setAttribute("dir", "ltr");
+      document.body.classList.remove("rtl");
     }
-  }
+  };
 
   const isActivePage = (path) => {
-    if (path === '/' && location.pathname === '/') return true
-    if (path !== '/' && location.pathname.startsWith(path)) return true
-    return false
-  }
+    if (path === "/" && location.pathname === "/") return true;
+    if (path !== "/" && location.pathname.startsWith(path)) return true;
+    return false;
+  };
 
   const handleLogout = () => {
-    logout()
-    navigate('/')
-  }
+    logout();
+    navigate("/");
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
@@ -54,7 +54,9 @@ const Navbar = () => {
                 <span className="text-white font-bold text-xl">IIB</span>
               </div>
               <div className="hidden sm:block">
-                <span className="text-xl font-bold text-gray-800">Iranian Info Bank</span>
+                <span className="text-xl font-bold text-gray-800">
+                  Iranian Info Bank
+                </span>
                 <p className="text-xs text-gray-500">Germany Directory</p>
               </div>
             </Link>
@@ -72,45 +74,45 @@ const Navbar = () => {
 
           {/* Right Side - Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link 
-              to="/" 
+            <Link
+              to="/"
               className={`transition-colors ${
-                isActivePage('/') 
-                  ? 'text-persian-600 font-medium border-b-2 border-persian-600 pb-1' 
-                  : 'text-gray-700 hover:text-persian-600'
+                isActivePage("/")
+                  ? "text-persian-600 font-medium border-b-2 border-persian-600 pb-1"
+                  : "text-gray-700 hover:text-persian-600"
               }`}
             >
-              {t('nav.home')}
+              {t("nav.home")}
             </Link>
-            <Link 
-              to="/about" 
+            <Link
+              to="/about"
               className={`transition-colors ${
-                isActivePage('/about') 
-                  ? 'text-persian-600 font-medium border-b-2 border-persian-600 pb-1' 
-                  : 'text-gray-700 hover:text-persian-600'
+                isActivePage("/about")
+                  ? "text-persian-600 font-medium border-b-2 border-persian-600 pb-1"
+                  : "text-gray-700 hover:text-persian-600"
               }`}
             >
-              {t('nav.about')}
+              {t("nav.about")}
             </Link>
-            <Link 
-              to="/contact" 
+            <Link
+              to="/contact"
               className={`transition-colors ${
-                isActivePage('/contact') 
-                  ? 'text-persian-600 font-medium border-b-2 border-persian-600 pb-1' 
-                  : 'text-gray-700 hover:text-persian-600'
+                isActivePage("/contact")
+                  ? "text-persian-600 font-medium border-b-2 border-persian-600 pb-1"
+                  : "text-gray-700 hover:text-persian-600"
               }`}
             >
-              {t('nav.contact')}
+              {t("nav.contact")}
             </Link>
-            <Link 
-              to="/events" 
+            <Link
+              to="/events"
               className={`transition-colors ${
-                isActivePage('/events') || isActivePage('/event') 
-                  ? 'text-persian-600 font-medium border-b-2 border-persian-600 pb-1' 
-                  : 'text-gray-700 hover:text-persian-600'
+                isActivePage("/events") || isActivePage("/event")
+                  ? "text-persian-600 font-medium border-b-2 border-persian-600 pb-1"
+                  : "text-gray-700 hover:text-persian-600"
               }`}
             >
-              {t('nav.events')}
+              {t("nav.events")}
             </Link>
 
             {/* Language Dropdown */}
@@ -120,7 +122,10 @@ const Navbar = () => {
                 className="flex items-center space-x-1 text-gray-700 hover:text-persian-600 transition-colors"
               >
                 <Globe size={18} />
-                <span>{languages.find(lang => lang.code === i18n.language)?.flag || '🇬🇧'}</span>
+                <span>
+                  {languages.find((lang) => lang.code === i18n.language)
+                    ?.flag || "Language"}
+                </span>
               </button>
               {isLangOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
@@ -141,17 +146,17 @@ const Navbar = () => {
             {/* User Authentication */}
             {user ? (
               <div className="flex items-center space-x-4">
-                {(user.role === 'admin' || user.role === 'super_admin') ? (
-                  <Link 
-                    to="/dashboard" 
+                {user.role === "admin" || user.role === "super_admin" ? (
+                  <Link
+                    to="/dashboard"
                     className="flex items-center space-x-1 text-gray-700 hover:text-persian-600 transition-colors"
                   >
                     <User size={18} />
                     <span>Admin Dashboard</span>
                   </Link>
                 ) : (
-                  <Link 
-                    to="/business-dashboard" 
+                  <Link
+                    to="/business-dashboard"
                     className="flex items-center space-x-1 text-gray-700 hover:text-persian-600 transition-colors"
                   >
                     <User size={18} />
@@ -163,15 +168,15 @@ const Navbar = () => {
                   className="flex items-center space-x-1 text-gray-700 hover:text-persian-600 transition-colors"
                 >
                   <LogOut size={18} />
-                  <span>{t('nav.logout')}</span>
+                  <span>{t("nav.logout")}</span>
                 </button>
               </div>
             ) : (
-              <Link 
-                to="/login" 
+              <Link
+                to="/login"
                 className="bg-persian-600 hover:bg-persian-700 text-white px-4 py-2 rounded-lg transition-colors"
               >
-                {t('nav.login')}
+                {t("nav.login")}
               </Link>
             )}
           </div>
@@ -189,63 +194,63 @@ const Navbar = () => {
         {isMenuOpen && (
           <div className="md:hidden bg-white border-t py-4">
             <div className="flex flex-col space-y-4">
-              <Link 
-                to="/" 
+              <Link
+                to="/"
                 className={`transition-colors ${
-                  isActivePage('/') 
-                    ? 'text-persian-600 font-medium' 
-                    : 'text-gray-700 hover:text-persian-600'
+                  isActivePage("/")
+                    ? "text-persian-600 font-medium"
+                    : "text-gray-700 hover:text-persian-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('nav.home')}
+                {t("nav.home")}
               </Link>
-              <Link 
-                to="/about" 
+              <Link
+                to="/about"
                 className={`transition-colors ${
-                  isActivePage('/about') 
-                    ? 'text-persian-600 font-medium' 
-                    : 'text-gray-700 hover:text-persian-600'
+                  isActivePage("/about")
+                    ? "text-persian-600 font-medium"
+                    : "text-gray-700 hover:text-persian-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('nav.about')}
+                {t("nav.about")}
               </Link>
-              <Link 
-                to="/contact" 
+              <Link
+                to="/contact"
                 className={`transition-colors ${
-                  isActivePage('/contact') 
-                    ? 'text-persian-600 font-medium' 
-                    : 'text-gray-700 hover:text-persian-600'
+                  isActivePage("/contact")
+                    ? "text-persian-600 font-medium"
+                    : "text-gray-700 hover:text-persian-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('nav.contact')}
+                {t("nav.contact")}
               </Link>
-              <Link 
-                to="/events" 
+              <Link
+                to="/events"
                 className={`transition-colors ${
-                  isActivePage('/events') || isActivePage('/event') 
-                    ? 'text-persian-600 font-medium' 
-                    : 'text-gray-700 hover:text-persian-600'
+                  isActivePage("/events") || isActivePage("/event")
+                    ? "text-persian-600 font-medium"
+                    : "text-gray-700 hover:text-persian-600"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('nav.events')}
+                {t("nav.events")}
               </Link>
               {user ? (
                 <>
-                  {(user.role === 'admin' || user.role === 'super_admin') ? (
-                    <Link 
-                      to="/dashboard" 
+                  {user.role === "admin" || user.role === "super_admin" ? (
+                    <Link
+                      to="/dashboard"
                       className="text-gray-700 hover:text-persian-600"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Admin Dashboard
                     </Link>
                   ) : (
-                    <Link 
-                      to="/business-dashboard" 
+                    <Link
+                      to="/business-dashboard"
                       className="text-gray-700 hover:text-persian-600"
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -256,16 +261,16 @@ const Navbar = () => {
                     onClick={handleLogout}
                     className="text-left text-gray-700 hover:text-persian-600"
                   >
-                    {t('nav.logout')}
+                    {t("nav.logout")}
                   </button>
                 </>
               ) : (
-                <Link 
-                  to="/login" 
+                <Link
+                  to="/login"
                   className="text-persian-600 font-medium"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  {t('nav.login')}
+                  {t("nav.login")}
                 </Link>
               )}
             </div>
@@ -273,7 +278,7 @@ const Navbar = () => {
         )}
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

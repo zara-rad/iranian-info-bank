@@ -1,6 +1,6 @@
 {
   "nav": {
-    "home": "Startseite",
+    "home": "Home",
     "about": "Über uns",
     "contact": "Kontakt",
     "events": "Veranstaltungen",
@@ -9,26 +9,54 @@
     "dashboard": "Dashboard"
   },
   "search": {
-    "placeholder": "Suche nach Stadt, Kategorie oder Firmenname..."
+    "placeholder": "Nach Stadt, Kategorie oder Geschäftsnamen suchen..."
   },
+  "globalSearch": {
+    "title": "🔍 Globale Suche",
+    "subtitle": "Suche nach Unternehmen, Städten oder Kategorien",
+    "resultsFor": "Suchergebnisse für \"{{query}}\" ({{count}} gefunden)",
+    "serviceLabel": "Dienstleistung",
+    "inCategory": "in {{category}}"
+  },
+ "searchBar": {
+    "title": "Suche nach Stadt & Kategorie",
+    "subtitle": "Finden Sie iranische Unternehmen in Ihrer Stadt oder stöbern Sie nach Kategorien",
+    "placeholderGlobal": "Suchen...",
+    "placeholderMain": "Suche nach Stadt oder Kategorie...",
+    "filters": {
+      "all": "Alle",
+      "city": "Städte",
+      "category": "Kategorien"
+    },
+    "suggestion": {
+      "inCategory": "in {{category}}",
+      "service": "Dienstleistung"
+    }
+  },
+
+
+
+
+
+
   "events": {
-    "title": "Kommende Veranstaltungen",
-    "readMore": "Mehr lesen"
+    "title": "Bevorstehende Veranstaltungen",
+    "readMore": "Mehr erfahren"
   },
   "categories": {
     "showMore": "Mehr anzeigen",
     "showLess": "Weniger anzeigen"
   },
   "footer": {
-    "mission": "Iranische Unternehmen mit der Gemeinschaft in Deutschland verbinden",
-    "quickLinks": "Schnelle Links",
+    "mission": "Verbindung iranischer Unternehmen mit der Gemeinschaft in Deutschland",
+    "quickLinks": "Schnellzugriff",
     "getInTouch": "Kontakt aufnehmen",
-    "copyright": "© 2025 Iranische Info Bank in Deutschland. Alle Rechte vorbehalten."
+    "copyright": "© 2025 Iranisches Info-Bank in Deutschland. Alle Rechte vorbehalten."
   },
   "hero": {
-    "title": "Iranische Info Bank in Deutschland",
-    "subtitle": "Ihr umfassendes Verzeichnis für iranische Unternehmen und Dienstleistungen in Deutschland",
-    "searchPlaceholder": "Suche nach Stadt, Kategorie oder Firmenname...",
+    "title": "Iranische Info-Bank in Deutschland",
+    "subtitle": "Ihr umfassendes Verzeichnis iranischer Unternehmen und Dienstleistungen in ganz Deutschland",
+    "searchPlaceholder": "Nach Stadt, Kategorie oder Geschäftsnamen suchen...",
     "searchButton": "Suchen"
   },
   "auth": {

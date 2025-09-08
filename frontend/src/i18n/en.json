@@ -11,6 +11,34 @@
   "search": {
     "placeholder": "Search by city, category, or business name..."
   },
+  "globalSearch": {
+    "title": "🔍 Global Search",
+    "subtitle": "Search for businesses, cities, or categories",
+    "resultsFor": "Search results for \"{{query}}\" ({{count}} found)",
+    "serviceLabel": "service",
+    "inCategory": "in {{category}}"
+  },
+ "searchBar": {
+    "title": "Search by City & Category",
+    "subtitle": "Find Iranian businesses in your city or browse by category",
+    "placeholderGlobal": "Search...",
+    "placeholderMain": "Search by city or category...",
+    "filters": {
+      "all": "All",
+      "city": "Cities",
+      "category": "Categories"
+    },
+    "suggestion": {
+      "inCategory": "in {{category}}",
+      "service": "service"
+    }
+  },
+
+
+
+
+
+
   "events": {
     "title": "Upcoming Events",
     "readMore": "Read More"

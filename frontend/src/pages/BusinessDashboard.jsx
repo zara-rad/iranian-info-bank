@@ -7,7 +7,7 @@ import {
   Calendar, Star, TrendingUp, Users, Clock
 } from 'lucide-react'
 import Breadcrumb from '../components/Breadcrumb'
-import GlobalSearch from '../components/GlobalSearch'
+import GlobalSearch from '../components/global-search/GlobalSearch.jsx'
 import toast from 'react-hot-toast'
 
 const BusinessDashboard = () => {
