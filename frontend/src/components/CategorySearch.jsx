@@ -103,7 +103,9 @@ const CategorySearch = () => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setIsOpen(false);
-        setSelectedIndex(-1);
+        setSelectedIndex(-1)
+          setQuery('');   // ✅ clears input
+
       }
     };
     document.addEventListener("mousedown", handleClickOutside);

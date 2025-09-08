@@ -19,6 +19,14 @@ const SearchBar = ({ isGlobal = false }) => {
   const searchRef = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { i18n } = useTranslation();
+
+  // 🔹 Helper to pick the correct language version
+  const getLocalizedName = (item) => {
+    if (i18n.language === "de") return item.nameGerman || item.de || item.name;
+    if (i18n.language === "fa") return item.namePersian || item.fa || item.name;
+    return item.name || item.en; // default English
+  };
 
   useEffect(() => {
     if (query.length > 0) {
@@ -33,14 +41,14 @@ const SearchBar = ({ isGlobal = false }) => {
             (city) =>
               city.en.toLowerCase().includes(query.toLowerCase()) ||
               city.de.toLowerCase().includes(query.toLowerCase()) ||
-              city.fa.includes(query) // ✅ Farsi support
+              city.fa.includes(query) // ✅ Persian search
           )
           .map((city) => ({
             type: "city",
             name: city.en,
             nameGerman: city.de,
             namePersian: city.fa,
-            displayName: city.en,
+            displayName: getLocalizedName(city),
             action: () => navigate(`/city/${encodeURIComponent(city.en)}`),
           }))
           .slice(0, 5);
@@ -60,7 +68,7 @@ const SearchBar = ({ isGlobal = false }) => {
             name: c.name,
             nameGerman: c.nameGerman,
             namePersian: c.namePersian,
-            displayName: c.name,
+            displayName: getLocalizedName(c),
             id: c.id,
             subcategories: c.subcategories,
             action: () => navigate(`/category/${c.id}`),
@@ -82,12 +90,11 @@ const SearchBar = ({ isGlobal = false }) => {
               name: sub.name,
               nameGerman: sub.nameGerman,
               namePersian: sub.namePersian,
-              displayName: sub.name,
-              categoryName: c.name,
+              displayName: getLocalizedName(sub),
+              categoryName: getLocalizedName(c),
               categoryId: c.id,
               id: sub.id,
-              action: () =>
-                navigate(`/category/${c.id}/subcategory/${sub.id}`),
+              action: () => navigate(`/category/${c.id}/subcategory/${sub.id}`),
             });
           });
         });
@@ -105,7 +112,7 @@ const SearchBar = ({ isGlobal = false }) => {
       setSuggestions([]);
       setIsOpen(false);
     }
-  }, [query, searchType, navigate]);
+  }, [query, searchType, navigate, i18n.language]);
 
   const handleSearch = (searchQuery = query) => {
     if (searchQuery.trim()) {
@@ -148,6 +155,8 @@ const SearchBar = ({ isGlobal = false }) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setIsOpen(false);
         setSelectedIndex(-1);
+        //  setShowAllResults(false)
+      setQuery('')
       }
     };
     document.addEventListener("mousedown", handleClickOutside);

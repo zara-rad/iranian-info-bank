@@ -13,10 +13,12 @@ const SearchBarInput = ({ query, setQuery, handleKeyDown, isGlobal, onSubmit }) 
     <div className="relative">
       <input
         type="text"
-        value={query}
+        value={query}  // ✅ controlled input
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder={isGlobal ? t("searchBar.placeholderGlobal") : t("searchBar.placeholderMain")}
+        placeholder={
+          isGlobal ? t("searchBar.placeholderGlobal") : t("searchBar.placeholderMain")
+        }
         className={inputClasses}
       />
       <Search
@@ -25,7 +27,8 @@ const SearchBarInput = ({ query, setQuery, handleKeyDown, isGlobal, onSubmit }) 
       />
       {!isGlobal && (
         <button
-          onClick={() => onSubmit()}
+          type="button"
+          onClick={() => onSubmit(query)}  
           className="absolute right-2 top-2 bg-persian-600 hover:bg-persian-700 text-white px-6 py-2 rounded-lg transition-colors"
         >
           <Search size={18} />

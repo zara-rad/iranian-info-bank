@@ -52,10 +52,20 @@
 
 
 
-
-  "events": {
+"events": {
     "title": "Upcoming Events",
-    "readMore": "Read More"
+      "subtitle": "Stay updated with the latest Iranian community events",
+
+    "readMore": "Read More",
+    "details": "Event Details",
+    "about": "About This Event",
+    "organizer": "Organizer",
+    "contact": "Contact Event",
+    "tags": "Tags",
+    "free": "Free Event",
+    "backHome": "Back to Home",
+    "notFound": "Event Not Found",
+    "loading": "Loading event..."
   },
   "categories": {
     "showMore": "Show More",
