@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "about": "Über uns",
+    "contact": "Kontakt",
+    "events": "Veranstaltungen",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "dashboard": "Dashboard"
+  },
+  "search": {
+    "placeholder": "Suche nach Stadt, Kategorie oder Firmenname..."
+  },
+  "events": {
+    "title": "Kommende Veranstaltungen",
+    "readMore": "Mehr lesen"
+  },
+  "categories": {
+    "showMore": "Mehr anzeigen",
+    "showLess": "Weniger anzeigen"
+  },
+  "footer": {
+    "mission": "Iranische Unternehmen mit der Gemeinschaft in Deutschland verbinden",
+    "quickLinks": "Schnelle Links",
+    "getInTouch": "Kontakt aufnehmen",
+    "copyright": "© 2025 Iranische Info Bank in Deutschland. Alle Rechte vorbehalten."
+  },
+  "hero": {
+    "title": "Iranische Info Bank in Deutschland",
+    "subtitle": "Ihr umfassendes Verzeichnis für iranische Unternehmen und Dienstleistungen in Deutschland",
+    "searchPlaceholder": "Suche nach Stadt, Kategorie oder Firmenname...",
+    "searchButton": "Suchen"
+  },
+  "auth": {
+    "email": "E-Mail",
+    "password": "Passwort",
+    "register": "Registrieren",
+    "loginButton": "Anmelden",
+    "forgotPassword": "Passwort vergessen?",
+    "noAccount": "Noch kein Konto?",
+    "signUp": "Registrieren",
+    "loading": "Laden..."
+  },
+  "common": {
+    "loading": "Laden...",
+    "germany": "Deutschland"
+  }
+}

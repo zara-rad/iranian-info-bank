@@ -1,0 +1,48 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About Us",
+    "contact": "Contact Us",
+    "events": "Events",
+    "login": "Login",
+    "logout": "Logout",
+    "dashboard": "Dashboard"
+  },
+  "search": {
+    "placeholder": "Search by city, category, or business name..."
+  },
+  "events": {
+    "title": "Upcoming Events",
+    "readMore": "Read More"
+  },
+  "categories": {
+    "showMore": "Show More",
+    "showLess": "Show Less"
+  },
+  "footer": {
+    "mission": "Connecting Iranian businesses with the community in Germany",
+    "quickLinks": "Quick Links",
+    "getInTouch": "Get in Touch",
+    "copyright": "© 2025 Iranian Info Bank in Germany. All rights reserved."
+  },
+  "hero": {
+    "title": "Iranian Info Bank in Germany",
+    "subtitle": "Your comprehensive directory for Iranian businesses and services across Germany",
+    "searchPlaceholder": "Search by city, category, or business name...",
+    "searchButton": "Search"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "register": "Register",
+    "loginButton": "Login",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign Up",
+    "loading": "Loading..."
+  },
+  "common": {
+    "loading": "Loading...",
+    "germany": "Germany"
+  }
+}
