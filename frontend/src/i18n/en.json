@@ -40,6 +40,10 @@
   "resultsFor": "Cities matching \"{{query}}\" ({{count}} found)"
 },
 
+"home": {
+  "categoriesTitle": "Browse by Category",
+  "categoriesSubtitle": "Discover Iranian businesses and services organized by category across Germany"
+},
 "categorySearch": {
   "title": "Search by Category",
   "subtitle": "Browse categories & subcategories",
@@ -67,6 +71,126 @@
     "showMore": "Show More",
     "showLess": "Show Less"
   },
+"about": {
+  "breadcrumb": "About Us",
+  "hero": {
+    "title": "About Us",
+    "subtitle": "Connecting Iranian businesses with the community in Germany"
+  },
+  "story": {
+    "title": "Our Story",
+    "paragraph1": "We are an Iranian couple living in Germany who know how difficult it can be to adapt to a new country. From finding the right services to understanding everyday life, we've experienced these challenges ourselves.",
+    "paragraph2": "That's why we created Iranian Info Bank in Germany — a place where Iranians in Germany can easily find reliable information, services, and resources all in one place.",
+    "missionTitle": "Our Mission",
+    "missionText": "Our goal is simple: to make life easier for every Iranian living in Germany. Whether it's housing, legal advice, health, education, shopping, or cultural activities, you'll find it here — clearly explained and always up to date.",
+    "paragraph3": "We believe community means helping each other. With our platform, we hope to build a bridge between Iran and Germany, so every Iranian feels supported and at home."
+  },
+  "values": {
+    "title": "Our Values",
+    "subtitle": "The principles that guide everything we do",
+    "list": [
+      {
+        "title": "Community First",
+        "description": "We believe in the power of community and helping each other succeed in Germany."
+      },
+      {
+        "title": "Reliable Information",
+        "description": "All our listings are verified and regularly updated to ensure accuracy."
+      },
+      {
+        "title": "Cultural Bridge",
+        "description": "Building connections between Iranian culture and German society."
+      },
+      {
+        "title": "Trust & Support",
+        "description": "Creating a trusted platform where every Iranian feels supported and at home."
+      }
+    ]
+  },
+  "impact": {
+    "title": "Our Impact",
+    "subtitle": "Growing together as a community",
+    "stats": {
+      "businesses": "Registered Businesses",
+      "cities": "German Cities",
+      "categories": "Business Categories",
+      "visitors": "Monthly Visitors"
+    }
+  },
+  "cta": {
+    "title": "Join Our Community",
+    "text": "Whether you're a business owner looking to reach the Iranian community or someone seeking reliable services, we're here to help you connect and thrive in Germany.",
+    "register": "Register Your Business",
+    "contact": "Contact Us"
+  }
+},
+
+"contact": {
+  "breadcrumb": "Contact Us",
+  "hero": {
+    "title": "Contact Us",
+    "subtitle": "Get in Touch"
+  },
+  "info": {
+    "title": "Get in Touch",
+    "phone": {
+      "title": "Phone",
+      "description": "Call us during business hours"
+    },
+    "email": {
+      "title": "Email",
+      "description": "Send us an email anytime"
+    },
+    "address": {
+      "title": "Address",
+      "value": "Germany",
+      "description": "Serving all of Germany"
+    },
+    "about": {
+      "title": "About Our Service",
+      "text": "We are dedicated to connecting the Iranian community in Germany with trusted professionals and services."
+    }
+  },
+  "form": {
+    "title": "Send us a Message",
+    "name": "Name *",
+    "namePlaceholder": "Your full name",
+    "email": "Email *",
+    "emailPlaceholder": "your@email.com",
+    "subject": "Subject *",
+    "subjectPlaceholder": "What is this about?",
+    "message": "Message *",
+    "messagePlaceholder": "Tell us how we can help you...",
+    "sendButton": "Send Message",
+    "sending": "Sending...",
+    "success": "Message sent successfully! We'll get back to you soon."
+  },
+  "features": {
+    "title": "Why Choose Us",
+    "subtitle": "We understand the unique needs of the Iranian community in Germany",
+    "list": [
+      {
+        "title": "Community Focused",
+        "description": "Connecting Iranians across Germany with trusted services and professionals."
+      },
+      {
+        "title": "Persian Speaking",
+        "description": "Find professionals who speak Persian and understand your cultural needs."
+      },
+      {
+        "title": "Always Updated",
+        "description": "Our listings are regularly updated to ensure accuracy and reliability."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to Join Our Community?",
+    "text": "Whether you're looking for services or want to list your business, we're here to help.",
+    "register": "Register Your Business",
+    "browse": "Browse Services"
+  }
+},
+
 "footer": {
   "mission": "Connecting Iranian businesses with the community in Germany",
   "quickLinks": "Quick Links",
@@ -86,13 +210,21 @@
     "searchPlaceholder": "Search by city, category, or business name...",
     "searchButton": "Search"
   },
+   "stats": {
+    "businesses": "Registered Businesses",
+    "cities": "German Cities",
+    "categories": "Business Categories",
+    "visitors": "Monthly Visitors"
+  },
   "auth": {
     "email": "Email",
     "password": "Password",
     "register": "Register",
     "loginButton": "Login",
-    "forgotPassword": "Forgot Password?",
+    "login":"Login",
+"forgotPassword": "Forgot your password?",
     "noAccount": "Don't have an account?",
+     "welcomeBack": "Welcome back to Iranian Info Bank",
     "signUp": "Sign Up",
     "loading": "Loading..."
   },

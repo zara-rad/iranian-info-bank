@@ -52,7 +52,8 @@ const Login = () => {
               <span className="text-white font-bold text-2xl">IIB</span>
             </div>
             <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('auth.login')}</h2>
-            <p className="text-gray-600">Welcome back to Iranian Info Bank</p>
+            <p className="text-gray-600">{t('auth.welcomeBack')}</p>
+
           </div>
 
           {/* Login Form */}

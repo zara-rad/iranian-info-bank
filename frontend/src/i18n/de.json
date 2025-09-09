@@ -62,10 +62,133 @@
     "notFound": "Veranstaltung nicht gefunden",
     "loading": "Veranstaltung wird geladen..."
   },
+  "home": {
+  "categoriesTitle": "Nach Kategorie durchsuchen",
+  "categoriesSubtitle": "Entdecken Sie iranische Unternehmen und Dienstleistungen, organisiert nach Kategorien in ganz Deutschland"
+},
   "categories": {
     "showMore": "Mehr anzeigen",
     "showLess": "Weniger anzeigen"
   },
+"about": {
+  "breadcrumb": "Über uns",
+  "hero": {
+    "title": "Über uns",
+    "subtitle": "Verbindung iranischer Unternehmen mit der Gemeinschaft in Deutschland"
+  },
+  "story": {
+    "title": "Unsere Geschichte",
+    "paragraph1": "Wir sind ein iranisches Paar, das in Deutschland lebt und weiß, wie schwierig es sein kann, sich in einem neuen Land einzuleben. Von der Suche nach den richtigen Dienstleistungen bis hin zum Verständnis des Alltags haben wir diese Herausforderungen selbst erlebt.",
+    "paragraph2": "Deshalb haben wir die Iranian Info Bank in Deutschland gegründet — einen Ort, an dem Iraner in Deutschland zuverlässige Informationen, Dienstleistungen und Ressourcen an einem Ort finden können.",
+    "missionTitle": "Unsere Mission",
+    "missionText": "Unser Ziel ist einfach: das Leben für jeden Iraner in Deutschland zu erleichtern. Ob Wohnen, Rechtsberatung, Gesundheit, Bildung, Einkaufen oder kulturelle Aktivitäten – hier finden Sie es klar erklärt und stets aktuell.",
+    "paragraph3": "Wir glauben, dass Gemeinschaft bedeutet, einander zu helfen. Mit unserer Plattform möchten wir eine Brücke zwischen Iran und Deutschland bauen, damit sich jeder Iraner unterstützt und zu Hause fühlt."
+  },
+  "values": {
+    "title": "Unsere Werte",
+    "subtitle": "Die Prinzipien, die unser Handeln leiten",
+    "list": [
+      {
+        "title": "Gemeinschaft zuerst",
+        "description": "Wir glauben an die Kraft der Gemeinschaft und daran, einander in Deutschland zum Erfolg zu verhelfen."
+      },
+      {
+        "title": "Zuverlässige Informationen",
+        "description": "Alle unsere Einträge werden überprüft und regelmäßig aktualisiert, um Genauigkeit sicherzustellen."
+      },
+      {
+        "title": "Kulturelle Brücke",
+        "description": "Verbindungen zwischen iranischer Kultur und deutscher Gesellschaft schaffen."
+      },
+      {
+        "title": "Vertrauen & Unterstützung",
+        "description": "Eine vertrauenswürdige Plattform schaffen, auf der sich jeder Iraner unterstützt und zu Hause fühlt."
+      }
+    ]
+  },
+  "impact": {
+    "title": "Unsere Wirkung",
+    "subtitle": "Gemeinsam als Gemeinschaft wachsen",
+    "stats": {
+      "businesses": "Registrierte Unternehmen",
+      "cities": "Deutsche Städte",
+      "categories": "Unternehmenskategorien",
+      "visitors": "Monatliche Besucher"
+    }
+  },
+  "cta": {
+    "title": "Trete unserer Gemeinschaft bei",
+    "text": "Egal, ob Sie Unternehmer sind, der die iranische Gemeinschaft erreichen möchte, oder jemand, der zuverlässige Dienstleistungen sucht – wir helfen Ihnen, sich zu vernetzen und in Deutschland erfolgreich zu sein.",
+    "register": "Ihr Unternehmen registrieren",
+    "contact": "Kontaktieren Sie uns"
+  }
+},
+"contact": {
+  "breadcrumb": "Kontakt",
+  "hero": {
+    "title": "Kontakt",
+    "subtitle": "Kontaktieren Sie uns"
+  },
+  "info": {
+    "title": "Kontakt aufnehmen",
+    "phone": {
+      "title": "Telefon",
+      "description": "Rufen Sie uns während der Geschäftszeiten an"
+    },
+    "email": {
+      "title": "E-Mail",
+      "description": "Senden Sie uns jederzeit eine E-Mail"
+    },
+    "address": {
+      "title": "Adresse",
+      "value": "Deutschland",
+      "description": "Wir sind in ganz Deutschland tätig"
+    },
+    "about": {
+      "title": "Über unseren Service",
+      "text": "Wir verbinden die iranische Gemeinschaft in Deutschland mit vertrauenswürdigen Fachleuten und Dienstleistungen."
+    }
+  },
+  "form": {
+    "title": "Nachricht senden",
+    "name": "Name *",
+    "namePlaceholder": "Ihr vollständiger Name",
+    "email": "E-Mail *",
+    "emailPlaceholder": "ihre@email.com",
+    "subject": "Betreff *",
+    "subjectPlaceholder": "Worum geht es?",
+    "message": "Nachricht *",
+    "messagePlaceholder": "Wie können wir Ihnen helfen?",
+    "sendButton": "Nachricht senden",
+    "sending": "Wird gesendet...",
+    "success": "Nachricht erfolgreich gesendet! Wir melden uns bald bei Ihnen."
+  },
+  "features": {
+    "title": "Warum wir?",
+    "subtitle": "Wir verstehen die besonderen Bedürfnisse der iranischen Gemeinschaft in Deutschland",
+    "list": [
+      {
+        "title": "Gemeinschaft im Fokus",
+        "description": "Wir verbinden Iraner in ganz Deutschland mit vertrauenswürdigen Dienstleistungen und Fachleuten."
+      },
+      {
+        "title": "Persischsprachig",
+        "description": "Finden Sie Fachleute, die Persisch sprechen und Ihre kulturellen Bedürfnisse verstehen."
+      },
+      {
+        "title": "Immer aktuell",
+        "description": "Unsere Einträge werden regelmäßig aktualisiert, um Genauigkeit und Zuverlässigkeit zu gewährleisten."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Bereit, unserer Gemeinschaft beizutreten?",
+    "text": "Ob Sie nach Dienstleistungen suchen oder Ihr Unternehmen eintragen möchten – wir helfen Ihnen.",
+    "register": "Unternehmen registrieren",
+    "browse": "Dienstleistungen durchsuchen"
+  }
+},
+
  "footer": {
   "mission": "Verbindung iranischer Unternehmen mit der Gemeinschaft in Deutschland",
   "quickLinks": "Schnellzugriff",
@@ -86,15 +209,25 @@
     "searchPlaceholder": "Nach Stadt, Kategorie oder Geschäftsnamen suchen...",
     "searchButton": "Suchen"
   },
+   "stats": {
+    "businesses": "Registrierte Unternehmen",
+    "cities": "Deutsche Städte",
+    "categories": "Unternehmenskategorien",
+    "visitors": "Monatliche Besucher"
+  },
   "auth": {
     "email": "E-Mail",
     "password": "Passwort",
     "register": "Registrieren",
     "loginButton": "Anmelden",
     "forgotPassword": "Passwort vergessen?",
-    "noAccount": "Noch kein Konto?",
+  "noAccount": "Sie haben noch kein Konto?",
     "signUp": "Registrieren",
-    "loading": "Laden..."
+    "loading": "Laden...",
+      "login": "Anmelden",
+
+      "welcomeBack": "Willkommen zurück bei der Iranian Info Bank"
+
   },
   "common": {
     "loading": "Laden...",

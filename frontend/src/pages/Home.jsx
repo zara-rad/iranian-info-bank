@@ -1,32 +1,55 @@
-import React, { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { ChevronDown, ChevronUp } from 'lucide-react'
-import { categories as allCategories } from '../data/categories'
-import GlobalSearch from '../components/global-search/GlobalSearch.jsx'
-import CitySearch from '../components/CitySearch'
-import CategorySearch from '../components/CategorySearch'
-import EventsCarousel from '../components/EventsCarousel'
-import CategoryCard from '../components/CategoryCard'
+import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import { categories as allCategories } from "../data/categories";
+import GlobalSearch from "../components/global-search/GlobalSearch.jsx";
+import CitySearch from "../components/CitySearch";
+import CategorySearch from "../components/CategorySearch";
+import EventsCarousel from "../components/EventsCarousel";
+import CategoryCard from "../components/CategoryCard";
+
+// --- Helpers for localized numbers ---
+const toFarsiDigits = (str) => {
+  return str.toString().replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
+};
+
+const getLocalizedNumber = (value, language = "en") => {
+  if (value === null || value === undefined) return "";
+
+  const strValue = value.toString();
+
+  if (language === "fa") {
+    return toFarsiDigits(strValue);
+  }
+
+  if (!isNaN(Number(strValue))) {
+    return new Intl.NumberFormat(language).format(Number(strValue));
+  }
+
+  return strValue;
+};
 
 const Home = () => {
-  const { t } = useTranslation()
-  const [visibleCategoriesCount, setVisibleCategoriesCount] = useState(6)
-  const [categories, setCategories] = useState([])
+  const { t, i18n } = useTranslation();
+  const [visibleCategoriesCount, setVisibleCategoriesCount] = useState(6);
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    setCategories(allCategories)
-  }, [])
+    setCategories(allCategories);
+  }, []);
 
-  const visibleCategories = allCategories.slice(0, visibleCategoriesCount)
-  const hasMoreCategories = visibleCategoriesCount < allCategories.length
-  
+  const visibleCategories = allCategories.slice(0, visibleCategoriesCount);
+  const hasMoreCategories = visibleCategoriesCount < allCategories.length;
+
   const showMoreCategories = () => {
-    setVisibleCategoriesCount(prev => Math.min(prev + 3, allCategories.length))
-  }
-  
+    setVisibleCategoriesCount((prev) =>
+      Math.min(prev + 3, allCategories.length)
+    );
+  };
+
   const showLessCategories = () => {
-    setVisibleCategoriesCount(prev => Math.max(prev - 3, 6))
-  }
+    setVisibleCategoriesCount((prev) => Math.max(prev - 3, 6));
+  };
 
   return (
     <div className="min-h-screen">
@@ -35,7 +58,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           {/* Global Search */}
           <GlobalSearch />
-          
+
           {/* Smaller Searches */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-4xl mx-auto">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
@@ -60,10 +83,10 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Browse by Category
+              {t("home.categoriesTitle")}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover Iranian businesses and services organized by category across Germany
+              {t("home.categoriesSubtitle")}
             </p>
           </div>
 
@@ -81,17 +104,29 @@ const Home = () => {
                 onClick={showMoreCategories}
                 className="inline-flex items-center space-x-2 bg-persian-600 hover:bg-persian-700 text-white px-8 py-3 rounded-lg transition-colors font-medium"
               >
-                <span>Show More ({Math.min(3, allCategories.length - visibleCategoriesCount)} more)</span>
+                <span>
+                  {t("categories.showMore")} (
+                  {getLocalizedNumber(
+                    Math.min(3, allCategories.length - visibleCategoriesCount),
+                    i18n.language
+                  )}{" "}
+                  )
+                </span>
                 <ChevronDown size={20} />
               </button>
             )}
-            
+
             {visibleCategoriesCount > 6 && (
               <button
                 onClick={showLessCategories}
-                className={`inline-flex items-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg transition-colors font-medium ${hasMoreCategories ? 'ml-4' : ''}`}
+                className={`inline-flex items-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg transition-colors font-medium ${
+                  hasMoreCategories ? "ms-4" : ""
+                }`}
               >
-                <span>Show Less (3 less)</span>
+                <span>
+                  {t("categories.showLess")} (
+                  {getLocalizedNumber(3, i18n.language)})
+                </span>
                 <ChevronUp size={20} />
               </button>
             )}
@@ -104,26 +139,34 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">1,200+</div>
-              <div className="text-gray-300">Registered Businesses</div>
+              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">
+                {getLocalizedNumber("1,200+", i18n.language)}
+              </div>
+              <div className="text-gray-300">{t("stats.businesses")}</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">50+</div>
-              <div className="text-gray-300">German Cities</div>
+              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">
+                {getLocalizedNumber("50+", i18n.language)}
+              </div>
+              <div className="text-gray-300">{t("stats.cities")}</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">25</div>
-              <div className="text-gray-300">Business Categories</div>
+              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">
+                {getLocalizedNumber("25", i18n.language)}
+              </div>
+              <div className="text-gray-300">{t("stats.categories")}</div>
             </div>
             <div>
-              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">5,000+</div>
-              <div className="text-gray-300">Monthly Visitors</div>
+              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">
+                {getLocalizedNumber("5,000+", i18n.language)}
+              </div>
+              <div className="text-gray-300">{t("stats.visitors")}</div>
             </div>
           </div>
         </div>
       </section>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
