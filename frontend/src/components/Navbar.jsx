@@ -73,7 +73,9 @@ const Navbar = () => {
           </div>
 
           {/* Right Side - Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className={`hidden md:flex items-center space-x-6 ${
+    i18n.language === "fa" ? "space-x-reverse" : ""
+  }`}>
             <Link
               to="/"
               className={`transition-colors ${

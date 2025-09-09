@@ -47,11 +47,7 @@
   "resultsFor": "Results matching \"{{query}}\" ({{count}} found)",
   "inCategory": "in {{category}}",
   "service": "service"
-}
-,
-
-
-
+},
 "events": {
     "title": "Upcoming Events",
       "subtitle": "Stay updated with the latest Iranian community events",
@@ -71,12 +67,19 @@
     "showMore": "Show More",
     "showLess": "Show Less"
   },
-  "footer": {
-    "mission": "Connecting Iranian businesses with the community in Germany",
-    "quickLinks": "Quick Links",
-    "getInTouch": "Get in Touch",
-    "copyright": "© 2025 Iranian Info Bank in Germany. All rights reserved."
+"footer": {
+  "mission": "Connecting Iranian businesses with the community in Germany",
+  "quickLinks": "Quick Links",
+  "getInTouch": "Get in Touch",
+  "popularCategories": "Popular Categories",
+  "categories": {
+    "medical": "Medical & Healthcare",
+    "beauty": "Beauty & Wellness",
+    "construction": "Construction & Handwerk",
+    "restaurants": "Restaurants & Food"
   },
+  "copyright": "© 2025 Iranian Info Bank in Germany. All rights reserved."
+},
   "hero": {
     "title": "Iranian Info Bank in Germany",
     "subtitle": "Your comprehensive directory for Iranian businesses and services across Germany",

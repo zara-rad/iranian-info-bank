@@ -14,6 +14,8 @@ import CityPage from './pages/CityPage'
 import CategoryPage from './pages/CategoryPage'
 import SubcategoryPage from './pages/SubcategoryPage'
 import EventDetail from './pages/EventDetail'
+import EventsPage from './pages/EventsPage'   // ✅ new import
+
 // import GlobalSearch from './components/global-search/GlobalSearch.jsx'
 import Dashboard from './pages/Dashboard'
 import BusinessDashboard from './pages/BusinessDashboard'
@@ -35,6 +37,8 @@ function App() {
               <Route path="/city/:cityName" element={<CityPage />} />
               <Route path="/category/:categoryId" element={<CategoryPage />} />
               <Route path="/category/:categoryId/subcategory/:subcategoryId" element={<SubcategoryPage />} />
+                            <Route path="/events" element={<EventsPage />} />   {/* All events listing */}
+
               <Route path="/event/:eventId" element={<EventDetail />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/business-dashboard" element={<BusinessDashboard />} />

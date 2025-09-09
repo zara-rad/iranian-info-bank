@@ -5,6 +5,7 @@ import Breadcrumb from "../components/Breadcrumb.jsx";
 import GlobalSearch from "../components/global-search/GlobalSearch.jsx";
 import { useTranslation } from "react-i18next";
 import { getLocalizedField } from "../utils/localization.js";
+import { sampleEvents } from "../data/sampleEvents";
 
 // Components
 import EventHero from "../components/event-detail/EventHero.jsx";
@@ -20,7 +21,7 @@ const EventDetail = () => {
   const [loading, setLoading] = useState(true);
 
   // sampleEvents (could also come from API)
-  const sampleEvents = [/* ...your events data... */];
+  // const sampleEvents = [/* ...your events data... */];
 
   useEffect(() => {
     const foundEvent = sampleEvents.find(ev => ev.id === parseInt(eventId, 10));

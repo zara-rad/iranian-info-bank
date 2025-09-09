@@ -1,6 +1,6 @@
 {
   "nav": {
-    "home": "Home",
+    "home": "Startseite",
     "about": "Über uns",
     "contact": "Kontakt",
     "events": "Veranstaltungen",
@@ -46,12 +46,7 @@
   "resultsFor": "Ergebnisse passend zu \"{{query}}\" ({{count}} gefunden)",
   "inCategory": "in {{category}}",
   "service": "Dienstleistung"
-}
-,
-
-
-
-
+},
   "events": {
     "title": "Bevorstehende Veranstaltungen",
       "subtitle": "Bleiben Sie auf dem Laufenden über die neuesten Veranstaltungen der iranischen Gemeinschaft",
@@ -71,12 +66,20 @@
     "showMore": "Mehr anzeigen",
     "showLess": "Weniger anzeigen"
   },
-  "footer": {
-    "mission": "Verbindung iranischer Unternehmen mit der Gemeinschaft in Deutschland",
-    "quickLinks": "Schnellzugriff",
-    "getInTouch": "Kontakt aufnehmen",
-    "copyright": "© 2025 Iranisches Info-Bank in Deutschland. Alle Rechte vorbehalten."
+ "footer": {
+  "mission": "Verbindung iranischer Unternehmen mit der Gemeinschaft in Deutschland",
+  "quickLinks": "Schnellzugriff",
+  "getInTouch": "Kontakt aufnehmen",
+  "popularCategories": "Beliebte Kategorien",
+  "categories": {
+    "medical": "Medizin & Gesundheit",
+    "beauty": "Schönheit & Wellness",
+    "construction": "Bau & Handwerk",
+    "restaurants": "Restaurants & Essen"
   },
+  "copyright": "© 2025 Iranisches Info-Bank in Deutschland. Alle Rechte vorbehalten."
+}
+,
   "hero": {
     "title": "Iranische Info-Bank in Deutschland",
     "subtitle": "Ihr umfassendes Verzeichnis iranischer Unternehmen und Dienstleistungen in ganz Deutschland",

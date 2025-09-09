@@ -2,9 +2,14 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Phone, Mail, MapPin, ExternalLink } from 'lucide-react'
+import { getLocalizedNumber } from '../utils/numberUtils'
 
 const Footer = () => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+
+  const phone = "+49 170 0000000"
+  const email = "you@example.com"
+  const year = new Date().getFullYear()
 
   return (
     <footer className="bg-gray-900 text-white pt-16 pb-8">
@@ -70,11 +75,11 @@ const Footer = () => {
             <div className="space-y-2 text-gray-300">
               <div className="flex items-center space-x-2">
                 <Phone size={16} />
-                <span>+49 170 0000000</span>
+                <span>{getLocalizedNumber(phone, i18n.language)}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail size={16} />
-                <span>you@example.com</span>
+                <span>{email}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin size={16} />
@@ -88,7 +93,9 @@ const Footer = () => {
         <div className="border-t border-gray-700 mt-12 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="text-center md:text-left mb-4 md:mb-0">
-              <p className="text-gray-400">{t('footer.copyright')}</p>
+              <p className="text-gray-400">
+                © {getLocalizedNumber(year, i18n.language)} {t('footer.copyright')}
+              </p>
             </div>
             <div className="flex items-center space-x-6">
               <Link to="/register" className="text-gray-300 hover:text-white transition-colors flex items-center space-x-1">
@@ -100,10 +107,6 @@ const Footer = () => {
               </Link>
             </div>
           </div>
-        </div>
-        {/* Copyright */}
-        <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
-          <p>{t('footer.copyright')}</p>
         </div>
       </div>
     </footer>
