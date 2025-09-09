@@ -1,36 +1,36 @@
-import React, { useState, useEffect } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useTranslation } from "react-i18next"
-import toast from "react-hot-toast"
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import toast from "react-hot-toast";
 
-import { useAuth } from "../utils/AuthContext"
+import { useAuth } from "../utils/AuthContext";
 
 // Components
-import RegisterHeader from "../components/register/RegisterHeader"
-import StepIndicator from "../components/register/StepIndicator"
-import Step1AccountInfo from "../components/register/Step1AccountInfo"
-import Step2BusinessInfo from "../components/register/Step2BusinessInfo"
-import Step3Branding from "../components/register/Step3Branding"
-import Step4Payment from "../components/register/Step4Payment"
-import Step5Terms from "../components/register/Step5Terms"
-import RegisterNavigation from "../components/register/RegisterNavigation"
+import RegisterHeader from "../components/register/RegisterHeader";
+import StepIndicator from "../components/register/StepIndicator";
+import Step1AccountInfo from "../components/register/Step1AccountInfo";
+import Step2BusinessInfo from "../components/register/Step2BusinessInfo";
+import Step3Branding from "../components/register/Step3Branding";
+import Step4Payment from "../components/register/Step4Payment";
+import Step5Terms from "../components/register/Step5Terms";
+import RegisterNavigation from "../components/register/RegisterNavigation";
 
 const Register = () => {
-  const { t } = useTranslation()
-  const { register } = useAuth()
-  const navigate = useNavigate()
+  const { t } = useTranslation();
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
   // Steps
-  const [currentStep, setCurrentStep] = useState(1)
+  const [currentStep, setCurrentStep] = useState(1);
 
   // States
-  const [isLoading, setIsLoading] = useState(false)
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false)
-  const [acceptedTerms, setAcceptedTerms] = useState(false)
-  const [categories, setCategories] = useState([])
-  const [selectedCategory, setSelectedCategory] = useState(null)
-  const [selectedSubcategories, setSelectedSubcategories] = useState([])
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedSubcategories, setSelectedSubcategories] = useState([]);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -46,41 +46,41 @@ const Register = () => {
     descriptionPersian: "",
     logo: null,
     paymentMethod: "stripe",
-  })
+  });
 
   // Load categories
   useEffect(() => {
     import("../data/categories").then((module) => {
-      setCategories(module.categories)
-    })
-  }, [])
+      setCategories(module.categories);
+    });
+  }, []);
 
   // Navigation
-  const nextStep = () => setCurrentStep(currentStep + 1)
-  const prevStep = () => setCurrentStep(currentStep - 1)
+  const nextStep = () => setCurrentStep(currentStep + 1);
+  const prevStep = () => setCurrentStep(currentStep - 1);
 
   // Submit
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!acceptedTerms) {
-      toast.error("You must accept the Terms & Privacy Policy")
-      return
+      toast.error("You must accept the Terms & Privacy Policy");
+      return;
     }
 
-    setIsProcessingPayment(true)
+    setIsProcessingPayment(true);
 
     try {
       // Dummy example – replace with your API call
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-      toast.success("Registration completed successfully!")
-      navigate("/login")
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      toast.success("Registration completed successfully!");
+      navigate("/login");
     } catch (err) {
-      toast.error("Registration failed, please try again.")
+      toast.error("Registration failed, please try again.");
     } finally {
-      setIsProcessingPayment(false)
+      setIsProcessingPayment(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -149,20 +149,16 @@ const Register = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Register
-
-
-
-
+export default Register;
 
 // import React, { useState, useEffect } from 'react'
 // import { Link, useNavigate } from 'react-router-dom'
 // import { useTranslation } from 'react-i18next'
-// import { 
-//   Eye, EyeOff, Mail, Lock, User, Phone, Building, 
+// import {
+//   Eye, EyeOff, Mail, Lock, User, Phone, Building,
 //   Upload, X, Check, CreditCard, Euro, FileText,
 //   ChevronDown, ChevronUp, Loader
 // } from 'lucide-react'
@@ -173,7 +169,7 @@ export default Register
 //   const { t } = useTranslation()
 //   const { register } = useAuth()
 //   const navigate = useNavigate()
-  
+
 //   const [currentStep, setCurrentStep] = useState(1)
 //   const [showPassword, setShowPassword] = useState(false)
 //   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -199,19 +195,19 @@ export default Register
 //     email: '',
 //     password: '',
 //     confirmPassword: '',
-    
+
 //     // Business Information
 //     businessName: '',
 //     phone: '',
 //     category: '',
 //     subcategories: [],
-    
+
 //     // Branding & Description
 //     descriptionEnglish: '',
 //     descriptionGerman: '',
 //     descriptionPersian: '',
 //     logo: null,
-    
+
 //     // Payment
 //     paymentMethod: 'stripe'
 //   })
@@ -247,13 +243,13 @@ export default Register
 //   const handleSubcategoryToggle = (subcategory) => {
 //     const isSelected = selectedSubcategories.find(sub => sub.id === subcategory.id)
 //     let newSubcategories
-    
+
 //     if (isSelected) {
 //       newSubcategories = selectedSubcategories.filter(sub => sub.id !== subcategory.id)
 //     } else {
 //       newSubcategories = [...selectedSubcategories, subcategory]
 //     }
-    
+
 //     setSelectedSubcategories(newSubcategories)
 //     setFormData({
 //       ...formData,
@@ -269,16 +265,16 @@ export default Register
 //         toast.error('File size must be less than 3MB')
 //         return
 //       }
-      
+
 //       // Check file type
 //       if (!file.type.match(/^image\/(jpeg|jpg|png)$/)) {
 //         toast.error('Only JPG and PNG files are allowed')
 //         return
 //       }
-      
+
 //       setLogoFile(file)
 //       setFormData({ ...formData, logo: file })
-      
+
 //       // Create preview
 //       const reader = new FileReader()
 //       reader.onload = (e) => setLogoPreview(e.target.result)
@@ -308,31 +304,31 @@ export default Register
 //           return false
 //         }
 //         return true
-      
+
 //       case 2:
 //         if (!formData.businessName || !formData.phone || !formData.category) {
 //           toast.error('Please fill in all required business information')
 //           return false
 //         }
 //         return true
-      
+
 //       case 3:
 //         if (!formData.descriptionEnglish && !formData.descriptionGerman && !formData.descriptionPersian) {
 //           toast.error('Please provide at least one description')
 //           return false
 //         }
 //         return true
-      
+
 //       case 4:
 //         return true // Payment step validation handled separately
-      
+
 //       case 5:
 //         if (!acceptedTerms) {
 //           toast.error('You must accept the Terms & Privacy Policy')
 //           return false
 //         }
 //         return true
-      
+
 //       default:
 //         return true
 //     }
@@ -350,7 +346,7 @@ export default Register
 
 //   const handlePayment = async () => {
 //     setIsProcessingPayment(true)
-    
+
 //     try {
 //       const response = await fetch('/api/payment/create-payment-intent', {
 //         method: 'POST',
@@ -376,10 +372,10 @@ export default Register
 //       })
 
 //       const data = await response.json()
-      
+
 //       if (response.ok) {
 //         setPaymentDetails(data)
-        
+
 //         if (formData.paymentMethod === 'stripe') {
 //           // For Stripe, you would integrate Stripe Elements here
 //           toast.success('Payment initiated! Complete payment to finish registration.')
@@ -403,7 +399,7 @@ export default Register
 //     } catch (error) {
 //       toast.error('Payment error. Please try again.')
 //     }
-    
+
 //     setIsProcessingPayment(false)
 //   }
 
@@ -435,7 +431,7 @@ export default Register
 //       })
 
 //       const data = await response.json()
-      
+
 //       if (response.ok) {
 //         setPaymentCompleted(true)
 //         toast.success('Registration completed successfully!')
@@ -453,7 +449,7 @@ export default Register
 //   const handleSubmit = async (e) => {
 //     e.preventDefault()
 //     if (!validateStep(5)) return
-    
+
 //     // Start payment process
 //     await handlePayment()
 //   }
@@ -463,8 +459,8 @@ export default Register
 //       {[1, 2, 3, 4, 5].map((step) => (
 //         <div key={step} className="flex items-center">
 //           <div className={`w-10 h-10 rounded-full flex items-center justify-center font-medium ${
-//             currentStep >= step 
-//               ? 'bg-persian-600 text-white' 
+//             currentStep >= step
+//               ? 'bg-persian-600 text-white'
 //               : 'bg-gray-200 text-gray-500'
 //           }`}>
 //             {currentStep > step ? <Check size={20} /> : step}
@@ -628,7 +624,7 @@ export default Register
 //             </div>
 //             <ChevronDown className={`transform transition-transform ${showCategoryDropdown ? 'rotate-180' : ''}`} size={20} />
 //           </button>
-          
+
 //           {showCategoryDropdown && (
 //             <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-lg shadow-lg mt-1 z-50 max-h-80 overflow-y-auto">
 //               {categories.map((category) => (
@@ -921,25 +917,25 @@ export default Register
 //           <div className="bg-gray-50 rounded-lg p-4 max-h-60 overflow-y-auto text-sm text-gray-700 space-y-3">
 //             <h5 className="font-medium">Privacy Policy</h5>
 //             <p>
-//               We collect and process your personal data in accordance with GDPR regulations. 
+//               We collect and process your personal data in accordance with GDPR regulations.
 //               Your information will be used solely for the purpose of providing our directory services.
 //             </p>
-            
+
 //             <h5 className="font-medium">Terms of Service</h5>
 //             <p>
-//               By registering, you agree to provide accurate information about your business. 
+//               By registering, you agree to provide accurate information about your business.
 //               You are responsible for keeping your listing information up to date.
 //             </p>
-            
+
 //             <h5 className="font-medium">Payment Terms</h5>
 //             <p>
-//               The registration fee is non-refundable. Your listing will be active for 12 months 
+//               The registration fee is non-refundable. Your listing will be active for 12 months
 //               from the date of payment confirmation.
 //             </p>
-            
+
 //             <h5 className="font-medium">Content Guidelines</h5>
 //             <p>
-//               All business information must be accurate and appropriate. We reserve the right 
+//               All business information must be accurate and appropriate. We reserve the right
 //               to remove listings that violate our community guidelines.
 //             </p>
 //           </div>
@@ -1005,7 +1001,7 @@ export default Register
 //                   Previous
 //                 </button>
 //               )}
-              
+
 //               <div className="ml-auto">
 //                 {currentStep < 5 ? (
 //                   <button

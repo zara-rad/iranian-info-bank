@@ -231,5 +231,23 @@
   "common": {
     "loading": "Loading...",
     "germany": "Germany"
+  },
+  "register": {
+    "title": "Create Your Account",
+    "subtitle": "Join Iranian Info Bank Germany",
+     "previous": "Previous",
+    "next": "Next",
+    "processingPayment": "Processing Payment...",
+    "payAndRegister": "Pay & Register",
+     "accountInfo": {
+      "title": "Account Information",
+      "subtitle": "Create your account credentials",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Your full name",
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "password": "Password",
+      "confirmPassword": "Confirm Password"
+    }
   }
 }

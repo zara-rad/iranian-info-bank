@@ -235,5 +235,23 @@
   "common": {
     "loading": "در حال بارگذاری...",
     "germany": "آلمان"
-  }
+  },
+   "register": {
+    "title": "ایجاد حساب کاربری",
+    "subtitle": "به بانک اطلاعات ایرانیان آلمان بپیوندید",
+    "previous": "قبلی",
+    "next": "بعدی",
+    "processingPayment": "در حال پردازش پرداخت...",
+    "payAndRegister": "پرداخت و ثبت‌نام"
+  },
+   "accountInfo": {
+      "title": "اطلاعات حساب کاربری",
+      "subtitle": "اطلاعات ورود خود را ایجاد کنید",
+      "fullName": "نام و نام خانوادگی",
+      "fullNamePlaceholder": "نام کامل شما",
+      "email": "آدرس ایمیل",
+      "emailPlaceholder": "ایمیل شما",
+      "password": "رمز عبور",
+      "confirmPassword": "تأیید رمز عبور"
+    }
 }

@@ -1,7 +1,9 @@
 import React, { useState } from "react"
 import { User, Mail, Lock, Eye, EyeOff } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 const Step1AccountInfo = ({ formData, setFormData }) => {
+  const { t } = useTranslation()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -11,17 +13,18 @@ const Step1AccountInfo = ({ formData, setFormData }) => {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="text-center mb-6">
         <h3 className="text-xl font-bold text-gray-900 mb-2">
-          👤 Account Information
+          👤 {t("register.accountInfo.title")}
         </h3>
-        <p className="text-gray-600">Create your account credentials</p>
+        <p className="text-gray-600">{t("register.accountInfo.subtitle")}</p>
       </div>
 
       {/* Full Name */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Full Name *
+          {t("register.accountInfo.fullName")} *
         </label>
         <div className="relative">
           <input
@@ -31,7 +34,7 @@ const Step1AccountInfo = ({ formData, setFormData }) => {
             value={formData.fullName}
             onChange={handleChange}
             className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
-            placeholder="Your full name"
+            placeholder={t("register.accountInfo.fullNamePlaceholder")}
           />
           <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
         </div>
@@ -40,7 +43,7 @@ const Step1AccountInfo = ({ formData, setFormData }) => {
       {/* Email */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Email Address *
+          {t("register.accountInfo.email")} *
         </label>
         <div className="relative">
           <input
@@ -50,7 +53,7 @@ const Step1AccountInfo = ({ formData, setFormData }) => {
             value={formData.email}
             onChange={handleChange}
             className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
-            placeholder="your@email.com"
+            placeholder={t("register.accountInfo.emailPlaceholder")}
           />
           <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
         </div>
@@ -59,7 +62,7 @@ const Step1AccountInfo = ({ formData, setFormData }) => {
       {/* Password */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Password *
+          {t("register.accountInfo.password")} *
         </label>
         <div className="relative">
           <input
@@ -85,7 +88,7 @@ const Step1AccountInfo = ({ formData, setFormData }) => {
       {/* Confirm Password */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Confirm Password *
+          {t("register.accountInfo.confirmPassword")} *
         </label>
         <div className="relative">
           <input

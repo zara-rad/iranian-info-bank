@@ -232,5 +232,23 @@
   "common": {
     "loading": "Laden...",
     "germany": "Deutschland"
-  }
+  },
+   "register": {
+    "title": "Erstellen Sie Ihr Konto",
+    "subtitle": "Treten Sie dem Iranian Info Bank Deutschland bei",
+     "previous": "Zurück",
+    "next": "Weiter",
+    "processingPayment": "Zahlung wird verarbeitet...",
+    "payAndRegister": "Bezahlen & Registrieren"
+  },
+   "accountInfo": {
+      "title": "Kontoinformationen",
+      "subtitle": "Erstellen Sie Ihre Zugangsdaten",
+      "fullName": "Vollständiger Name",
+      "fullNamePlaceholder": "Ihr vollständiger Name",
+      "email": "E-Mail-Adresse",
+      "emailPlaceholder": "ihre@email.de",
+      "password": "Passwort",
+      "confirmPassword": "Passwort bestätigen"
+    }
 }

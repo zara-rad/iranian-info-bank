@@ -1,9 +1,42 @@
 import React from "react"
-import { Phone, Building } from "lucide-react"
+import { Phone, Building, ChevronDown, X } from "lucide-react"
+import toast from "react-hot-toast"
 
-const Step2BusinessInfo = ({ formData, setFormData }) => {
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+const Step2BusinessInfo = ({
+  formData,
+  setFormData,
+  categories,
+  selectedCategory,
+  setSelectedCategory,
+  selectedSubcategories,
+  setSelectedSubcategories,
+  showCategoryDropdown,
+  setShowCategoryDropdown,
+}) => {
+  // Select category
+  const handleCategorySelect = (category) => {
+    setSelectedCategory(category)
+    setSelectedSubcategories([])
+    setShowCategoryDropdown(false)
+    setFormData({
+      ...formData,
+      category: category.id,
+      subcategories: [],
+    })
+  }
+
+  // Toggle subcategory
+  const handleSubcategoryToggle = (subcategory) => {
+    const isSelected = selectedSubcategories.find((s) => s.id === subcategory.id)
+    let newSubs = isSelected
+      ? selectedSubcategories.filter((s) => s.id !== subcategory.id)
+      : [...selectedSubcategories, subcategory]
+
+    setSelectedSubcategories(newSubs)
+    setFormData({
+      ...formData,
+      subcategories: newSubs.map((s) => s.id),
+    })
   }
 
   return (
@@ -24,11 +57,11 @@ const Step2BusinessInfo = ({ formData, setFormData }) => {
             name="businessName"
             required
             value={formData.businessName}
-            onChange={handleChange}
-            className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
+            onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+            className="w-full pl-12 pr-4 py-3 border rounded-lg"
             placeholder="Your business name"
           />
-          <Building className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+          <Building className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
         </div>
       </div>
 
@@ -43,15 +76,120 @@ const Step2BusinessInfo = ({ formData, setFormData }) => {
             name="phone"
             required
             value={formData.phone}
-            onChange={handleChange}
-            className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
+            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            className="w-full pl-12 pr-4 py-3 border rounded-lg"
             placeholder="+49 123 456 789"
           />
-          <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
         </div>
       </div>
 
-      {/* TODO: Category + Subcategories (same JSX you already had) */}
+      {/* Category Dropdown */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Select Category *
+        </label>
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+            className="w-full text-left p-4 border rounded-lg flex items-center justify-between"
+          >
+            {selectedCategory ? (
+              <span className="font-medium flex items-center">
+                <span className="mr-2">{selectedCategory.icon}</span>
+                {selectedCategory.name}
+              </span>
+            ) : (
+              <span className="text-gray-500">Choose a category...</span>
+            )}
+            <ChevronDown
+              className={`transform transition-transform ${
+                showCategoryDropdown ? "rotate-180" : ""
+              }`}
+              size={20}
+            />
+          </button>
+
+          {showCategoryDropdown && (
+            <div className="absolute top-full left-0 right-0 bg-white border rounded-lg shadow-lg mt-1 z-50 max-h-80 overflow-y-auto">
+              {categories.map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => handleCategorySelect(cat)}
+                  className="w-full text-left p-4 hover:bg-gray-50 border-b last:border-0"
+                >
+                  <span className="font-medium">{cat.name}</span>
+                  <p className="text-sm text-gray-500">{cat.nameGerman}</p>
+                  <p className="text-xs text-gray-400">{cat.businessCount} businesses</p>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Subcategories */}
+      {selectedCategory && selectedCategory.subcategories?.length > 0 && (
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Select Subcategories (Multiple Allowed)
+          </label>
+          <div className="space-y-2 max-h-60 overflow-y-auto">
+            {selectedCategory.subcategories.map((sub) => (
+              <label
+                key={sub.id}
+                className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  checked={!!selectedSubcategories.find((s) => s.id === sub.id)}
+                  onChange={() => handleSubcategoryToggle(sub)}
+                  className="w-4 h-4 text-persian-600 border-gray-300 rounded"
+                />
+                <span className="ml-3">{sub.name}</span>
+              </label>
+            ))}
+          </div>
+
+          {selectedSubcategories.length > 0 && (
+            <div className="mt-3 p-3 bg-persian-50 rounded-lg">
+              <p className="text-sm font-medium text-persian-800 mb-2">
+                Selected Subcategories:
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {selectedSubcategories.map((sub) => (
+                  <span
+                    key={sub.id}
+                    className="px-3 py-1 bg-persian-600 text-white text-sm rounded-full flex items-center"
+                  >
+                    {sub.name}
+                    <button
+                      type="button"
+                      onClick={() => handleSubcategoryToggle(sub)}
+                      className="ml-2 hover:bg-persian-700 rounded-full p-1"
+                    >
+                      <X size={12} />
+                    </button>
+                  </span>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedSubcategories([])
+                  setFormData({ ...formData, subcategories: [] })
+                  toast.success("Cleared all subcategories")
+                }}
+                className="mt-2 text-sm text-persian-600 underline"
+              >
+                Clear all selections
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }
