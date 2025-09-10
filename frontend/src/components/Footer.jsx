@@ -55,16 +55,28 @@ const Footer = () => {
               {t("footer.quickLinks")}
             </h3>
             <div className="space-y-2">
-              <Link to="/" className="block text-gray-300 hover:text-white transition-colors">
+              <Link
+                to="/"
+                className="block text-gray-300 hover:text-white transition-colors"
+              >
                 {t("nav.home")}
               </Link>
-              <Link to="/about" className="block text-gray-300 hover:text-white transition-colors">
+              <Link
+                to="/about"
+                className="block text-gray-300 hover:text-white transition-colors"
+              >
                 {t("nav.about")}
               </Link>
-              <Link to="/contact" className="block text-gray-300 hover:text-white transition-colors">
+              <Link
+                to="/contact"
+                className="block text-gray-300 hover:text-white transition-colors"
+              >
                 {t("nav.contact")}
               </Link>
-              <Link to="/events" className="block text-gray-300 hover:text-white transition-colors">
+              <Link
+                to="/events"
+                className="block text-gray-300 hover:text-white transition-colors"
+              >
                 {t("nav.events")}
               </Link>
             </div>
@@ -76,16 +88,28 @@ const Footer = () => {
               {t("footer.popularCategories")}
             </h3>
             <div className="space-y-2">
-              <Link to="/category/1" className="block text-gray-300 hover:text-white transition-colors">
+              <Link
+                to="/category/1"
+                className="block text-gray-300 hover:text-white transition-colors"
+              >
                 {t("footer.categories.medical")}
               </Link>
-              <Link to="/category/2" className="block text-gray-300 hover:text-white transition-colors">
+              <Link
+                to="/category/2"
+                className="block text-gray-300 hover:text-white transition-colors"
+              >
                 {t("footer.categories.beauty")}
               </Link>
-              <Link to="/category/3" className="block text-gray-300 hover:text-white transition-colors">
+              <Link
+                to="/category/3"
+                className="block text-gray-300 hover:text-white transition-colors"
+              >
                 {t("footer.categories.construction")}
               </Link>
-              <Link to="/category/4" className="block text-gray-300 hover:text-white transition-colors">
+              <Link
+                to="/category/4"
+                className="block text-gray-300 hover:text-white transition-colors"
+              >
                 {t("footer.categories.restaurants")}
               </Link>
             </div>
@@ -93,11 +117,15 @@ const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">{t("footer.getInTouch")}</h3>
+            <h3 className="text-lg font-semibold mb-4">
+              {t("footer.getInTouch")}
+            </h3>
             <div className="space-y-2 text-gray-300">
               <div className="flex items-center space-x-2">
                 <Phone size={16} />
-                <span>{getLocalizedNumber("+49 170 0000000", i18n.language)}</span>
+                <span>
+                  {getLocalizedNumber("+49 170 0000000", i18n.language)}
+                </span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail size={16} />
@@ -127,25 +155,12 @@ const Footer = () => {
                 to="/register"
                 className="text-gray-300 hover:text-white transition-colors flex items-center space-x-1"
               >
-                <span>Register Business</span>
+                <span>{t("footer.registerBusiness")}</span>
                 <ExternalLink size={14} />
-              </Link>
-              <Link to="/contact" className="text-gray-300 hover:text-white transition-colors">
-                Support
               </Link>
             </div>
           </div>
         </div>
-
-        {/* Copyright bottom */}
-        {/* <div className="border-t border-gray-700 mt-12 pt-8 text-center text-gray-400">
-          <p>
-            {t("footer.copyright").replace(
-              "2025",
-              getLocalizedNumber(currentYear, i18n.language)
-            )}
-          </p>
-        </div> */}
       </div>
     </footer>
   );

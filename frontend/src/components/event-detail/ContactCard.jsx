@@ -16,7 +16,7 @@ const ContactCard = ({ event }) => {
             href={`tel:${event.contactPhone}`}
             className="w-full bg-persian-600 hover:bg-persian-700 text-white px-4 py-3 rounded-lg flex items-center justify-center space-x-2"
           >
-            <Phone size={18} /> <span>Call</span>
+            <Phone size={18} /> <span>{t("events.call", "Call")}</span>
           </a>
         )}
         {event.contactEmail && (
@@ -24,7 +24,7 @@ const ContactCard = ({ event }) => {
             href={`mailto:${event.contactEmail}`}
             className="w-full bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg flex items-center justify-center space-x-2"
           >
-            <Mail size={18} /> <span>Email</span>
+            <Mail size={18} /> <span>{t("events.email", "Email")}</span>
           </a>
         )}
         {event.website && (
@@ -34,7 +34,7 @@ const ContactCard = ({ event }) => {
             rel="noopener noreferrer"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg flex items-center justify-center space-x-2"
           >
-            <Globe size={18} /> <span>Website</span>
+            <Globe size={18} /> <span>{t("events.website", "Website")}</span>
           </a>
         )}
       </div>

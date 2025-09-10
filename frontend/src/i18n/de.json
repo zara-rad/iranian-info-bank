@@ -54,6 +54,12 @@
     "readMore": "Mehr erfahren",
     "details": "Veranstaltungsdetails",
     "about": "Über diese Veranstaltung",
+      "dateTime": "Datum & Uhrzeit",
+  "location": "Ort",
+  "price": "Preis",
+"call": "Anrufen",
+  "email": "E-Mail",
+  "website": "Webseite",
     "organizer": "Veranstalter",
     "contact": "Kontakt",
     "tags": "Stichwörter",
@@ -70,6 +76,19 @@
     "showMore": "Mehr anzeigen",
     "showLess": "Weniger anzeigen"
   },
+  "category": {
+  "loading": "Kategorie wird geladen...",
+  "notFound": {
+    "title": "Kategorie nicht gefunden",
+    "message": "Die gewünschte Kategorie konnte nicht gefunden werden."
+  },
+  "businesses": "Unternehmen",
+  "subcategories": "Unterkategorien",
+  "subcategoriesTitle": "Unterkategorien von {{category}}",
+  "subcategoriesSubtitle": "Wählen Sie eine bestimmte Dienstleistungsart",
+  "viewBusinesses": "Unternehmen anzeigen"
+}
+,
   "subcategory": {
   "loading": "Unternehmen werden geladen...",
   "notFoundTitle": "Seite nicht gefunden",
@@ -220,7 +239,9 @@
     "construction": "Bau & Handwerk",
     "restaurants": "Restaurants & Essen"
   },
-  "copyright": "© 2025 Iranisches Info-Bank in Deutschland. Alle Rechte vorbehalten."
+  "copyright": "© 2025 Iranisches Info-Bank in Deutschland. Alle Rechte vorbehalten.",
+    "registerBusiness": "Unternehmen registrieren"
+
 }
 ,
   "hero": {
@@ -318,6 +339,27 @@
     "error": "Registrierung fehlgeschlagen, bitte versuchen Sie es erneut."
   },
   "alreadyAccount": "Sie haben bereits ein Konto?"
+  },
+  "dashboard": {
+  "title": "Unternehmens-Dashboard",
+  "role": "Geschäftsinhaber",
+  "welcome": "Willkommen zurück, {{name}}",
+  "loading": "Dashboard wird geladen...",
+  "thisMonth": "Diesen Monat",
+  "stats": {
+    "totalViews": "Gesamtansichten",
+    "phoneClicks": "Telefonklicks",
+    "emailClicks": "E-Mail-Klicks",
+    "rating": "Bewertung"
+  },
+  "messages": {
+    "updated": "Unternehmensinformationen erfolgreich aktualisiert!"
+  },
+  "errors": {
+    "load": "Fehler beim Laden der Geschäftsdaten",
+    "save": "Fehler beim Speichern der Geschäftsdaten"
   }
+}
+
   
 }

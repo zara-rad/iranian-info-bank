@@ -3,8 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Menu, X, Globe, User, LogOut, Phone, Mail } from "lucide-react";
 import { useAuth } from "../utils/AuthContext";
-// import SearchBar from "../components/search-bar/SearchBar.jsx";
-// import GlobalSearch from "../components/global-search/GlobalSearch.jsx";
+import { getLocalizedNumber } from "../utils/numberUtils"; // ✅ import helper
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
@@ -63,7 +62,7 @@ const Navbar = () => {
             <div className="hidden lg:flex items-center space-x-6 ml-8 text-sm text-gray-600">
               <div className="flex items-center space-x-2">
                 <Phone size={16} className="text-persian-600" />
-                <span>+49 170 0000000</span>
+                <span>{getLocalizedNumber("+49 170 0000000", i18n.language)}</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail size={16} className="text-persian-600" />
@@ -73,9 +72,11 @@ const Navbar = () => {
           </div>
 
           {/* Right Side - Navigation */}
-          <div className={`hidden md:flex items-center space-x-6 ${
-    i18n.language === "fa" ? "space-x-reverse" : ""
-  }`}>
+          <div
+            className={`hidden md:flex items-center space-x-6 ${
+              i18n.language === "fa" ? "space-x-reverse" : ""
+            }`}
+          >
             <Link
               to="/"
               className={`transition-colors ${
@@ -125,8 +126,8 @@ const Navbar = () => {
               >
                 <Globe size={18} />
                 <span>
-                  {languages.find((lang) => lang.code === i18n.language)
-                    ?.flag || "Language"}
+                  {languages.find((lang) => lang.code === i18n.language)?.flag ||
+                    "Language"}
                 </span>
               </button>
               {isLangOpen && (
@@ -154,7 +155,7 @@ const Navbar = () => {
                     className="flex items-center space-x-1 text-gray-700 hover:text-persian-600 transition-colors"
                   >
                     <User size={18} />
-                    <span>Admin Dashboard</span>
+                    <span>{t("nav.adminDashboard")}</span>
                   </Link>
                 ) : (
                   <Link
@@ -162,7 +163,7 @@ const Navbar = () => {
                     className="flex items-center space-x-1 text-gray-700 hover:text-persian-600 transition-colors"
                   >
                     <User size={18} />
-                    <span>My Business</span>
+                    <span>{t("nav.myBusiness")}</span>
                   </Link>
                 )}
                 <button
@@ -248,7 +249,7 @@ const Navbar = () => {
                       className="text-gray-700 hover:text-persian-600"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Admin Dashboard
+                      {t("nav.adminDashboard")}
                     </Link>
                   ) : (
                     <Link
@@ -256,7 +257,7 @@ const Navbar = () => {
                       className="text-gray-700 hover:text-persian-600"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      My Business
+                      {t("nav.myBusiness")}
                     </Link>
                   )}
                   <button

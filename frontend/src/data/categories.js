@@ -6,7 +6,6 @@ export const categories = [
     namePersian: 'پزشکی و مراقبت از سلامت',
     icon: '🏥',
     image: 'https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=500',
-    description: 'Find doctors, specialists, pharmacies and healthcare services',
     businessCount: 245,
     subcategories: [
       { id: 11, name: 'General Practitioners', nameGerman: 'Hausärzte', namePersian: 'پزشک عمومی', businessCount: 89 },

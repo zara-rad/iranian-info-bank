@@ -55,12 +55,18 @@
 "events": {
     "title": "Upcoming Events",
       "subtitle": "Stay updated with the latest Iranian community events",
-
     "readMore": "Read More",
     "details": "Event Details",
+      "dateTime": "Date & Time",
+  "location": "Location",
+  "price": "Price",
     "about": "About This Event",
     "organizer": "Organizer",
     "contact": "Contact Event",
+      "call": "Call",
+  "email": "Email",
+  "website": "Website",
+
     "tags": "Tags",
     "free": "Free Event",
     "backHome": "Back to Home",
@@ -71,6 +77,19 @@
     "showMore": "Show More",
     "showLess": "Show Less"
   },
+  "category": {
+  "loading": "Loading category...",
+  "notFound": {
+    "title": "Category Not Found",
+    "message": "The requested category could not be found."
+  },
+  "businesses": "businesses",
+  "subcategories": "subcategories",
+  "subcategoriesTitle": "{{category}} Subcategories",
+  "subcategoriesSubtitle": "Choose a specific service type",
+  "viewBusinesses": "View businesses"
+}
+,
   "subcategory": {
   "loading": "Loading businesses...",
   "notFoundTitle": "Page Not Found",
@@ -221,7 +240,8 @@
     "construction": "Construction & Handwerk",
     "restaurants": "Restaurants & Food"
   },
-  "copyright": "© 2025 Iranian Info Bank in Germany. All rights reserved."
+  "copyright": "© 2025 Iranian Info Bank in Germany. All rights reserved.",
+    "registerBusiness": "Register Business"
 },
   "hero": {
     "title": "Iranian Info Bank in Germany",
@@ -317,6 +337,27 @@
     "error": "Registration failed, please try again."
   },
   "alreadyAccount": "Already have an account?"
+  },
+  "dashboard": {
+  "title": "Business Dashboard",
+  "role": "Business Owner",
+  "welcome": "Welcome back, {{name}}",
+  "loading": "Loading dashboard...",
+  "thisMonth": "This month",
+  "stats": {
+    "totalViews": "Total Views",
+    "phoneClicks": "Phone Clicks",
+    "emailClicks": "Email Clicks",
+    "rating": "Rating"
+  },
+  "messages": {
+    "updated": "Business information updated successfully!"
+  },
+  "errors": {
+    "load": "Error loading business data",
+    "save": "Error saving business data"
   }
+}
+
 
 }
