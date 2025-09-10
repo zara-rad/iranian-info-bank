@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Tag, Building, MapPin, Phone, Mail, Globe } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { categories } from '../data/categories'
 import Breadcrumb from '../components/Breadcrumb'
 import GlobalSearch from '../components/global-search/GlobalSearch.jsx'
+import { getLocalizedNumber } from '../utils/numberUtils'
 
 const SubcategoryPage = () => {
   const { categoryId, subcategoryId } = useParams()
+  const { t, i18n } = useTranslation()
+
   const [subcategory, setSubcategory] = useState(null)
   const [category, setCategory] = useState(null)
   const [businesses, setBusinesses] = useState([])
@@ -44,11 +48,10 @@ const SubcategoryPage = () => {
   ]
 
   useEffect(() => {
-    // Simulate API call
     setTimeout(() => {
       const foundCategory = categories.find(cat => cat.id === parseInt(categoryId))
       const foundSubcategory = foundCategory?.subcategories.find(sub => sub.id === parseInt(subcategoryId))
-      
+
       setCategory(foundCategory)
       setSubcategory(foundSubcategory)
       setBusinesses(sampleBusinesses)
@@ -62,7 +65,7 @@ const SubcategoryPage = () => {
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-persian-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading businesses...</p>
+            <p className="text-gray-600">{t("subcategory.loading")}</p>
           </div>
         </div>
       </div>
@@ -74,8 +77,8 @@ const SubcategoryPage = () => {
       <div className="min-h-screen pt-20">
         <div className="flex items-center justify-center py-20">
           <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Page Not Found</h1>
-            <p className="text-gray-600">The requested page could not be found.</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">{t("subcategory.notFoundTitle")}</h1>
+            <p className="text-gray-600">{t("subcategory.notFoundText")}</p>
           </div>
         </div>
       </div>
@@ -107,17 +110,19 @@ const SubcategoryPage = () => {
               <h1 className="text-4xl font-bold text-gray-900">{subcategory.name}</h1>
             </div>
             <p className="text-xl text-gray-600 mb-8">
-              {subcategory.description || `Find the best ${subcategory.name.toLowerCase()} in Germany`}
+              {subcategory.description || t("subcategory.defaultDescription", { name: subcategory.name })}
             </p>
             
             <div className="flex items-center justify-center space-x-8 text-gray-500">
               <div className="flex items-center space-x-2">
                 <Building size={20} />
-                <span>{businesses.length} businesses</span>
+                <span>
+                  {getLocalizedNumber(businesses.length, i18n.language)} {t("subcategory.businesses")}
+                </span>
               </div>
               <div className="flex items-center space-x-2">
                 <span>⭐</span>
-                <span>Verified listings</span>
+                <span>{t("subcategory.verified")}</span>
               </div>
             </div>
           </div>
@@ -138,7 +143,7 @@ const SubcategoryPage = () => {
                       </h3>
                       {business.isVerified && (
                         <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
-                          ✓ Verified
+                          ✓ {t("subcategory.verifiedBadge")}
                         </span>
                       )}
                     </div>
@@ -151,7 +156,9 @@ const SubcategoryPage = () => {
                       <div className="flex items-center">
                         <span className="text-yellow-400 mr-1">⭐</span>
                         <span className="font-medium">{business.averageRating}</span>
-                        <span className="text-gray-500 ml-1">({business.totalReviews} reviews)</span>
+                        <span className="text-gray-500 ml-1">
+                          ({getLocalizedNumber(business.totalReviews, i18n.language)} {t("subcategory.reviews")})
+                        </span>
                       </div>
                     </div>
                     
@@ -176,7 +183,7 @@ const SubcategoryPage = () => {
                         className="flex items-center justify-center lg:justify-start space-x-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors"
                       >
                         <Mail size={16} />
-                        <span>Email</span>
+                        <span>{t("subcategory.email")}</span>
                       </a>
                       
                       {business.website && (
@@ -187,7 +194,7 @@ const SubcategoryPage = () => {
                           className="flex items-center justify-center lg:justify-start space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
                         >
                           <Globe size={16} />
-                          <span>Website</span>
+                          <span>{t("subcategory.website")}</span>
                         </a>
                       )}
                     </div>

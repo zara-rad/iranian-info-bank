@@ -64,7 +64,7 @@ const Register = () => {
     e.preventDefault();
 
     if (!acceptedTerms) {
-      toast.error("You must accept the Terms & Privacy Policy");
+      toast.error(t("register.toasts.mustAccept"));
       return;
     }
 
@@ -73,10 +73,10 @@ const Register = () => {
     try {
       // Dummy example – replace with your API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      toast.success("Registration completed successfully!");
+      toast.success(t("register.toasts.success"));
       navigate("/login");
     } catch (err) {
-      toast.error("Registration failed, please try again.");
+      toast.error(t("register.toasts.error"));
     } finally {
       setIsProcessingPayment(false);
     }
@@ -137,12 +137,12 @@ const Register = () => {
           {/* Login Link */}
           <div className="mt-8 text-center">
             <p className="text-gray-600">
-              Already have an account?{" "}
+              {t("register.alreadyAccount")}{" "}
               <Link
                 to="/login"
                 className="text-persian-600 hover:text-persian-700 font-medium transition-colors"
               >
-                Login
+                {t("auth.login")}
               </Link>
             </p>
           </div>
@@ -153,6 +153,7 @@ const Register = () => {
 };
 
 export default Register;
+
 
 // import React, { useState, useEffect } from 'react'
 // import { Link, useNavigate } from 'react-router-dom'

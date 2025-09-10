@@ -71,6 +71,18 @@
     "showMore": "Show More",
     "showLess": "Show Less"
   },
+  "subcategory": {
+  "loading": "Loading businesses...",
+  "notFoundTitle": "Page Not Found",
+  "notFoundText": "The requested page could not be found.",
+  "defaultDescription": "Find the best {{name}} in Germany",
+  "businesses": "businesses",
+  "verified": "Verified listings",
+  "verifiedBadge": "Verified",
+  "reviews": "reviews",
+  "email": "Email",
+  "website": "Website"
+},
 "about": {
   "breadcrumb": "About Us",
   "hero": {
@@ -124,6 +136,13 @@
     "contact": "Contact Us"
   }
 },
+"breadcrumb": {
+  "home": "Home",
+  "backHome": "Back to Home",
+  "backTo": "Back to {{label}}",
+  "previous": "Previous"
+}
+,
 
 "contact": {
   "breadcrumb": "Contact Us",
@@ -291,7 +310,13 @@
     "text": "We collect and process your personal data in accordance with GDPR regulations. By registering, you agree to provide accurate information and keep it updated. The registration fee is non-refundable.",
     "accept": "I have read and accept the",
     "policy": "Privacy Policy and Terms of Service"
-  }
+  },
+  "toasts": {
+    "mustAccept": "You must accept the Terms & Privacy Policy",
+    "success": "Registration completed successfully!",
+    "error": "Registration failed, please try again."
+  },
+  "alreadyAccount": "Already have an account?"
   }
 
 }

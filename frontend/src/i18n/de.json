@@ -70,6 +70,26 @@
     "showMore": "Mehr anzeigen",
     "showLess": "Weniger anzeigen"
   },
+  "subcategory": {
+  "loading": "Unternehmen werden geladen...",
+  "notFoundTitle": "Seite nicht gefunden",
+  "notFoundText": "Die angeforderte Seite konnte nicht gefunden werden.",
+  "defaultDescription": "Finden Sie die besten {{name}} in Deutschland",
+  "businesses": "Unternehmen",
+  "verified": "Verifizierte Einträge",
+  "verifiedBadge": "Verifiziert",
+  "reviews": "Bewertungen",
+  "email": "E-Mail",
+  "website": "Webseite"
+}
+,
+"breadcrumb": {
+  "home": "Startseite",
+  "backHome": "Zurück zur Startseite",
+  "backTo": "Zurück zu {{label}}",
+  "previous": "Zurück"
+}
+,
 "about": {
   "breadcrumb": "Über uns",
   "hero": {
@@ -291,7 +311,13 @@
     "text": "Wir erheben und verarbeiten Ihre personenbezogenen Daten gemäß der DSGVO. Mit der Registrierung erklären Sie sich bereit, genaue Informationen bereitzustellen und diese aktuell zu halten. Die Registrierungsgebühr ist nicht erstattungsfähig.",
     "accept": "Ich habe gelesen und akzeptiere die",
     "policy": "Datenschutzerklärung und Nutzungsbedingungen"
-  }
+  },
+   "toasts": {
+    "mustAccept": "Sie müssen die Bedingungen & Datenschutzrichtlinie akzeptieren",
+    "success": "Registrierung erfolgreich abgeschlossen!",
+    "error": "Registrierung fehlgeschlagen, bitte versuchen Sie es erneut."
+  },
+  "alreadyAccount": "Sie haben bereits ein Konto?"
   }
   
 }
