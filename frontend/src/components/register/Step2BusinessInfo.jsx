@@ -1,6 +1,8 @@
 import React from "react"
 import { Phone, Building, ChevronDown, X } from "lucide-react"
 import toast from "react-hot-toast"
+import { useTranslation } from "react-i18next"
+import { getLocalizedNumber } from "../../utils/numberUtils" // adjust path if needed
 
 const Step2BusinessInfo = ({
   formData,
@@ -13,6 +15,20 @@ const Step2BusinessInfo = ({
   showCategoryDropdown,
   setShowCategoryDropdown,
 }) => {
+  const { t, i18n } = useTranslation()
+
+  // Select localized category/subcategory name
+  const getLocalizedName = (item) => {
+    switch (i18n.language) {
+      case "de":
+        return item.nameGerman
+      case "fa":
+        return item.namePersian
+      default:
+        return item.name
+    }
+  }
+
   // Select category
   const handleCategorySelect = (category) => {
     setSelectedCategory(category)
@@ -42,14 +58,16 @@ const Step2BusinessInfo = ({
   return (
     <div className="space-y-6">
       <div className="text-center mb-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-2">🏢 Business Information</h3>
-        <p className="text-gray-600">Tell us about your business</p>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">
+          🏢 {t("register.businessInfo.title")}
+        </h3>
+        <p className="text-gray-600">{t("register.businessInfo.subtitle")}</p>
       </div>
 
       {/* Business Name */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Business Name *
+          {t("register.businessInfo.businessName")} *
         </label>
         <div className="relative">
           <input
@@ -57,18 +75,23 @@ const Step2BusinessInfo = ({
             name="businessName"
             required
             value={formData.businessName}
-            onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, businessName: e.target.value })
+            }
             className="w-full pl-12 pr-4 py-3 border rounded-lg"
-            placeholder="Your business name"
+            placeholder={t("register.businessInfo.businessNamePlaceholder")}
           />
-          <Building className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <Building
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+            size={18}
+          />
         </div>
       </div>
 
       {/* Phone */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Phone Number *
+          {t("register.businessInfo.phone")} *
         </label>
         <div className="relative">
           <input
@@ -78,16 +101,23 @@ const Step2BusinessInfo = ({
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             className="w-full pl-12 pr-4 py-3 border rounded-lg"
-            placeholder="+49 123 456 789"
+            placeholder={
+              i18n.language === "fa"
+                ? getLocalizedNumber("+49 123 456 789", "fa")
+                : t("register.businessInfo.phonePlaceholder")
+            }
           />
-          <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+          <Phone
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+            size={18}
+          />
         </div>
       </div>
 
       {/* Category Dropdown */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Select Category *
+          {t("register.businessInfo.selectCategory")} *
         </label>
         <div className="relative">
           <button
@@ -98,10 +128,12 @@ const Step2BusinessInfo = ({
             {selectedCategory ? (
               <span className="font-medium flex items-center">
                 <span className="mr-2">{selectedCategory.icon}</span>
-                {selectedCategory.name}
+                {getLocalizedName(selectedCategory)}
               </span>
             ) : (
-              <span className="text-gray-500">Choose a category...</span>
+              <span className="text-gray-500">
+                {t("register.businessInfo.chooseCategory")}
+              </span>
             )}
             <ChevronDown
               className={`transform transition-transform ${
@@ -120,9 +152,11 @@ const Step2BusinessInfo = ({
                   onClick={() => handleCategorySelect(cat)}
                   className="w-full text-left p-4 hover:bg-gray-50 border-b last:border-0"
                 >
-                  <span className="font-medium">{cat.name}</span>
-                  <p className="text-sm text-gray-500">{cat.nameGerman}</p>
-                  <p className="text-xs text-gray-400">{cat.businessCount} businesses</p>
+                  <span className="font-medium">{getLocalizedName(cat)}</span>
+                  <p className="text-xs text-gray-400">
+                    {getLocalizedNumber(cat.businessCount, i18n.language)}{" "}
+                    {t("register.businessInfo.businesses")}
+                  </p>
                 </button>
               ))}
             </div>
@@ -134,7 +168,7 @@ const Step2BusinessInfo = ({
       {selectedCategory && selectedCategory.subcategories?.length > 0 && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Select Subcategories (Multiple Allowed)
+            {t("register.businessInfo.selectSubcategories")}
           </label>
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {selectedCategory.subcategories.map((sub) => (
@@ -148,7 +182,7 @@ const Step2BusinessInfo = ({
                   onChange={() => handleSubcategoryToggle(sub)}
                   className="w-4 h-4 text-persian-600 border-gray-300 rounded"
                 />
-                <span className="ml-3">{sub.name}</span>
+                <span className="ml-3">{getLocalizedName(sub)}</span>
               </label>
             ))}
           </div>
@@ -156,7 +190,7 @@ const Step2BusinessInfo = ({
           {selectedSubcategories.length > 0 && (
             <div className="mt-3 p-3 bg-persian-50 rounded-lg">
               <p className="text-sm font-medium text-persian-800 mb-2">
-                Selected Subcategories:
+                {t("register.businessInfo.selectedSubcategories")}
               </p>
               <div className="flex flex-wrap gap-2">
                 {selectedSubcategories.map((sub) => (
@@ -164,7 +198,7 @@ const Step2BusinessInfo = ({
                     key={sub.id}
                     className="px-3 py-1 bg-persian-600 text-white text-sm rounded-full flex items-center"
                   >
-                    {sub.name}
+                    {getLocalizedName(sub)}
                     <button
                       type="button"
                       onClick={() => handleSubcategoryToggle(sub)}
@@ -180,11 +214,11 @@ const Step2BusinessInfo = ({
                 onClick={() => {
                   setSelectedSubcategories([])
                   setFormData({ ...formData, subcategories: [] })
-                  toast.success("Cleared all subcategories")
+                  toast.success(t("register.businessInfo.cleared"))
                 }}
                 className="mt-2 text-sm text-persian-600 underline"
               >
-                Clear all selections
+                {t("register.businessInfo.clearAll")}
               </button>
             </div>
           )}

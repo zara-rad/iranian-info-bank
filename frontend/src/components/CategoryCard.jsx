@@ -1,15 +1,30 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const CategoryCard = ({ category }) => {
+  const { i18n } = useTranslation()
+
+  // Select localized category name
+  const getCategoryName = () => {
+    switch (i18n.language) {
+      case 'de':
+        return category.nameGerman
+      case 'fa':
+        return category.namePersian
+      default:
+        return category.name
+    }
+  }
+
   return (
     <Link to={`/category/${category.id}`} className="group">
       <div className="card overflow-hidden group-hover:scale-105 transition-transform duration-300">
         <div className="relative h-48 overflow-hidden">
           <img 
             src={category.image} 
-            alt={category.name}
+            alt={getCategoryName()}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -28,7 +43,7 @@ const CategoryCard = ({ category }) => {
         <div className="p-6">
           <div className="flex items-center justify-between mb-2">
             <h3 className="text-xl font-bold text-gray-900 group-hover:text-persian-600 transition-colors">
-              {category.name}
+              {getCategoryName()}
             </h3>
             <ChevronRight 
               size={20} 

@@ -239,9 +239,8 @@
      "previous": "Zurück",
     "next": "Weiter",
     "processingPayment": "Zahlung wird verarbeitet...",
-    "payAndRegister": "Bezahlen & Registrieren"
-  },
-   "accountInfo": {
+    "payAndRegister": "Bezahlen & Registrieren",
+     "accountInfo": {
       "title": "Kontoinformationen",
       "subtitle": "Erstellen Sie Ihre Zugangsdaten",
       "fullName": "Vollständiger Name",
@@ -250,5 +249,49 @@
       "emailPlaceholder": "ihre@email.de",
       "password": "Passwort",
       "confirmPassword": "Passwort bestätigen"
-    }
+    },
+     "branding": {
+    "title": "Branding & Beschreibung",
+    "subtitle": "Fügen Sie Ihre Geschäfts­beschreibung und Ihr Logo hinzu",
+    "english": "Beschreibung auf Englisch",
+    "englishPlaceholder": "Beschreiben Sie Ihr Unternehmen auf Englisch...",
+    "german": "Beschreibung auf Deutsch",
+    "germanPlaceholder": "Beschreiben Sie Ihr Unternehmen auf Deutsch...",
+    "persian": "Beschreibung auf Persisch (فارسی)",
+    "persianPlaceholder": "Beschreiben Sie Ihr Unternehmen auf Persisch..."
+  },
+  "businessInfo": {
+    "title": "Geschäftsinformationen",
+    "subtitle": "Erzählen Sie uns von Ihrem Geschäft",
+    "businessName": "Firmenname",
+    "businessNamePlaceholder": "Ihr Firmenname",
+    "phone": "Telefonnummer",
+    "phonePlaceholder": "+49 123 456 789",
+    "selectCategory": "Kategorie auswählen",
+    "chooseCategory": "Wählen Sie eine Kategorie...",
+    "businesses": "Unternehmen",
+    "selectSubcategories": "Unterkategorien auswählen (Mehrfachauswahl möglich)",
+    "selectedSubcategories": "Ausgewählte Unterkategorien:",
+    "clearAll": "Alle Auswahlen löschen",
+    "cleared": "Alle Unterkategorien wurden gelöscht"
+  },
+   "payment": {
+    "title": "Zahlung",
+    "subtitle": "Schließen Sie die Zahlung ab, um Ihr Konto zu aktivieren",
+    "fee": "Einmalige Registrierungsgebühr",
+    "includes": "Enthält 1 Jahr Eintrag",
+    "selectMethod": "Zahlungsmethode auswählen",
+    "stripe": "Kredit-/Debitkarte (Stripe)",
+    "paypal": "PayPal",
+    "bank": "Banküberweisung"
+  },
+   "terms": {
+    "title": "Bedingungen & Datenschutz",
+    "subtitle": "Bitte überprüfen und akzeptieren Sie unsere Bedingungen",
+    "text": "Wir erheben und verarbeiten Ihre personenbezogenen Daten gemäß der DSGVO. Mit der Registrierung erklären Sie sich bereit, genaue Informationen bereitzustellen und diese aktuell zu halten. Die Registrierungsgebühr ist nicht erstattungsfähig.",
+    "accept": "Ich habe gelesen und akzeptiere die",
+    "policy": "Datenschutzerklärung und Nutzungsbedingungen"
+  }
+  }
+  
 }

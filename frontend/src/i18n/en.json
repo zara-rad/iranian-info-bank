@@ -232,6 +232,7 @@
     "loading": "Loading...",
     "germany": "Germany"
   },
+
   "register": {
     "title": "Create Your Account",
     "subtitle": "Join Iranian Info Bank Germany",
@@ -248,6 +249,49 @@
       "emailPlaceholder": "your@email.com",
       "password": "Password",
       "confirmPassword": "Confirm Password"
-    }
+    },
+      "branding": {
+    "title": "Branding & Description",
+    "subtitle": "Add your business description and logo",
+    "english": "Description in English",
+    "englishPlaceholder": "Describe your business in English...",
+    "german": "Description in German",
+    "germanPlaceholder": "Describe your business in German...",
+    "persian": "Description in Persian (فارسی)",
+    "persianPlaceholder": "Describe your business in Persian..."
+  },
+  "businessInfo": {
+    "title": "Business Information",
+    "subtitle": "Tell us about your business",
+    "businessName": "Business Name",
+    "businessNamePlaceholder": "Your business name",
+    "phone": "Phone Number",
+    "phonePlaceholder": "+49 123 456 789",
+    "selectCategory": "Select Category",
+    "chooseCategory": "Choose a category...",
+    "businesses": "businesses",
+    "selectSubcategories": "Select Subcategories (Multiple Allowed)",
+    "selectedSubcategories": "Selected Subcategories:",
+    "clearAll": "Clear all selections",
+    "cleared": "Cleared all subcategories"
+  },
+   "payment": {
+    "title": "Payment",
+    "subtitle": "Complete payment to activate your account",
+    "fee": "One-time registration fee",
+    "includes": "Includes 1 year of listing",
+    "selectMethod": "Select Payment Method",
+    "stripe": "Credit/Debit Card (Stripe)",
+    "paypal": "PayPal",
+    "bank": "Bank Transfer"
+  },
+   "terms": {
+    "title": "Terms & Privacy",
+    "subtitle": "Please review and accept our terms",
+    "text": "We collect and process your personal data in accordance with GDPR regulations. By registering, you agree to provide accurate information and keep it updated. The registration fee is non-refundable.",
+    "accept": "I have read and accept the",
+    "policy": "Privacy Policy and Terms of Service"
   }
+  }
+
 }

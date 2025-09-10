@@ -1,7 +1,10 @@
+// src/components/register/Step3Branding.jsx
 import React from "react"
-import { Upload, X } from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 const Step3Branding = ({ formData, setFormData }) => {
+  const { t } = useTranslation()
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
@@ -9,16 +12,16 @@ const Step3Branding = ({ formData, setFormData }) => {
   return (
     <div className="space-y-6">
       <div className="text-center mb-6">
-        <h3 className="text-xl font-bold text-gray-900 mb-2">🖼️ Branding & Description</h3>
-        <p className="text-gray-600">Add your business description and logo</p>
+        <h3 className="text-xl font-bold text-gray-900 mb-2">
+          🖼️ {t("register.branding.title")}
+        </h3>
+        <p className="text-gray-600">{t("register.branding.subtitle")}</p>
       </div>
-
-      {/* TODO: Logo Upload (use your existing JSX here) */}
 
       {/* English */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Description in English
+          {t("register.branding.english")}
         </label>
         <textarea
           name="descriptionEnglish"
@@ -26,14 +29,14 @@ const Step3Branding = ({ formData, setFormData }) => {
           onChange={handleChange}
           rows={4}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
-          placeholder="Describe your business in English..."
+          placeholder={t("register.branding.englishPlaceholder")}
         />
       </div>
 
       {/* German */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Description in German
+          {t("register.branding.german")}
         </label>
         <textarea
           name="descriptionGerman"
@@ -41,14 +44,14 @@ const Step3Branding = ({ formData, setFormData }) => {
           onChange={handleChange}
           rows={4}
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
-          placeholder="Beschreiben Sie Ihr Unternehmen auf Deutsch..."
+          placeholder={t("register.branding.germanPlaceholder")}
         />
       </div>
 
       {/* Persian */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Description in Persian (فارسی)
+          {t("register.branding.persian")}
         </label>
         <textarea
           name="descriptionPersian"
@@ -57,7 +60,7 @@ const Step3Branding = ({ formData, setFormData }) => {
           rows={4}
           dir="rtl"
           className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500 text-right"
-          placeholder="کسب و کار خود را به فارسی توضیح دهید..."
+          placeholder={t("register.branding.persianPlaceholder")}
         />
       </div>
     </div>
