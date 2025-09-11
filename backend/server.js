@@ -45,6 +45,25 @@ app.use('/uploads', express.static('uploads'))
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() })
 })
+const User = require('./models/User'); // make sure this path is correct
+
+app.get('/test-db', async (req, res) => {
+  try {
+    const newUser = new User({
+      fullName: "Test User",
+      email: "test@example.com",
+      password: "password123",
+      role: "business_owner",
+      acceptedTerms: true,
+      acceptedPrivacy: true
+    });
+    await newUser.save();
+    res.json({ message: "User created successfully", user: newUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error creating user" });
+  }
+});
 
 // Error handling middleware
 app.use((err, req, res, next) => {
