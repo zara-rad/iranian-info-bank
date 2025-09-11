@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "description": "Backend for Iranian Business Directory in Germany",
   "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js",
-    "seed": "node seeds/seedDatabase.js"
-  },
+"scripts": {
+  "start": "node server.js",
+  "dev": "nodemon server.js",
+  "seed": "node seeds/seedDatabase.js",
+  "seed:frontend-categories": "node seeds/seedFrontendCategories.js"
+},
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
