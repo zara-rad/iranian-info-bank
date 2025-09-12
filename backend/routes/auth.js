@@ -19,7 +19,9 @@ const generateToken = (userId) => {
 router.post(
   "/register",
   [
-    body("email").isEmail().normalizeEmail(),
+    body("email")
+      .isEmail()
+      .normalizeEmail({ gmail_remove_dots: false }), // ✅ keep Gmail dots
     body("password").isLength({ min: 6 }),
     body("fullName").trim().isLength({ min: 2 }),
     body("businessName").optional().trim(),
@@ -95,7 +97,12 @@ router.post(
  */
 router.post(
   "/login",
-  [body("email").isEmail().normalizeEmail(), body("password").exists()],
+  [
+    body("email")
+      .isEmail()
+      .normalizeEmail({ gmail_remove_dots: false }), // ✅ keep Gmail dots
+    body("password").exists(),
+  ],
   async (req, res) => {
     try {
       const errors = validationResult(req);
@@ -107,11 +114,14 @@ router.post(
 
       const { email, password } = req.body;
 
+      console.log("📩 Login attempt:", email);
+
       // ✅ Super Admin Login (from .env)
       if (
         email === process.env.ADMIN_EMAIL &&
         password === process.env.ADMIN_PASSWORD
       ) {
+        console.log("🔑 Super Admin login");
         const token = jwt.sign(
           { email, role: "super_admin" },
           process.env.JWT_SECRET,
@@ -130,13 +140,18 @@ router.post(
       }
 
       // ✅ Regular User Login
-      const user = await User.findOne({ email, isActive: true });
+      const user = await User.findOne({ email, isActive: true }).select(
+        "+password"
+      );
+      console.log("👤 Found user:", user ? user.email : "NOT FOUND");
+
       if (!user) {
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
       // Check if account is locked
-      if (user.isLocked) {
+      if (user.isLocked || (user.lockUntil && user.lockUntil > Date.now())) {
+        console.warn("⛔ Account locked for:", email);
         return res
           .status(423)
           .json({ message: "Account temporarily locked due to failed attempts" });
@@ -144,6 +159,8 @@ router.post(
 
       // Compare password
       const isPasswordValid = await user.comparePassword(password);
+      console.log("🔑 Password valid?", isPasswordValid);
+
       if (!isPasswordValid) {
         await user.incLoginAttempts();
         return res.status(401).json({ message: "Invalid credentials" });
@@ -163,13 +180,15 @@ router.post(
       delete userResponse.loginAttempts;
       delete userResponse.lockUntil;
 
+      console.log("✅ Login success:", email);
+
       res.json({
         message: "Login successful",
         token,
         user: userResponse,
       });
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("🔥 Login error:", error);
       res.status(500).json({ message: "Error logging in" });
     }
   }

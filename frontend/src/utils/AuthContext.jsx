@@ -17,6 +17,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const API_BASE = "http://localhost:5000"; // ✅ Always call backend directly
+
   useEffect(() => {
     // ✅ Restore user + token from localStorage on app init
     const storedUser = localStorage.getItem("user");
@@ -31,47 +33,54 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // ✅ Login with backend API
-  const login = async (email, password) => {
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+const login = async (email, password) => {
+  try {
+    const res = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-      if (!res.ok) {
-        toast.error("Invalid email or password");
-        return false;
-      }
+    const data = await res.json();
+    console.log("🔎 Login response:", data);
 
-      const data = await res.json();
-      // Expected: { token, user }
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setUser(data.user);
-      return true;
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error("Login failed. Please try again.");
+    if (!res.ok) {
+      toast.error(data.message || "Invalid email or password");
       return false;
     }
-  };
+
+    // Save token + user
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+    setUser(data.user);
+
+    toast.success("Login successful");
+    return true;
+  } catch (error) {
+    console.error("Login error:", error);
+    toast.error("Login failed. Please try again.");
+    return false;
+  }
+};
+
 
   // ✅ Register with backend API
   const register = async (userData) => {
     try {
-      const res = await fetch("/api/auth/register", {
+      const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
 
+      const data = await res.json();
+      console.log("🔎 Register response:", data); // Debugging
+
       if (!res.ok) {
-        toast.error("Registration failed");
+        toast.error(data.message || "Registration failed");
         return false;
       }
 
-      const data = await res.json();
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
