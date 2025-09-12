@@ -38,7 +38,7 @@ app.use('/api/businesses', require('./routes/businesses'))
 app.use('/api/events', require('./routes/events'))
 app.use('/api/search', require('./routes/search'))
 app.use('/api/admin', require('./routes/admin'))
-app.use('/api/business-owner', require('./routes/business-owner'))
+// app.use('/api/business-owner', require('./routes/business-owner'))
 app.use("/api/business-owner", businessOwnerRoutes);
 
 // Static files

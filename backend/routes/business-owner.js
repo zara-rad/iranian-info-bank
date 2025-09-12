@@ -1,34 +1,41 @@
-const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const express = require("express");
+const router = express.Router();
+const upload = require("../middleware/upload"); // ✅ import your upload middleware
 
-const uploadDir = path.join(__dirname, "../uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const ext = path.extname(file.originalname);
-    const uniqueName =
-      Date.now() + "-" + Math.round(Math.random() * 1e9) + ext;
-    cb(null, uniqueName);
-  },
+// Example: Get business info for the logged-in owner
+router.get("/business", (req, res) => {
+  res.json({ message: "Business data fetched successfully!" });
 });
 
-function fileFilter(req, file, cb) {
-  if (file.mimetype.startsWith("image/")) {
-    cb(null, true);
-  } else {
-    cb(new Error("Only image files are allowed!"), false);
-  }
-}
+// Example: Update business info
+router.put("/business", (req, res) => {
+  res.json({ message: "Business info updated!", data: req.body });
+});
 
-const upload = multer({ storage, fileFilter });
-module.exports = upload;
+// Upload logo
+router.post("/business/logo", upload.single("logo"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No file uploaded" });
+  }
+  res.json({
+    message: "Logo uploaded successfully",
+    file: req.file.filename,
+  });
+});
+
+// Upload multiple gallery images
+router.post("/business/images", upload.array("images", 5), (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: "No images uploaded" });
+  }
+  res.json({
+    message: "Images uploaded successfully",
+    files: req.files.map((f) => f.filename),
+  });
+});
+
+module.exports = router;
+
 
 
 

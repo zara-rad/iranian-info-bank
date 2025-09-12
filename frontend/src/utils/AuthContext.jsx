@@ -1,117 +1,109 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 
-const AuthContext = createContext()
+const AuthContext = createContext();
 
 export const useAuth = () => {
-  const context = useContext(AuthContext)
+  const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error("useAuth must be used within an AuthProvider");
   }
-  return context
-}
+  return context;
+};
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored user data on app initialization
-    const storedUser = localStorage.getItem('user')
+    // ✅ Restore user + token from localStorage on app init
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
-        setUser(JSON.parse(storedUser))
+        setUser(JSON.parse(storedUser));
       } catch (error) {
-        localStorage.removeItem('user')
+        localStorage.removeItem("user");
       }
     }
-    setLoading(false)
-  }, [])
+    setLoading(false);
+  }, []);
 
+  // ✅ Login with backend API
   const login = async (email, password) => {
     try {
-      // Check for admin credentials
-      let mockUser
-      
-      if (email === 'admin@iranianinfo.de' && password === 'admin123') {
-        mockUser = {
-          id: 1,
-          email: email,
-          fullName: 'Super Admin',
-          role: 'super_admin',
-          businessName: null
-        }
-      } else if (email === 'moderator@iranianinfo.de' && password === 'mod123') {
-        mockUser = {
-          id: 2,
-          email: email,
-          fullName: 'Admin User',
-          role: 'admin',
-          businessName: null
-        }
-      } else if (email === 'business@example.com' && password === 'business123') {
-        mockUser = {
-          id: 3,
-          email: email,
-          fullName: 'Ahmad Hosseini',
-          role: 'business_owner',
-          businessName: 'Dr. Hosseini Medical Practice'
-        }
-      } else {
-        // Regular business owner
-        mockUser = {
-          id: 4,
-          email: email,
-          fullName: 'Business Owner',
-          role: 'business_owner',
-          businessName: 'Test Business'
-        }
-      }
-      
-      setUser(mockUser)
-      localStorage.setItem('user', JSON.stringify(mockUser))
-      return true
-    } catch (error) {
-      console.error('Login error:', error)
-      return false
-    }
-  }
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
+      if (!res.ok) {
+        toast.error("Invalid email or password");
+        return false;
+      }
+
+      const data = await res.json();
+      // Expected: { token, user }
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setUser(data.user);
+      return true;
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Login failed. Please try again.");
+      return false;
+    }
+  };
+
+  // ✅ Register with backend API
   const register = async (userData) => {
     try {
-      // In a real app, this would be an API call
-      const mockUser = {
-        id: Date.now(),
-        email: userData.email,
-        fullName: userData.fullName,
-        role: 'business_owner',
-        businessName: userData.businessName
-      }
-      
-      setUser(mockUser)
-      localStorage.setItem('user', JSON.stringify(mockUser))
-      return true
-    } catch (error) {
-      console.error('Registration error:', error)
-      return false
-    }
-  }
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
 
+      if (!res.ok) {
+        toast.error("Registration failed");
+        return false;
+      }
+
+      const data = await res.json();
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setUser(data.user);
+      return true;
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error("Registration failed");
+      return false;
+    }
+  };
+
+  // ✅ Logout
   const logout = () => {
-    setUser(null)
-    localStorage.removeItem('user')
-  }
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+    navigate("/login");
+    toast.success("Logged out");
+  };
 
   const value = {
     user,
     login,
     register,
     logout,
-    loading
-  }
+    loading,
+    isAuthenticated: !!user,
+  };
 
   return (
     <AuthContext.Provider value={value}>
       {!loading && children}
     </AuthContext.Provider>
-  )
-}
+  );
+};
