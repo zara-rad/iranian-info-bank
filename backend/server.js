@@ -3,6 +3,8 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const helmet = require('helmet')
 const rateLimit = require('express-rate-limit')
+const businessOwnerRoutes = require("./routes/business-owner");
+
 require('dotenv').config()
 
 const app = express()
@@ -37,6 +39,7 @@ app.use('/api/events', require('./routes/events'))
 app.use('/api/search', require('./routes/search'))
 app.use('/api/admin', require('./routes/admin'))
 app.use('/api/business-owner', require('./routes/business-owner'))
+app.use("/api/business-owner", businessOwnerRoutes);
 
 // Static files
 app.use('/uploads', express.static('uploads'))
