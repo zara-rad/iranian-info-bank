@@ -1,68 +1,36 @@
-const express = require("express");
-const router = express.Router();
-const Business = require("../models/Business");
-const auth = require("../middleware/auth");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
-// ✅ Get logged-in user's business
-router.get("/business", auth, async (req, res) => {
-  try {
-    const business = await Business.findOne({ owner: req.user.id })
-      .populate("category", "name nameGerman namePersian slug")
-      .lean();
+const uploadDir = path.join(__dirname, "../uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
 
-    if (!business) {
-      return res.status(404).json({ message: "Business not found" });
-    }
-
-    res.json(business);
-  } catch (error) {
-    console.error("Error fetching business:", error);
-    res.status(500).json({ message: "Error fetching business" });
-  }
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const uniqueName =
+      Date.now() + "-" + Math.round(Math.random() * 1e9) + ext;
+    cb(null, uniqueName);
+  },
 });
 
-// ✅ Create business (first time after register)
-router.post("/business", auth, async (req, res) => {
-  try {
-    const existing = await Business.findOne({ owner: req.user.id });
-    if (existing) {
-      return res.status(400).json({ message: "Business already exists" });
-    }
-
-    const business = new Business({
-      ...req.body,
-      owner: req.user.id,
-    });
-
-    await business.save();
-    res.status(201).json(business);
-  } catch (error) {
-    console.error("Error creating business:", error);
-    res.status(500).json({ message: "Error creating business" });
+function fileFilter(req, file, cb) {
+  if (file.mimetype.startsWith("image/")) {
+    cb(null, true);
+  } else {
+    cb(new Error("Only image files are allowed!"), false);
   }
-});
+}
 
-// ✅ Update business
-router.put("/business", auth, async (req, res) => {
-  try {
-    const business = await Business.findOneAndUpdate(
-      { owner: req.user.id },
-      { $set: req.body },
-      { new: true }
-    );
+const upload = multer({ storage, fileFilter });
+module.exports = upload;
 
-    if (!business) {
-      return res.status(404).json({ message: "Business not found" });
-    }
 
-    res.json(business);
-  } catch (error) {
-    console.error("Error updating business:", error);
-    res.status(500).json({ message: "Error updating business" });
-  }
-});
-
-module.exports = router;
 
 
 

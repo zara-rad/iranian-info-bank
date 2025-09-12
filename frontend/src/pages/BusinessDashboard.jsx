@@ -17,6 +17,18 @@ const BusinessDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
+  const defaultWorkingHours = [
+  { day: "monday", open: "", close: "", isClosed: false },
+  { day: "tuesday", open: "", close: "", isClosed: false },
+  { day: "wednesday", open: "", close: "", isClosed: false },
+  { day: "thursday", open: "", close: "", isClosed: false },
+  { day: "friday", open: "", close: "", isClosed: false },
+  { day: "saturday", open: "", close: "", isClosed: true },
+  { day: "sunday", open: "", close: "", isClosed: true },
+];
+const [formData, setFormData] = useState({
+  workingHours: defaultWorkingHours,
+});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -24,10 +36,10 @@ const BusinessDashboard = () => {
   // Business data
   const [businessData, setBusinessData] = useState(null);
   const [categories, setCategories] = useState([]);
-  const [formData, setFormData] = useState({});
+  // const [formData, setFormData] = useState({});
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
 
-  // Analytics data (this will come later from backend too)
+  // Analytics data (later fetched from backend)
   const [analytics, setAnalytics] = useState({
     views: 0,
     clicksPhone: 0,
@@ -51,9 +63,18 @@ const BusinessDashboard = () => {
   const loadBusinessData = async () => {
     try {
       const token = localStorage.getItem("token");
+       if (!token) {
+      navigate("/login");
+      return;
+    }
       const res = await fetch("/api/business-owner/business", {
         headers: { Authorization: `Bearer ${token}` },
       });
+      if (res.status === 401) {
+      localStorage.removeItem("token");
+      navigate("/login");
+      return;
+    }
 
       if (!res.ok) throw new Error("Failed to load business data");
 
@@ -69,7 +90,7 @@ const BusinessDashboard = () => {
     }
   };
 
-  // ✅ Fetch categories from backend
+  // ✅ Fetch categories
   const loadCategories = async () => {
     try {
       const res = await fetch("/api/categories");
@@ -111,7 +132,7 @@ const BusinessDashboard = () => {
     );
   };
 
-  // ✅ Save business data to backend
+  // ✅ Save business data
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -142,9 +163,63 @@ const BusinessDashboard = () => {
 
   // ✅ Cancel editing
   const handleCancel = () => {
+     if (!businessData) {
+    toast.error("No business data to restore");
+    return;
+  }
     setFormData(businessData);
     setSelectedSubcategories(businessData.subcategories || []);
     setEditMode(false);
+  };
+
+  // ✅ Upload logo
+  const handleLogoUpload = async (file) => {
+    try {
+      const token = localStorage.getItem("token");
+      const fd = new FormData();
+      fd.append("logo", file);
+
+      const res = await fetch("/api/business-owner/business/logo", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: fd,
+      });
+
+      if (!res.ok) throw new Error("Failed to upload logo");
+      const data = await res.json();
+      setBusinessData(data);
+      setFormData(data);
+      toast.success("Logo uploaded successfully!");
+    } catch (error) {
+      console.error("Logo upload failed:", error);
+      toast.error("Error uploading logo");
+    }
+  };
+
+  // ✅ Upload gallery images
+  const handleImageUpload = async (files) => {
+    try {
+      const token = localStorage.getItem("token");
+      const fd = new FormData();
+      for (const file of files) {
+        fd.append("images", file);
+      }
+
+      const res = await fetch("/api/business-owner/business/images", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: fd,
+      });
+
+      if (!res.ok) throw new Error("Failed to upload images");
+      const data = await res.json();
+      setBusinessData(data);
+      setFormData(data);
+      toast.success("Images uploaded successfully!");
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      toast.error("Error uploading images");
+    }
   };
 
   const breadcrumbItems = [{ label: "Business Dashboard", link: null }];
@@ -204,6 +279,8 @@ const BusinessDashboard = () => {
                 categories={categories}
                 selectedSubcategories={selectedSubcategories}
                 handleSubcategoryToggle={handleSubcategoryToggle}
+                handleLogoUpload={handleLogoUpload}       // ✅ added
+                handleImageUpload={handleImageUpload}     // ✅ added
               />
             )}
             {activeTab === "working-hours" && (
@@ -226,6 +303,7 @@ const BusinessDashboard = () => {
 };
 
 export default BusinessDashboard;
+
 
 
 
