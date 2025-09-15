@@ -2,32 +2,28 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const { body, validationResult } = require("express-validator");
 const User = require("../models/User");
+const Business = require("../models/Business");
+const Category = require("../models/Category");
 
 const router = express.Router();
 
-// Generate JWT token
-const generateToken = (userId) => {
-  return jwt.sign({ userId }, process.env.JWT_SECRET, {
+// Generate JWT
+const generateToken = (userId, role = "business_owner") => {
+  return jwt.sign({ userId, role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
   });
 };
 
 /**
- * @route   POST /api/auth/register
- * @desc    Register new user
+ * REGISTER
  */
 router.post(
   "/register",
   [
-    body("email")
-      .isEmail()
-      .normalizeEmail({ gmail_remove_dots: false }), // ✅ keep Gmail dots
+    body("email").isEmail().normalizeEmail({ gmail_remove_dots: false }),
     body("password").isLength({ min: 6 }),
     body("fullName").trim().isLength({ min: 2 }),
-    body("businessName").optional().trim(),
-    body("acceptedTerms")
-      .equals("true")
-      .withMessage("You must accept the terms and privacy policy"),
+    body("businessName").trim().isLength({ min: 2 }),
   ],
   async (req, res) => {
     try {
@@ -46,149 +42,99 @@ router.post(
         businessName,
         businessCategory,
         businessSubcategories,
+        city,
+        address,
       } = req.body;
 
-      // Check if user already exists
+      // Check duplicate
       const existingUser = await User.findOne({ email });
       if (existingUser) {
-        return res
-          .status(400)
-          .json({ message: "User already exists with this email" });
+        return res.status(400).json({ message: "User already exists" });
       }
 
-      // Create new user
-      const user = new User({
+      // Create user
+      const newUser = new User({
         email,
         password,
         fullName,
         phone,
-        businessName,
-        businessCategory,
-        businessSubcategories,
-        acceptedTerms: true,
-        acceptedPrivacy: true,
-        acceptedAt: new Date(),
+        role: "business_owner",
+        isActive: true,
       });
+      await newUser.save();
+      console.log("✅ User saved:", newUser._id);
 
-      await user.save();
+      // Validate category ID
+      if (businessCategory) {
+        const categoryExists = await Category.findById(businessCategory);
+        if (!categoryExists) {
+          return res.status(400).json({ message: "Invalid category ID" });
+        }
+      }
+
+      // Create business
+      const business = new Business({
+        owner: newUser._id,
+        businessName,
+        ownerName: fullName,
+        email,
+        phone,
+        city: city || "",
+        address: address || "",
+        category: businessCategory || null,
+        subcategories: businessSubcategories || [],
+        isVerified: false,
+        isActive: true,
+      });
+      await business.save();
+      console.log("✅ Business saved:", business._id);
 
       // Generate token
-      const token = generateToken(user._id);
-
-      // Return safe response
-      const userResponse = user.toObject();
-      delete userResponse.password;
+      const token = generateToken(newUser._id, newUser.role);
 
       res.status(201).json({
-        message: "User registered successfully",
+        message: "User and Business registered successfully",
         token,
-        user: userResponse,
+        user: { id: newUser._id, email, fullName, role: newUser.role },
+        business,
       });
     } catch (error) {
-      console.error("Registration error:", error);
-      res.status(500).json({ message: "Error registering user" });
+      console.error("❌ Registration error:", error);
+      res.status(500).json({ message: "Error registering user and business" });
     }
   }
 );
 
 /**
- * @route   POST /api/auth/login
- * @desc    Login user (supports super admin via ENV)
+ * LOGIN
  */
 router.post(
   "/login",
-  [
-    body("email")
-      .isEmail()
-      .normalizeEmail({ gmail_remove_dots: false }), // ✅ keep Gmail dots
-    body("password").exists(),
-  ],
+  [body("email").isEmail(), body("password").exists()],
   async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res
-          .status(400)
-          .json({ message: "Validation failed", errors: errors.array() });
-      }
-
       const { email, password } = req.body;
-
-      console.log("📩 Login attempt:", email);
-
-      // ✅ Super Admin Login (from .env)
-      if (
-        email === process.env.ADMIN_EMAIL &&
-        password === process.env.ADMIN_PASSWORD
-      ) {
-        console.log("🔑 Super Admin login");
-        const token = jwt.sign(
-          { email, role: "super_admin" },
-          process.env.JWT_SECRET,
-          { expiresIn: process.env.JWT_EXPIRE }
-        );
-        return res.json({
-          message: "Super admin login successful",
-          token,
-          user: {
-            id: "super-admin",
-            email,
-            fullName: "Super Admin",
-            role: "super_admin",
-          },
-        });
-      }
-
-      // ✅ Regular User Login
       const user = await User.findOne({ email, isActive: true }).select(
         "+password"
       );
-      console.log("👤 Found user:", user ? user.email : "NOT FOUND");
 
-      if (!user) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
+      if (!user) return res.status(401).json({ message: "Invalid credentials" });
 
-      // Check if account is locked
-      if (user.isLocked || (user.lockUntil && user.lockUntil > Date.now())) {
-        console.warn("⛔ Account locked for:", email);
-        return res
-          .status(423)
-          .json({ message: "Account temporarily locked due to failed attempts" });
-      }
-
-      // Compare password
       const isPasswordValid = await user.comparePassword(password);
-      console.log("🔑 Password valid?", isPasswordValid);
-
       if (!isPasswordValid) {
-        await user.incLoginAttempts();
         return res.status(401).json({ message: "Invalid credentials" });
       }
 
-      // Reset login attempts
-      user.loginAttempts = 0;
-      user.lockUntil = undefined;
       user.lastLogin = new Date();
       await user.save();
 
-      // Generate token
-      const token = generateToken(user._id);
-
+      const token = generateToken(user._id, user.role);
       const userResponse = user.toObject();
       delete userResponse.password;
-      delete userResponse.loginAttempts;
-      delete userResponse.lockUntil;
 
-      console.log("✅ Login success:", email);
-
-      res.json({
-        message: "Login successful",
-        token,
-        user: userResponse,
-      });
+      res.json({ message: "Login successful", token, user: userResponse });
     } catch (error) {
-      console.error("🔥 Login error:", error);
+      console.error("❌ Login error:", error);
       res.status(500).json({ message: "Error logging in" });
     }
   }

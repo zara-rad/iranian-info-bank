@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { categories as allCategories } from "../data/categories";
 import GlobalSearch from "../components/global-search/GlobalSearch.jsx";
 import CitySearch from "../components/CitySearch";
 import CategorySearch from "../components/CategorySearch";
@@ -33,17 +32,32 @@ const Home = () => {
   const { t, i18n } = useTranslation();
   const [visibleCategoriesCount, setVisibleCategoriesCount] = useState(6);
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  // ✅ Fetch categories from backend
   useEffect(() => {
-    setCategories(allCategories);
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        if (!res.ok) throw new Error("Failed to fetch categories");
+        const data = await res.json();
+        setCategories(data);
+      } catch (err) {
+        console.error("Error fetching categories:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
-  const visibleCategories = allCategories.slice(0, visibleCategoriesCount);
-  const hasMoreCategories = visibleCategoriesCount < allCategories.length;
+  const visibleCategories = categories.slice(0, visibleCategoriesCount);
+  const hasMoreCategories = visibleCategoriesCount < categories.length;
 
   const showMoreCategories = () => {
     setVisibleCategoriesCount((prev) =>
-      Math.min(prev + 3, allCategories.length)
+      Math.min(prev + 3, categories.length)
     );
   };
 
@@ -91,11 +105,15 @@ const Home = () => {
           </div>
 
           {/* Categories Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {visibleCategories.map((category) => (
-              <CategoryCard key={category.id} category={category} />
-            ))}
-          </div>
+          {loading ? (
+            <p className="text-center text-gray-600">{t("category.loading")}</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {visibleCategories.map((category) => (
+                <CategoryCard key={category._id} category={category} />
+              ))}
+            </div>
+          )}
 
           {/* Show More/Less Button */}
           <div className="text-center mt-12">
@@ -107,9 +125,9 @@ const Home = () => {
                 <span>
                   {t("categories.showMore")} (
                   {getLocalizedNumber(
-                    Math.min(3, allCategories.length - visibleCategoriesCount),
+                    Math.min(3, categories.length - visibleCategoriesCount),
                     i18n.language
-                  )}{" "}
+                  )}
                   )
                 </span>
                 <ChevronDown size={20} />

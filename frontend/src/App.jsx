@@ -31,11 +31,14 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/city/:cityName" element={<CityPage />} />
-            <Route path="/category/:categoryId" element={<CategoryPage />} />
+
+            {/* ✅ Use slug instead of categoryId */}
+            <Route path="/category/:slug" element={<CategoryPage />} />
             <Route
-              path="/category/:categoryId/subcategory/:subcategoryId"
+              path="/category/:slug/subcategory/:subcategoryId"
               element={<SubcategoryPage />}
             />
+
             <Route path="/events" element={<EventsPage />} />
             <Route path="/event/:eventId" element={<EventDetail />} />
             <Route path="/dashboard" element={<Dashboard />} />

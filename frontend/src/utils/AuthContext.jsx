@@ -17,64 +17,62 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const API_BASE = "http://localhost:5000"; // ✅ Always call backend directly
+  // ✅ از proxy استفاده کن، نه localhost مستقیم
+  const API_BASE = "/api";
 
   useEffect(() => {
-    // ✅ Restore user + token from localStorage on app init
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       try {
         setUser(JSON.parse(storedUser));
-      } catch (error) {
+      } catch {
         localStorage.removeItem("user");
       }
     }
     setLoading(false);
   }, []);
 
-  // ✅ Login with backend API
-const login = async (email, password) => {
-  try {
-    const res = await fetch("http://localhost:5000/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+  // ✅ Login
+  const login = async (email, password) => {
+    try {
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    const data = await res.json();
-    console.log("🔎 Login response:", data);
+      const data = await res.json();
+      console.log("🔎 Login response:", data);
 
-    if (!res.ok) {
-      toast.error(data.message || "Invalid email or password");
+      if (!res.ok) {
+        toast.error(data.message || "Invalid email or password");
+        return false;
+      }
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      setUser(data.user);
+
+      toast.success("Login successful");
+      return true;
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Login failed. Please try again.");
       return false;
     }
+  };
 
-    // Save token + user
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
-    setUser(data.user);
-
-    toast.success("Login successful");
-    return true;
-  } catch (error) {
-    console.error("Login error:", error);
-    toast.error("Login failed. Please try again.");
-    return false;
-  }
-};
-
-
-  // ✅ Register with backend API
+  // ✅ Register
   const register = async (userData) => {
     try {
-      const res = await fetch(`${API_BASE}/api/auth/register`, {
+      const res = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
       });
 
       const data = await res.json();
-      console.log("🔎 Register response:", data); // Debugging
+      console.log("🔎 Register response:", data);
 
       if (!res.ok) {
         toast.error(data.message || "Registration failed");
@@ -84,6 +82,8 @@ const login = async (email, password) => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
+
+      toast.success("Registered successfully");
       return true;
     } catch (error) {
       console.error("Registration error:", error);
@@ -92,7 +92,6 @@ const login = async (email, password) => {
     }
   };
 
-  // ✅ Logout
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -101,17 +100,17 @@ const login = async (email, password) => {
     toast.success("Logged out");
   };
 
-  const value = {
-    user,
-    login,
-    register,
-    logout,
-    loading,
-    isAuthenticated: !!user,
-  };
-
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        register,
+        logout,
+        loading,
+        isAuthenticated: !!user,
+      }}
+    >
       {!loading && children}
     </AuthContext.Provider>
   );
