@@ -7,7 +7,7 @@ const Category = require("../models/Category");
 
 const router = express.Router();
 
-// Generate JWT
+// JWT
 const generateToken = (userId, role = "business_owner") => {
   return jwt.sign({ userId, role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
@@ -46,13 +46,13 @@ router.post(
         address,
       } = req.body;
 
-      // Check duplicate
+      // Check duplicate user
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ message: "User already exists" });
       }
 
-      // Create user
+      // Create User
       const newUser = new User({
         email,
         password,
@@ -64,7 +64,7 @@ router.post(
       await newUser.save();
       console.log("✅ User saved:", newUser._id);
 
-      // Validate category ID
+      // If category is provided, validate it
       if (businessCategory) {
         const categoryExists = await Category.findById(businessCategory);
         if (!categoryExists) {
@@ -72,7 +72,7 @@ router.post(
         }
       }
 
-      // Create business
+      // Create Business
       const business = new Business({
         owner: newUser._id,
         businessName,
@@ -99,8 +99,8 @@ router.post(
         business,
       });
     } catch (error) {
-      console.error("❌ Registration error:", error);
-      res.status(500).json({ message: "Error registering user and business" });
+      console.error("❌ Registration error:", error.message);
+      res.status(500).json({ message: error.message });
     }
   }
 );
@@ -134,7 +134,7 @@ router.post(
 
       res.json({ message: "Login successful", token, user: userResponse });
     } catch (error) {
-      console.error("❌ Login error:", error);
+      console.error("❌ Login error:", error.message);
       res.status(500).json({ message: "Error logging in" });
     }
   }

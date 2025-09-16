@@ -48,12 +48,21 @@ const Register = () => {
     paymentMethod: "stripe",
   });
 
-  // Load categories
+  // ✅ Load categories from API instead of local file
   useEffect(() => {
-    import("../data/categories").then((module) => {
-      setCategories(module.categories);
-    });
-  }, []);
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/categories");
+        if (!res.ok) throw new Error("Failed to fetch categories");
+        const data = await res.json();
+        setCategories(data);
+      } catch (err) {
+        console.error("❌ Error fetching categories:", err);
+        toast.error(t("register.toasts.errorCategories") || "Failed to load categories");
+      }
+    };
+    fetchCategories();
+  }, [t]);
 
   // Navigation
   const nextStep = () => setCurrentStep(currentStep + 1);
@@ -71,11 +80,13 @@ const Register = () => {
     setIsProcessingPayment(true);
 
     try {
-      // Dummy example – replace with your API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      toast.success(t("register.toasts.success"));
-      navigate("/login");
+      const success = await register(formData);
+      if (success) {
+        toast.success(t("register.toasts.success"));
+        navigate("/login");
+      }
     } catch (err) {
+      console.error("❌ Registration error:", err);
       toast.error(t("register.toasts.error"));
     } finally {
       setIsProcessingPayment(false);
@@ -153,6 +164,3 @@ const Register = () => {
 };
 
 export default Register;
-
-
-

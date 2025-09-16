@@ -28,14 +28,10 @@ const Login = () => {
     setIsLoading(true)
 
     try {
-      const response = await login(formData.email, formData.password)
+      const success = await login(formData.email, formData.password)
 
-      if (response?.token) {
-        // ✅ store token for API requests
-        localStorage.setItem('token', response.token)
-
+      if (success) {
         toast.success(t('auth.loginSuccess') || 'Login successful!')
-        // ✅ redirect to correct dashboard
         navigate('/business-dashboard')
       } else {
         toast.error(t('auth.invalidCredentials') || 'Invalid email or password')
@@ -148,6 +144,7 @@ const Login = () => {
 }
 
 export default Login
+
 
 
 

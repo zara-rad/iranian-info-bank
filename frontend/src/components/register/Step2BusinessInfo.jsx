@@ -36,22 +36,22 @@ const Step2BusinessInfo = ({
     setShowCategoryDropdown(false)
     setFormData({
       ...formData,
-      category: category.id,
+      category: category._id, // ✅ استفاده از _id واقعی DB
       subcategories: [],
     })
   }
 
   // Toggle subcategory
   const handleSubcategoryToggle = (subcategory) => {
-    const isSelected = selectedSubcategories.find((s) => s.id === subcategory.id)
+    const isSelected = selectedSubcategories.find((s) => s._id === subcategory._id)
     let newSubs = isSelected
-      ? selectedSubcategories.filter((s) => s.id !== subcategory.id)
+      ? selectedSubcategories.filter((s) => s._id !== subcategory._id)
       : [...selectedSubcategories, subcategory]
 
     setSelectedSubcategories(newSubs)
     setFormData({
       ...formData,
-      subcategories: newSubs.map((s) => s.id),
+      subcategories: newSubs.map((s) => s._id), // ✅ ذخیره با ObjectId واقعی
     })
   }
 
@@ -147,7 +147,7 @@ const Step2BusinessInfo = ({
             <div className="absolute top-full left-0 right-0 bg-white border rounded-lg shadow-lg mt-1 z-50 max-h-80 overflow-y-auto">
               {categories.map((cat) => (
                 <button
-                  key={cat.id}
+                  key={cat._id} // ✅ کلید روی _id
                   type="button"
                   onClick={() => handleCategorySelect(cat)}
                   className="w-full text-left p-4 hover:bg-gray-50 border-b last:border-0"
@@ -173,12 +173,12 @@ const Step2BusinessInfo = ({
           <div className="space-y-2 max-h-60 overflow-y-auto">
             {selectedCategory.subcategories.map((sub) => (
               <label
-                key={sub.id}
+                key={sub._id} // ✅ کلید روی _id
                 className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
               >
                 <input
                   type="checkbox"
-                  checked={!!selectedSubcategories.find((s) => s.id === sub.id)}
+                  checked={!!selectedSubcategories.find((s) => s._id === sub._id)}
                   onChange={() => handleSubcategoryToggle(sub)}
                   className="w-4 h-4 text-persian-600 border-gray-300 rounded"
                 />
@@ -195,7 +195,7 @@ const Step2BusinessInfo = ({
               <div className="flex flex-wrap gap-2">
                 {selectedSubcategories.map((sub) => (
                   <span
-                    key={sub.id}
+                    key={sub._id}
                     className="px-3 py-1 bg-persian-600 text-white text-sm rounded-full flex items-center"
                   >
                     {getLocalizedName(sub)}

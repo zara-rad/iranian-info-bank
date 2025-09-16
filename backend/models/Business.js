@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-// Working Hours Schema
+// 🕒 اسکیمای ساعت کاری
 const workingHoursSchema = new mongoose.Schema({
   day: {
     type: String,
@@ -20,25 +20,25 @@ const workingHoursSchema = new mongoose.Schema({
   isClosed: { type: Boolean, default: false },
 });
 
-// Main Business Schema
+// 🏢 اسکیمای اصلی بیزنس
 const businessSchema = new mongoose.Schema(
   {
-    // 🔑 ارتباط با یوزر (صاحب بیزنس)
+    // ارتباط با کاربر
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 
-    // 🏢 اطلاعات پایه
+    // اطلاعات پایه
     businessName: { type: String, required: true },
     ownerName: { type: String },
     email: { type: String },
     phone: { type: String },
     website: { type: String },
 
-    // 🌍 توضیحات چند زبانه
+    // توضیحات چندزبانه
     description: { type: String },
     descriptionGerman: { type: String },
     descriptionPersian: { type: String },
 
-    // 📍 لوکیشن
+    // لوکیشن
     address: { type: String },
     city: { type: String },
     state: { type: String },
@@ -48,50 +48,50 @@ const businessSchema = new mongoose.Schema(
       longitude: { type: Number },
     },
 
-    // 📂 دسته‌بندی
+    // دسته‌بندی‌ها
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
-      required: true,
+      required: false,
     },
-    subcategories: [{ type: mongoose.Schema.Types.ObjectId }],
+    subcategories: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Category" } // ✅ اصلاح شد
+    ],
 
-    // 🕒 ساعت کاری
+    // ساعت کاری
     workingHours: [workingHoursSchema],
 
-    // 🖼️ رسانه
+    // رسانه
     logo: { type: String },
     images: [{ type: String }],
 
-    // ⭐ امتیازدهی
+    // امتیازدهی
     averageRating: { type: Number, default: 0, min: 0, max: 5 },
     totalReviews: { type: Number, default: 0 },
 
-    // ✅ وضعیت
+    // وضعیت
     isVerified: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
     isPaid: { type: Boolean, default: false },
     paymentDate: { type: Date },
     expirationDate: { type: Date },
 
-    // 🔎 سئو
+    // سئو
     slug: { type: String, unique: true },
     metaTitle: { type: String },
     metaDescription: { type: String },
     keywords: [{ type: String }],
 
-    // 📊 آنالیتیکس
+    // آنالیتیکس
     views: { type: Number, default: 0 },
     clicksPhone: { type: Number, default: 0 },
     clicksEmail: { type: Number, default: 0 },
     clicksWebsite: { type: Number, default: 0 },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-// Indexes برای سرچ و کارایی
+// ایندکس‌ها
 businessSchema.index({ businessName: "text", description: "text" });
 businessSchema.index({ city: 1 });
 businessSchema.index({ category: 1 });
@@ -101,7 +101,7 @@ businessSchema.index({ averageRating: -1 });
 businessSchema.index({ createdAt: -1 });
 businessSchema.index({ slug: 1 });
 
-// 🛠️ ساخت slug قبل از ذخیره
+// ساخت slug خودکار
 businessSchema.pre("save", function (next) {
   if (!this.slug) {
     this.slug =
@@ -111,7 +111,7 @@ businessSchema.pre("save", function (next) {
         .replace(/\s+/g, "-")
         .replace(/-+/g, "-") +
       "-" +
-      this.city.toLowerCase();
+      (this.city ? this.city.toLowerCase() : "no-city");
   }
   next();
 });
