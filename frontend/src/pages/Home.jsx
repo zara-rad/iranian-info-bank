@@ -6,27 +6,7 @@ import CitySearch from "../components/CitySearch";
 import CategorySearch from "../components/CategorySearch";
 import EventsCarousel from "../components/EventsCarousel";
 import CategoryCard from "../components/CategoryCard";
-
-// --- Helpers for localized numbers ---
-const toFarsiDigits = (str) => {
-  return str.toString().replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
-};
-
-const getLocalizedNumber = (value, language = "en") => {
-  if (value === null || value === undefined) return "";
-
-  const strValue = value.toString();
-
-  if (language === "fa") {
-    return toFarsiDigits(strValue);
-  }
-
-  if (!isNaN(Number(strValue))) {
-    return new Intl.NumberFormat(language).format(Number(strValue));
-  }
-
-  return strValue;
-};
+import { getLocalizedNumber } from "../utils/numberUtils";
 
 const Home = () => {
   const { t, i18n } = useTranslation();
@@ -34,7 +14,6 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Fetch categories from backend
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -55,25 +34,12 @@ const Home = () => {
   const visibleCategories = categories.slice(0, visibleCategoriesCount);
   const hasMoreCategories = visibleCategoriesCount < categories.length;
 
-  const showMoreCategories = () => {
-    setVisibleCategoriesCount((prev) =>
-      Math.min(prev + 3, categories.length)
-    );
-  };
-
-  const showLessCategories = () => {
-    setVisibleCategoriesCount((prev) => Math.max(prev - 3, 6));
-  };
-
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-persian-600 via-persian-700 to-navy-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          {/* Global Search */}
           <GlobalSearch />
-
-          {/* Smaller Searches */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-4xl mx-auto">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6">
               <CitySearch />
@@ -85,14 +51,14 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Events Section */}
+      {/* Events */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <EventsCarousel />
         </div>
       </section>
 
-      {/* Categories Section */}
+      {/* Categories */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -104,7 +70,6 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Categories Grid */}
           {loading ? (
             <p className="text-center text-gray-600">{t("category.loading")}</p>
           ) : (
@@ -115,12 +80,15 @@ const Home = () => {
             </div>
           )}
 
-          {/* Show More/Less Button */}
           <div className="text-center mt-12">
             {hasMoreCategories && (
               <button
-                onClick={showMoreCategories}
-                className="inline-flex items-center space-x-2 bg-persian-600 hover:bg-persian-700 text-white px-8 py-3 rounded-lg transition-colors font-medium"
+                onClick={() =>
+                  setVisibleCategoriesCount((prev) =>
+                    Math.min(prev + 3, categories.length)
+                  )
+                }
+                className="inline-flex items-center space-x-2 bg-persian-600 hover:bg-persian-700 text-white px-8 py-3 rounded-lg"
               >
                 <span>
                   {t("categories.showMore")} (
@@ -133,53 +101,19 @@ const Home = () => {
                 <ChevronDown size={20} />
               </button>
             )}
-
             {visibleCategoriesCount > 6 && (
               <button
-                onClick={showLessCategories}
-                className={`inline-flex items-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg transition-colors font-medium ${
-                  hasMoreCategories ? "ms-4" : ""
-                }`}
+                onClick={() =>
+                  setVisibleCategoriesCount((prev) => Math.max(prev - 3, 6))
+                }
+                className="inline-flex items-center space-x-2 bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg ms-4"
               >
                 <span>
-                  {t("categories.showLess")} (
-                  {getLocalizedNumber(3, i18n.language)})
+                  {t("categories.showLess")} ({getLocalizedNumber(3, i18n.language)})
                 </span>
                 <ChevronUp size={20} />
               </button>
             )}
-          </div>
-        </div>
-      </section>
-
-      {/* Statistics Section */}
-      <section className="py-16 bg-navy-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">
-                {getLocalizedNumber("1,200+", i18n.language)}
-              </div>
-              <div className="text-gray-300">{t("stats.businesses")}</div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">
-                {getLocalizedNumber("50+", i18n.language)}
-              </div>
-              <div className="text-gray-300">{t("stats.cities")}</div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">
-                {getLocalizedNumber("25", i18n.language)}
-              </div>
-              <div className="text-gray-300">{t("stats.categories")}</div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-bold text-gold-400 mb-2">
-                {getLocalizedNumber("5,000+", i18n.language)}
-              </div>
-              <div className="text-gray-300">{t("stats.visitors")}</div>
-            </div>
           </div>
         </div>
       </section>

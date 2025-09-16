@@ -23,22 +23,17 @@ const workingHoursSchema = new mongoose.Schema({
 // 🏢 اسکیمای اصلی بیزنس
 const businessSchema = new mongoose.Schema(
   {
-    // ارتباط با کاربر
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-
-    // اطلاعات پایه
     businessName: { type: String, required: true },
     ownerName: { type: String },
     email: { type: String },
     phone: { type: String },
     website: { type: String },
 
-    // توضیحات چندزبانه
     description: { type: String },
     descriptionGerman: { type: String },
     descriptionPersian: { type: String },
 
-    // لوکیشن
     address: { type: String },
     city: { type: String },
     state: { type: String },
@@ -48,41 +43,32 @@ const businessSchema = new mongoose.Schema(
       longitude: { type: Number },
     },
 
-    // دسته‌بندی‌ها
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: false,
     },
-    subcategories: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Category" } // ✅ اصلاح شد
-    ],
+    subcategories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Subcategory" }],
 
-    // ساعت کاری
     workingHours: [workingHoursSchema],
 
-    // رسانه
     logo: { type: String },
     images: [{ type: String }],
 
-    // امتیازدهی
     averageRating: { type: Number, default: 0, min: 0, max: 5 },
     totalReviews: { type: Number, default: 0 },
 
-    // وضعیت
     isVerified: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
     isPaid: { type: Boolean, default: false },
     paymentDate: { type: Date },
     expirationDate: { type: Date },
 
-    // سئو
     slug: { type: String, unique: true },
     metaTitle: { type: String },
     metaDescription: { type: String },
     keywords: [{ type: String }],
 
-    // آنالیتیکس
     views: { type: Number, default: 0 },
     clicksPhone: { type: Number, default: 0 },
     clicksEmail: { type: Number, default: 0 },

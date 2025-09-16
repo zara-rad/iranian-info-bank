@@ -7,7 +7,7 @@ const Category = require("../models/Category");
 
 const router = express.Router();
 
-// JWT
+// 🔑 JWT
 const generateToken = (userId, role = "business_owner") => {
   return jwt.sign({ userId, role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
@@ -15,23 +15,32 @@ const generateToken = (userId, role = "business_owner") => {
 };
 
 /**
- * REGISTER
+ * 📝 REGISTER
  */
 router.post(
   "/register",
   [
-    body("email").isEmail().normalizeEmail({ gmail_remove_dots: false }),
-    body("password").isLength({ min: 6 }),
-    body("fullName").trim().isLength({ min: 2 }),
-    body("businessName").trim().isLength({ min: 2 }),
+    body("email").isEmail().withMessage("Invalid email")
+      .normalizeEmail({ gmail_remove_dots: false }),
+    body("password").isLength({ min: 6 }).withMessage("Password must be at least 6 characters"),
+    body("fullName").trim().isLength({ min: 2 }).withMessage("Full name must be at least 2 characters"),
+    body("businessName").trim().isLength({ min: 2 }).withMessage("Business name must be at least 2 characters"),
   ],
   async (req, res) => {
     try {
+      console.log("📥 Incoming register body:", req.body);
+
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return res
-          .status(400)
-          .json({ message: "Validation failed", errors: errors.array() });
+        console.log("❌ Validation errors:", errors.array());
+        return res.status(400).json({
+          message: "Validation failed",
+          errors: errors.array().map((err) => ({
+            field: err.param,
+            msg: err.msg,
+            value: err.value,
+          })),
+        });
       }
 
       const {
@@ -40,19 +49,19 @@ router.post(
         fullName,
         phone,
         businessName,
-        businessCategory,
-        businessSubcategories,
+        category,
+        subcategories,
         city,
         address,
       } = req.body;
 
-      // Check duplicate user
+      // 👤 Duplicate check
       const existingUser = await User.findOne({ email });
       if (existingUser) {
         return res.status(400).json({ message: "User already exists" });
       }
 
-      // Create User
+      // 👤 Create User
       const newUser = new User({
         email,
         password,
@@ -64,15 +73,15 @@ router.post(
       await newUser.save();
       console.log("✅ User saved:", newUser._id);
 
-      // If category is provided, validate it
-      if (businessCategory) {
-        const categoryExists = await Category.findById(businessCategory);
+      // 🏷️ Validate category
+      if (category) {
+        const categoryExists = await Category.findById(category);
         if (!categoryExists) {
           return res.status(400).json({ message: "Invalid category ID" });
         }
       }
 
-      // Create Business
+      // 🏢 Create Business
       const business = new Business({
         owner: newUser._id,
         businessName,
@@ -81,15 +90,15 @@ router.post(
         phone,
         city: city || "",
         address: address || "",
-        category: businessCategory || null,
-        subcategories: businessSubcategories || [],
+        category: category || null,
+        subcategories: Array.isArray(subcategories) ? subcategories : [],
         isVerified: false,
         isActive: true,
       });
       await business.save();
       console.log("✅ Business saved:", business._id);
 
-      // Generate token
+      // 🔑 JWT
       const token = generateToken(newUser._id, newUser.role);
 
       res.status(201).json({
@@ -99,14 +108,14 @@ router.post(
         business,
       });
     } catch (error) {
-      console.error("❌ Registration error:", error.message);
-      res.status(500).json({ message: error.message });
+      console.error("❌ Registration error:", error);
+      res.status(500).json({ message: error.message || "Server error" });
     }
   }
 );
 
 /**
- * LOGIN
+ * 🔑 LOGIN
  */
 router.post(
   "/login",
@@ -114,10 +123,8 @@ router.post(
   async (req, res) => {
     try {
       const { email, password } = req.body;
-      const user = await User.findOne({ email, isActive: true }).select(
-        "+password"
-      );
 
+      const user = await User.findOne({ email, isActive: true }).select("+password");
       if (!user) return res.status(401).json({ message: "Invalid credentials" });
 
       const isPasswordValid = await user.comparePassword(password);
@@ -134,7 +141,7 @@ router.post(
 
       res.json({ message: "Login successful", token, user: userResponse });
     } catch (error) {
-      console.error("❌ Login error:", error.message);
+      console.error("❌ Login error:", error);
       res.status(500).json({ message: "Error logging in" });
     }
   }

@@ -2,10 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
-
 import { useAuth } from "../utils/AuthContext";
 
-// Components
 import RegisterHeader from "../components/register/RegisterHeader";
 import StepIndicator from "../components/register/StepIndicator";
 import Step1AccountInfo from "../components/register/Step1AccountInfo";
@@ -20,11 +18,7 @@ const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
 
-  // Steps
   const [currentStep, setCurrentStep] = useState(1);
-
-  // States
-  const [isLoading, setIsLoading] = useState(false);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [categories, setCategories] = useState([]);
@@ -41,14 +35,15 @@ const Register = () => {
     phone: "",
     category: "",
     subcategories: [],
-    descriptionEnglish: "",
+    description: "",
     descriptionGerman: "",
     descriptionPersian: "",
     logo: null,
     paymentMethod: "stripe",
+    city: "",
+    address: "",
   });
 
-  // ✅ Load categories from API instead of local file
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -58,29 +53,33 @@ const Register = () => {
         setCategories(data);
       } catch (err) {
         console.error("❌ Error fetching categories:", err);
-        toast.error(t("register.toasts.errorCategories") || "Failed to load categories");
+        toast.error("Failed to load categories");
       }
     };
     fetchCategories();
-  }, [t]);
+  }, []);
 
-  // Navigation
-  const nextStep = () => setCurrentStep(currentStep + 1);
-  const prevStep = () => setCurrentStep(currentStep - 1);
+  const nextStep = () => setCurrentStep((s) => s + 1);
+  const prevStep = () => setCurrentStep((s) => s - 1);
 
-  // Submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!acceptedTerms) {
       toast.error(t("register.toasts.mustAccept"));
       return;
     }
 
-    setIsProcessingPayment(true);
+    const finalData = {
+      ...formData,
+      category: selectedCategory?._id || "",
+      subcategories: selectedSubcategories.map((s) => s._id),
+    };
 
+    console.log("🚀 Final register payload:", finalData);
+
+    setIsProcessingPayment(true);
     try {
-      const success = await register(formData);
+      const success = await register(finalData);
       if (success) {
         toast.success(t("register.toasts.success"));
         navigate("/login");
@@ -97,13 +96,9 @@ const Register = () => {
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg p-8">
-          {/* Header */}
           <RegisterHeader />
-
-          {/* Step Indicator */}
           <StepIndicator currentStep={currentStep} />
 
-          {/* Form */}
           <form onSubmit={handleSubmit}>
             {currentStep === 1 && (
               <Step1AccountInfo formData={formData} setFormData={setFormData} />
@@ -134,24 +129,21 @@ const Register = () => {
               />
             )}
 
-            {/* Navigation */}
             <RegisterNavigation
               currentStep={currentStep}
               prevStep={prevStep}
               nextStep={nextStep}
-              isLoading={isLoading}
               isProcessingPayment={isProcessingPayment}
               acceptedTerms={acceptedTerms}
             />
           </form>
 
-          {/* Login Link */}
           <div className="mt-8 text-center">
             <p className="text-gray-600">
               {t("register.alreadyAccount")}{" "}
               <Link
                 to="/login"
-                className="text-persian-600 hover:text-persian-700 font-medium transition-colors"
+                className="text-persian-600 hover:text-persian-700 font-medium"
               >
                 {t("auth.login")}
               </Link>

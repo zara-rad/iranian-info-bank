@@ -6,9 +6,7 @@ const AuthContext = createContext();
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };
 
@@ -17,8 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // ✅ از proxy استفاده کن، نه localhost مستقیم
-  const API_BASE = "/api";
+  const API_BASE = "/api"; // ✅ proxy استفاده کن
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -40,9 +37,7 @@ export const AuthProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
       const data = await res.json();
-      console.log("🔎 Login response:", data);
 
       if (!res.ok) {
         toast.error(data.message || "Invalid email or password");
@@ -52,28 +47,41 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
-
       toast.success("Login successful");
       return true;
-    } catch (error) {
-      console.error("Login error:", error);
-      toast.error("Login failed. Please try again.");
+    } catch (err) {
+      console.error("Login error:", err);
+      toast.error("Login failed");
       return false;
     }
   };
 
-  // ✅ Register
+  // ✅ Register (User + Business یکجا)
   const register = async (userData) => {
+    console.log("📌 Sending register data:", userData);
+
     try {
       const res = await fetch(`${API_BASE}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
+        body: JSON.stringify({
+          fullName: userData.fullName,
+          email: userData.email,
+          password: userData.password,
+          confirmPassword: userData.confirmPassword,
+          businessName: userData.businessName,
+          phone: userData.phone,
+          category: userData.category,
+          subcategories: userData.subcategories,
+          description: userData.description,
+          descriptionGerman: userData.descriptionGerman,
+          descriptionPersian: userData.descriptionPersian,
+          city: userData.city || "",
+          address: userData.address || "",
+        }),
       });
 
       const data = await res.json();
-      console.log("🔎 Register response:", data);
-
       if (!res.ok) {
         toast.error(data.message || "Registration failed");
         return false;
@@ -83,15 +91,16 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(data.user));
       setUser(data.user);
 
-      toast.success("Registered successfully");
+      toast.success("Registered successfully with business");
       return true;
-    } catch (error) {
-      console.error("Registration error:", error);
+    } catch (err) {
+      console.error("Register error:", err);
       toast.error("Registration failed");
       return false;
     }
   };
 
+  // ✅ Logout
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -102,14 +111,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{
-        user,
-        login,
-        register,
-        logout,
-        loading,
-        isAuthenticated: !!user,
-      }}
+      value={{ user, login, register, logout, loading, isAuthenticated: !!user }}
     >
       {!loading && children}
     </AuthContext.Provider>
