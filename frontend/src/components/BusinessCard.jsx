@@ -1,146 +1,91 @@
 import React from "react";
-import {
-  Phone,
-  Mail,
-  MapPin,
-  Home,
-  Globe,
-  User,
-  Clock,
-  Tags,
-} from "lucide-react";
+import { MapPin, Phone, Mail, Globe, User, Tag } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const BusinessCard = ({ biz }) => {
-  const { i18n } = useTranslation();
-
-  if (!biz) return null;
-
-  // ✅ گرفتن نام بر اساس زبان
-  const getLocalizedName = (item) => {
-    if (!item) return "";
-    switch (i18n.language) {
-      case "de":
-        return item.nameGerman || item.name;
-      case "fa":
-        return item.namePersian || item.name;
-      default:
-        return item.name;
-    }
-  };
+  const { t } = useTranslation();
 
   return (
-    <div className="bg-white shadow-md rounded-lg p-6 mb-4">
-      {/* ✅ نمایش لوگو */}
-      {biz?.logo ? (
-        <img
-          src={biz.logo}
-          alt={biz.businessName}
-          className="w-24 h-24 object-cover rounded-full mx-auto mb-4"
-        />
-      ) : (
-        <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center mx-auto mb-4">
-          <span className="text-gray-500 text-xl">
-            {biz?.businessName?.[0]?.toUpperCase() || "?"}
-          </span>
-        </div>
-      )}
+    <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+     {/* لوگو و اسم (وسط و بالا) */}
+<div className="flex flex-col items-center justify-center text-center mb-6">
+  <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold text-gray-600 shadow">
+    {biz.logo ? (
+      <img
+        src={biz.logo}
+        alt={biz.businessName}
+        className="w-20 h-20 rounded-full object-cover"
+      />
+    ) : (
+      biz.businessName?.charAt(0).toUpperCase()
+    )}
+  </div>
+  <h3 className="text-2xl font-bold mt-3">{biz.businessName}</h3>
+</div>
 
-      {/* ✅ نام کسب‌وکار */}
-      <h2 className="text-xl font-bold text-center mb-2">
-        {biz?.businessName}
-      </h2>
+     {/* توضیحات هر زبان در باکس جدا */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+  {biz.description && (
+    <div className="p-4 bg-white rounded-lg shadow hover:shadow-lg transition">
+      <p className="font-bold">EN:</p>
+      <p className="text-gray-700">{biz.description}</p>
+    </div>
+  )}
+  {biz.descriptionGerman && (
+    <div className="p-4 bg-white rounded-lg shadow hover:shadow-lg transition">
+      <p className="font-bold">DE:</p>
+      <p className="text-gray-700">{biz.descriptionGerman}</p>
+    </div>
+  )}
+  {biz.descriptionPersian && (
+    <div className="p-4 bg-white rounded-lg shadow hover:shadow-lg transition">
+      <p className="font-bold">FA:</p>
+      <p className="text-gray-700 text-right">{biz.descriptionPersian}</p>
+    </div>
+  )}
+</div>
 
-      {/* ✅ توضیحات چندزبانه */}
-      <div className="text-sm text-gray-700 text-center space-y-1 mb-3">
-        {biz?.description && (
-          <p>
-            <strong>EN:</strong> {biz.description}
-          </p>
+
+      {/* اطلاعات تماس */}
+      <div className="space-y-2 text-gray-700">
+        {biz.ownerName && (
+          <div className="flex items-center">
+            <User className="w-5 h-5 text-blue-500 mr-2" />
+            <strong>{t("Owner")}:</strong> {biz.ownerName}
+          </div>
         )}
-        {biz?.descriptionGerman && (
-          <p>
-            <strong>DE:</strong> {biz.descriptionGerman}
-          </p>
+        {biz.phone && (
+          <div className="flex items-center">
+            <Phone className="w-5 h-5 text-green-500 mr-2" /> {biz.phone}
+          </div>
         )}
-        {biz?.descriptionPersian && (
-          <p dir="rtl">
-            <strong>FA:</strong> {biz.descriptionPersian}
-          </p>
+        {biz.email && (
+          <div className="flex items-center">
+            <Mail className="w-5 h-5 text-red-500 mr-2" /> {biz.email}
+          </div>
+        )}
+        {biz.city && (
+          <div className="flex items-center">
+            <MapPin className="w-5 h-5 text-purple-500 mr-2" /> {biz.city}
+          </div>
+        )}
+        {biz.address && (
+          <div className="flex items-center">
+            <Globe className="w-5 h-5 text-orange-500 mr-2" /> {biz.address}
+          </div>
         )}
       </div>
 
-      {/* ✅ اطلاعات تماس با آیکون رنگی */}
-      <div className="text-sm text-gray-700 space-y-1">
-        {biz?.ownerName && (
-          <p>
-            <User className="inline w-4 h-4 mr-1 text-blue-500" />{" "}
-            <strong>Owner:</strong> {biz.ownerName}
-          </p>
-        )}
-        {biz?.phone && (
-          <p>
-            <Phone className="inline w-4 h-4 mr-1 text-pink-500" /> {biz.phone}
-          </p>
-        )}
-        {biz?.email && (
-          <p>
-            <Mail className="inline w-4 h-4 mr-1 text-green-500" /> {biz.email}
-          </p>
-        )}
-        {biz?.website && (
-          <p>
-            <Globe className="inline w-4 h-4 mr-1 text-purple-500" />
-            <a
-              href={biz.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 underline"
-            >
-              {biz.website}
-            </a>
-          </p>
-        )}
-        {biz?.city && (
-          <p>
-            <MapPin className="inline w-4 h-4 mr-1 text-red-500" /> {biz.city}
-          </p>
-        )}
-        {biz?.address && (
-          <p>
-            <Home className="inline w-4 h-4 mr-1 text-orange-500" />{" "}
-            {biz.address}
-          </p>
-        )}
-      </div>
-
-      {/* ✅ ساعات کاری */}
-      {biz?.workingHours?.length > 0 && (
+      {/* زیر دسته‌ها */}
+      {biz.subcategories?.length > 0 && (
         <div className="mt-4">
-          <h3 className="font-semibold text-gray-800 mb-2">
-            <Clock className="inline w-4 h-4 mr-1 text-indigo-500" /> Working
-            Hours
-          </h3>
-          <ul className="text-sm text-gray-600">
-            {biz.workingHours.map((day, idx) => (
-              <li key={idx}>
-                <strong>{day.day}:</strong>{" "}
-                {day.isClosed ? "Closed" : `${day.open} - ${day.close}`}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {/* ✅ نمایش Subcategories */}
-      {biz?.subcategories?.length > 0 && (
-        <div className="mt-4">
-          <h3 className="font-semibold text-gray-800 mb-2">
-            <Tags className="inline w-4 h-4 mr-1 text-pink-500" /> Subcategories
-          </h3>
-          <ul className="list-disc list-inside text-sm text-gray-600">
-            {biz.subcategories.map((sub) => (
-              <li key={sub._id || sub}>{getLocalizedName(sub)}</li>
+          <div className="flex items-center mb-2">
+            <Tag className="w-5 h-5 text-pink-500 mr-2" />
+            <strong>{t("Subcategories")}:</strong>
+          </div>
+          <ul className="list-disc list-inside text-gray-600">
+            {biz.subcategories.map((sub, idx) => (
+              <li key={idx}>{sub.name || sub}</li>
             ))}
           </ul>
         </div>
