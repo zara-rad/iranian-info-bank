@@ -6,7 +6,9 @@ const Category = require("../models/Category");
 
 const router = express.Router();
 
+// =========================
 // GET all businesses
+// =========================
 router.get("/", async (req, res) => {
   try {
     const {
@@ -42,7 +44,9 @@ router.get("/", async (req, res) => {
   }
 });
 
+// =========================
 // GET business by id
+// =========================
 router.get("/:id", async (req, res) => {
   try {
     const business = await Business.findById(req.params.id)
@@ -58,7 +62,9 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// =========================
 // CREATE
+// =========================
 router.post(
   "/",
   authenticate,
@@ -66,32 +72,59 @@ router.post(
     body("businessName").trim().isLength({ min: 2 }),
     body("email").isEmail(),
     body("phone").trim().isLength({ min: 10 }),
-    body("address").trim().isLength({ min: 5 }),
+    body("address").trim().isLength({ min: 2 }),
     body("city").trim().isLength({ min: 2 }),
     body("category").isMongoId(),
+
+    // optional fields
+    body("website").optional().isString(),
+    body("logo").optional().isString(),
+    body("images").optional().isArray(),
+    body("description").optional().isString(),
+    body("descriptionGerman").optional().isString(),
+    body("descriptionPersian").optional().isString(),
+    body("workingHours").optional().isArray(),
   ],
   async (req, res) => {
     try {
       const errors = validationResult(req);
-      if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+      if (!errors.isEmpty())
+        return res.status(400).json({ errors: errors.array() });
 
       const category = await Category.findById(req.body.category);
       if (!category) return res.status(400).json({ message: "Invalid category" });
 
       const business = new Business({
-        ...req.body,
         owner: req.user._id,
+        businessName: req.body.businessName,
+        ownerName: req.user.fullName,
+        email: req.body.email,
+        phone: req.body.phone,
+        website: req.body.website || "",
+        description: req.body.description || "",
+        descriptionGerman: req.body.descriptionGerman || "",
+        descriptionPersian: req.body.descriptionPersian || "",
+        address: req.body.address || "",
+        city: req.body.city || "",
+        category: req.body.category,
+        subcategories: req.body.subcategories || [],
+        workingHours: req.body.workingHours || [],
+        logo: req.body.logo || null,
+        images: req.body.images || [],
       });
 
       await business.save();
       res.status(201).json(business);
     } catch (err) {
+      console.error("Error creating business:", err);
       res.status(500).json({ message: "Error creating business" });
     }
   }
 );
 
+// =========================
 // UPDATE
+// =========================
 router.put("/:id", authenticate, async (req, res) => {
   try {
     const business = await Business.findById(req.params.id);
@@ -99,7 +132,8 @@ router.put("/:id", authenticate, async (req, res) => {
 
     const isOwner = business.owner.toString() === req.user._id.toString();
     const isAdmin = ["admin", "super_admin"].includes(req.user.role);
-    if (!isOwner && !isAdmin) return res.status(403).json({ message: "Access denied" });
+    if (!isOwner && !isAdmin)
+      return res.status(403).json({ message: "Access denied" });
 
     Object.assign(business, req.body);
     await business.save();
@@ -110,7 +144,9 @@ router.put("/:id", authenticate, async (req, res) => {
   }
 });
 
+// =========================
 // DELETE
+// =========================
 router.delete("/:id", authenticate, async (req, res) => {
   try {
     const business = await Business.findById(req.params.id);
@@ -118,7 +154,8 @@ router.delete("/:id", authenticate, async (req, res) => {
 
     const isOwner = business.owner.toString() === req.user._id.toString();
     const isAdmin = ["admin", "super_admin"].includes(req.user.role);
-    if (!isOwner && !isAdmin) return res.status(403).json({ message: "Access denied" });
+    if (!isOwner && !isAdmin)
+      return res.status(403).json({ message: "Access denied" });
 
     await Business.findByIdAndDelete(req.params.id);
     res.json({ message: "Business deleted" });
@@ -128,6 +165,3 @@ router.delete("/:id", authenticate, async (req, res) => {
 });
 
 module.exports = router;
-
-
-

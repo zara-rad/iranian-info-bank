@@ -1,3 +1,4 @@
+// src/components/register/RegisterNavigation.jsx
 import React from "react"
 import { Loader } from "lucide-react"
 import { useTranslation } from "react-i18next"
@@ -9,8 +10,10 @@ const RegisterNavigation = ({
   isLoading,
   isProcessingPayment,
   acceptedTerms,
+  totalSteps = 6, // ✅ تعداد کل مراحل (الان ۶ تاست)
 }) => {
   const { t } = useTranslation()
+  const isLastStep = currentStep === totalSteps // ✅ چک آخرین مرحله
 
   return (
     <div className="flex justify-between mt-8">
@@ -27,7 +30,7 @@ const RegisterNavigation = ({
 
       {/* Next or Submit */}
       <div className="ml-auto">
-        {currentStep < 5 ? (
+        {!isLastStep ? (
           <button
             type="button"
             onClick={nextStep}

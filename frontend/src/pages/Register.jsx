@@ -9,6 +9,7 @@ import StepIndicator from "../components/register/StepIndicator";
 import Step1AccountInfo from "../components/register/Step1AccountInfo";
 import Step2BusinessInfo from "../components/register/Step2BusinessInfo";
 import Step3Branding from "../components/register/Step3Branding";
+import StepWorkingHours from "../components/register/StepWorkingHours"; // ✅ جدید
 import Step4Payment from "../components/register/Step4Payment";
 import Step5Terms from "../components/register/Step5Terms";
 import RegisterNavigation from "../components/register/RegisterNavigation";
@@ -28,25 +29,25 @@ const Register = () => {
 
   const [formData, setFormData] = useState({
     fullName: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-  businessName: "",
-  phone: "",
-  category: "",
-  subcategories: [],
-  // 📝 توضیحات سه‌زبانه
-  description: "",
-  descriptionGerman: "",
-  descriptionPersian: "",
-  // 🌐 اطلاعات اضافی
-  logo: null,
-  website: "",   
-  address: "",   
-  city: "",      
-  workingHours: [], 
-  // 💳 پرداخت
-  paymentMethod: "stripe",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    businessName: "",
+    phone: "",
+    category: "",
+    subcategories: [],
+    // 📝 توضیحات سه‌زبانه
+    description: "",
+    descriptionGerman: "",
+    descriptionPersian: "",
+    // 🌐 اطلاعات اضافی
+    logo: null,
+    website: "",
+    address: "",
+    city: "",
+    workingHours: [], // ✅ اضافه شد
+    // 💳 پرداخت
+    paymentMethod: "stripe",
   });
 
   useEffect(() => {
@@ -64,16 +65,13 @@ const Register = () => {
     fetchCategories();
   }, []);
 
- const nextStep = () => {
-  if (currentStep === 2) {
-    // قبل از رفتن به Step3 مطمئن شو category انتخاب شده
-    if (!selectedCategory) {
+  const nextStep = () => {
+    if (currentStep === 2 && !selectedCategory) {
       toast.error(t("register.toasts.selectCategoryFirst"));
       return;
     }
-  }
-  setCurrentStep((s) => s + 1);
-};
+    setCurrentStep((s) => s + 1);
+  };
 
   const prevStep = () => setCurrentStep((s) => s - 1);
 
@@ -91,8 +89,6 @@ const Register = () => {
     };
 
     console.log("🚀 Final register payload:", finalData);
-      console.log("🚀 Sending register data:", finalData);
-
 
     setIsProcessingPayment(true);
     try {
@@ -114,7 +110,7 @@ const Register = () => {
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg p-8">
           <RegisterHeader />
-          <StepIndicator currentStep={currentStep} />
+          <StepIndicator currentStep={currentStep} totalSteps={6} /> {/* ✅ الان ۶ مرحله */}
 
           <form onSubmit={handleSubmit}>
             {currentStep === 1 && (
@@ -137,9 +133,12 @@ const Register = () => {
               <Step3Branding formData={formData} setFormData={setFormData} />
             )}
             {currentStep === 4 && (
-              <Step4Payment formData={formData} setFormData={setFormData} />
+              <StepWorkingHours formData={formData} setFormData={setFormData} />
             )}
             {currentStep === 5 && (
+              <Step4Payment formData={formData} setFormData={setFormData} />
+            )}
+            {currentStep === 6 && (
               <Step5Terms
                 acceptedTerms={acceptedTerms}
                 setAcceptedTerms={setAcceptedTerms}
@@ -152,6 +151,7 @@ const Register = () => {
               nextStep={nextStep}
               isProcessingPayment={isProcessingPayment}
               acceptedTerms={acceptedTerms}
+              totalSteps={6}
             />
           </form>
 
