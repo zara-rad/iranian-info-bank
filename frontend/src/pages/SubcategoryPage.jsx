@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import Breadcrumb from "../components/Breadcrumb";
 import GlobalSearch from "../components/global-search/GlobalSearch.jsx";
 import { getLocalizedNumber } from "../utils/numberUtils";
-import BusinessCard from "../components/BusinessCard.jsx"; // ✅ مسیر درست
+import BusinessCard from "../components/BusinessCard"; // ✅ اضافه کن
 
 const SubcategoryPage = () => {
   const { slug, subcategoryId } = useParams();
@@ -51,14 +51,12 @@ const SubcategoryPage = () => {
 
   return (
     <div className="min-h-screen pt-20">
-      {/* 🔎 بخش سرچ بالای صفحه */}
       <section className="bg-gradient-to-br from-persian-600 via-persian-700 to-navy-800 text-white py-16">
         <div className="max-w-7xl mx-auto">
           <GlobalSearch />
         </div>
       </section>
 
-      {/* 🧭 نوار مسیر */}
       <Breadcrumb
         items={[
           { label: category.name, link: `/category/${slug}` },
@@ -66,7 +64,6 @@ const SubcategoryPage = () => {
         ]}
       />
 
-      {/* 📌 معرفی زیرشاخه */}
       <section className="bg-white py-12 text-center">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold">{subcategory.name}</h1>
@@ -81,14 +78,14 @@ const SubcategoryPage = () => {
         </div>
       </section>
 
-      {/* 📇 لیست کارت بیزنس‌ها */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto space-y-6">
-          {businesses.map((biz) => (
-            <BusinessCard key={biz._id} biz={biz} />
-          ))}
-        </div>
-      </section>
+      {/* ✅ استفاده از BusinessCard */}
+     <section className="py-16 bg-gray-50">
+  <div className="max-w-4xl mx-auto space-y-6">
+    {businesses.map((biz) => (
+      <BusinessCard key={biz._id} biz={biz} />
+    ))}
+  </div>
+</section>
     </div>
   );
 };
