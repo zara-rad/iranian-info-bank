@@ -1,15 +1,20 @@
-import React, { useState } from "react"
-import { User, Mail, Lock, Eye, EyeOff } from "lucide-react"
-import { useTranslation } from "react-i18next"
+import React, { useState } from "react";
+import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const Step1AccountInfo = ({ formData, setFormData }) => {
-  const { t } = useTranslation()
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const { t } = useTranslation();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  // ✅ تغییر مهم: استفاده از prev برای جلوگیری از overwrite اشتباه
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   return (
     <div className="space-y-6">
@@ -36,7 +41,10 @@ const Step1AccountInfo = ({ formData, setFormData }) => {
             className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
             placeholder={t("register.accountInfo.fullNamePlaceholder")}
           />
-          <User className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+          <User
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={18}
+          />
         </div>
       </div>
 
@@ -55,7 +63,10 @@ const Step1AccountInfo = ({ formData, setFormData }) => {
             className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
             placeholder={t("register.accountInfo.emailPlaceholder")}
           />
-          <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+          <Mail
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={18}
+          />
         </div>
       </div>
 
@@ -74,7 +85,10 @@ const Step1AccountInfo = ({ formData, setFormData }) => {
             className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
             placeholder="••••••••"
           />
-          <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+          <Lock
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={18}
+          />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
@@ -100,7 +114,10 @@ const Step1AccountInfo = ({ formData, setFormData }) => {
             className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
             placeholder="••••••••"
           />
-          <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+          <Lock
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={18}
+          />
           <button
             type="button"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -111,7 +128,7 @@ const Step1AccountInfo = ({ formData, setFormData }) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Step1AccountInfo
+export default Step1AccountInfo;
