@@ -104,6 +104,36 @@ const Step2BusinessInfo = ({
           />
         </div>
       </div>
+      {/* 📌 آدرس */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    {t("register.businessInfo.address")} *
+  </label>
+  <input
+    type="text"
+    name="address"
+    required
+    value={formData.address}
+    onChange={(e) => setFormData((prev) => ({ ...prev, address: e.target.value }))}
+    className="w-full px-4 py-3 border rounded-lg"
+  />
+</div>
+
+{/* 📌 وبسایت */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    {t("register.businessInfo.website")}
+  </label>
+  <input
+    type="url"
+    name="website"
+    value={formData.website}
+    onChange={(e) => setFormData((prev) => ({ ...prev, website: e.target.value }))}
+    className="w-full px-4 py-3 border rounded-lg"
+    placeholder="https://example.com"
+  />
+</div>
+
 
       {/* 📌 انتخاب کتگوری */}
       <div>

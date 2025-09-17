@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Tag, Building, MapPin, Phone, Mail, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import Breadcrumb from "../components/Breadcrumb";
 import GlobalSearch from "../components/global-search/GlobalSearch.jsx";
 import { getLocalizedNumber } from "../utils/numberUtils";
+import BusinessCard from "../components/BusinessCard.jsx"; // ✅ مسیر درست
 
 const SubcategoryPage = () => {
   const { slug, subcategoryId } = useParams();
@@ -51,12 +51,14 @@ const SubcategoryPage = () => {
 
   return (
     <div className="min-h-screen pt-20">
+      {/* 🔎 بخش سرچ بالای صفحه */}
       <section className="bg-gradient-to-br from-persian-600 via-persian-700 to-navy-800 text-white py-16">
         <div className="max-w-7xl mx-auto">
           <GlobalSearch />
         </div>
       </section>
 
+      {/* 🧭 نوار مسیر */}
       <Breadcrumb
         items={[
           { label: category.name, link: `/category/${slug}` },
@@ -64,6 +66,7 @@ const SubcategoryPage = () => {
         ]}
       />
 
+      {/* 📌 معرفی زیرشاخه */}
       <section className="bg-white py-12 text-center">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold">{subcategory.name}</h1>
@@ -78,29 +81,11 @@ const SubcategoryPage = () => {
         </div>
       </section>
 
+      {/* 📇 لیست کارت بیزنس‌ها */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto space-y-6">
           {businesses.map((biz) => (
-            <div key={biz._id} className="bg-white p-6 rounded-xl shadow-md">
-              <h3 className="text-2xl font-bold">{biz.businessName}</h3>
-              <p className="text-gray-600">{biz.description}</p>
-              <div className="mt-3 space-y-2">
-                <div className="flex items-center">
-                  <MapPin size={16} className="mr-2" /> {biz.address}
-                </div>
-                <div className="flex items-center">
-                  <Phone size={16} className="mr-2" /> {biz.phone}
-                </div>
-                <div className="flex items-center">
-                  <Mail size={16} className="mr-2" /> {biz.email}
-                </div>
-                {biz.website && (
-                  <div className="flex items-center">
-                    <Globe size={16} className="mr-2" /> {biz.website}
-                  </div>
-                )}
-              </div>
-            </div>
+            <BusinessCard key={biz._id} biz={biz} />
           ))}
         </div>
       </section>

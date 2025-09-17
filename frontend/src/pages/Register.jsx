@@ -28,20 +28,25 @@ const Register = () => {
 
   const [formData, setFormData] = useState({
     fullName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    businessName: "",
-    phone: "",
-    category: "",
-    subcategories: [],
-    description: "",
-    descriptionGerman: "",
-    descriptionPersian: "",
-    logo: null,
-    paymentMethod: "stripe",
-    city: "",
-    address: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  businessName: "",
+  phone: "",
+  category: "",
+  subcategories: [],
+  // 📝 توضیحات سه‌زبانه
+  description: "",
+  descriptionGerman: "",
+  descriptionPersian: "",
+  // 🌐 اطلاعات اضافی
+  logo: null,
+  website: "",   
+  address: "",   
+  city: "",      
+  workingHours: [], 
+  // 💳 پرداخت
+  paymentMethod: "stripe",
   });
 
   useEffect(() => {
@@ -59,7 +64,17 @@ const Register = () => {
     fetchCategories();
   }, []);
 
-  const nextStep = () => setCurrentStep((s) => s + 1);
+ const nextStep = () => {
+  if (currentStep === 2) {
+    // قبل از رفتن به Step3 مطمئن شو category انتخاب شده
+    if (!selectedCategory) {
+      toast.error(t("register.toasts.selectCategoryFirst"));
+      return;
+    }
+  }
+  setCurrentStep((s) => s + 1);
+};
+
   const prevStep = () => setCurrentStep((s) => s - 1);
 
   const handleSubmit = async (e) => {
@@ -76,6 +91,8 @@ const Register = () => {
     };
 
     console.log("🚀 Final register payload:", finalData);
+      console.log("🚀 Sending register data:", finalData);
+
 
     setIsProcessingPayment(true);
     try {

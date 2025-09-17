@@ -1,4 +1,3 @@
-// src/components/register/Step3Branding.jsx
 import React from "react"
 import { useTranslation } from "react-i18next"
 
@@ -7,6 +6,29 @@ const Step3Branding = ({ formData, setFormData }) => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
+
+  const handleLogoUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    const formDataUpload = new FormData()
+    formDataUpload.append("logo", file)
+
+    try {
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formDataUpload,
+      })
+      const data = await res.json()
+      if (data.imageUrl) {
+        setFormData((prev) => ({ ...prev, logo: data.imageUrl }))
+      } else {
+        console.error("Upload failed:", data)
+      }
+    } catch (err) {
+      console.error("❌ Upload error:", err)
+    }
   }
 
   return (
@@ -18,22 +40,36 @@ const Step3Branding = ({ formData, setFormData }) => {
         <p className="text-gray-600">{t("register.branding.subtitle")}</p>
       </div>
 
-      {/* English */}
+      {/* 📌 آپلود لوگو */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("register.branding.logo")}
+        </label>
+        <input type="file" accept="image/*" onChange={handleLogoUpload} />
+        {formData.logo && (
+          <img
+            src={formData.logo}
+            alt="Logo preview"
+            className="mt-4 h-20 rounded border"
+          />
+        )}
+      </div>
+
+      {/* 📌 توضیحات انگلیسی */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           {t("register.branding.english")}
         </label>
         <textarea
-          name="descriptionEnglish"
-          value={formData.descriptionEnglish}
+          name="description"
+          value={formData.description}
           onChange={handleChange}
           rows={4}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
-          placeholder={t("register.branding.englishPlaceholder")}
+          className="w-full border rounded-lg px-4 py-2"
         />
       </div>
 
-      {/* German */}
+      {/* 📌 توضیحات آلمانی */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           {t("register.branding.german")}
@@ -43,12 +79,11 @@ const Step3Branding = ({ formData, setFormData }) => {
           value={formData.descriptionGerman}
           onChange={handleChange}
           rows={4}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500"
-          placeholder={t("register.branding.germanPlaceholder")}
+          className="w-full border rounded-lg px-4 py-2"
         />
       </div>
 
-      {/* Persian */}
+      {/* 📌 توضیحات فارسی */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           {t("register.branding.persian")}
@@ -59,8 +94,7 @@ const Step3Branding = ({ formData, setFormData }) => {
           onChange={handleChange}
           rows={4}
           dir="rtl"
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500 text-right"
-          placeholder={t("register.branding.persianPlaceholder")}
+          className="w-full border rounded-lg px-4 py-2 text-right"
         />
       </div>
     </div>

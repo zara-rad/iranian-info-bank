@@ -28,11 +28,8 @@ router.post(
   ],
   async (req, res) => {
     try {
-      console.log("📥 Incoming register body:", req.body);
-
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        console.log("❌ Validation errors:", errors.array());
         return res.status(400).json({
           message: "Validation failed",
           errors: errors.array().map((err) => ({
@@ -53,6 +50,12 @@ router.post(
         subcategories,
         city,
         address,
+        website,
+        logo,
+        description,
+        descriptionGerman,
+        descriptionPersian,
+        workingHours,
       } = req.body;
 
       // 👤 Duplicate check
@@ -71,7 +74,6 @@ router.post(
         isActive: true,
       });
       await newUser.save();
-      console.log("✅ User saved:", newUser._id);
 
       // 🏷️ Validate category
       if (category) {
@@ -81,7 +83,7 @@ router.post(
         }
       }
 
-      // 🏢 Create Business
+      // 🏢 Create Business with all fields
       const business = new Business({
         owner: newUser._id,
         businessName,
@@ -90,13 +92,18 @@ router.post(
         phone,
         city: city || "",
         address: address || "",
+        website: website || "",
+        logo: logo || null,
+        description: description || "",
+        descriptionGerman: descriptionGerman || "",
+        descriptionPersian: descriptionPersian || "",
+        workingHours: Array.isArray(workingHours) ? workingHours : [],
         category: category || null,
         subcategories: Array.isArray(subcategories) ? subcategories : [],
         isVerified: false,
         isActive: true,
       });
       await business.save();
-      console.log("✅ Business saved:", business._id);
 
       // 🔑 JWT
       const token = generateToken(newUser._id, newUser.role);
@@ -110,39 +117,6 @@ router.post(
     } catch (error) {
       console.error("❌ Registration error:", error);
       res.status(500).json({ message: error.message || "Server error" });
-    }
-  }
-);
-
-/**
- * 🔑 LOGIN
- */
-router.post(
-  "/login",
-  [body("email").isEmail(), body("password").exists()],
-  async (req, res) => {
-    try {
-      const { email, password } = req.body;
-
-      const user = await User.findOne({ email, isActive: true }).select("+password");
-      if (!user) return res.status(401).json({ message: "Invalid credentials" });
-
-      const isPasswordValid = await user.comparePassword(password);
-      if (!isPasswordValid) {
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
-
-      user.lastLogin = new Date();
-      await user.save();
-
-      const token = generateToken(user._id, user.role);
-      const userResponse = user.toObject();
-      delete userResponse.password;
-
-      res.json({ message: "Login successful", token, user: userResponse });
-    } catch (error) {
-      console.error("❌ Login error:", error);
-      res.status(500).json({ message: "Error logging in" });
     }
   }
 );
