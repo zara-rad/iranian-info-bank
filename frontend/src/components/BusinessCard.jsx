@@ -8,10 +8,15 @@ import {
   Tag,
   Clock,
   ChevronDown,
-  Hash,
+  Home,
   Image as ImageIcon,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
+import { Swiper, SwiperSlide } from "swiper/react"
+import "swiper/css"
+import "swiper/css/navigation"
+import "swiper/css/pagination"
+import { Navigation, Pagination } from "swiper/modules"
 
 const BusinessCard = ({ biz }) => {
   const { t } = useTranslation()
@@ -37,8 +42,35 @@ const BusinessCard = ({ biz }) => {
         </h3>
       </div>
 
+      {/* 📷 تصاویر (Carousel) */}
+      {biz.images && biz.images.length > 0 && (
+        <div className="mb-6">
+          <h4 className="font-bold mb-3 flex items-center">
+            <ImageIcon className="w-5 h-5 mr-2 text-gray-600" /> {t("Images")}
+          </h4>
+          <Swiper
+            modules={[Navigation, Pagination]}
+            navigation
+            pagination={{ clickable: true }}
+            spaceBetween={20}
+            slidesPerView={1}
+            className="rounded-lg shadow-md"
+          >
+            {biz.images.map((img, idx) => (
+              <SwiperSlide key={idx}>
+                <img
+                  src={img}
+                  alt={`Image ${idx + 1}`}
+                  className="object-cover w-full h-64 rounded-lg"
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+      )}
+
       {/* توضیحات چندزبانه */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {biz.description && (
           <div className="p-4 rounded-lg shadow bg-blue-50">
             <p className="font-bold">EN:</p>
@@ -60,7 +92,7 @@ const BusinessCard = ({ biz }) => {
       </div>
 
       {/* اطلاعات تماس */}
-      <div className="space-y-3 text-gray-700 mt-6">
+      <div className="space-y-3 text-gray-700">
         {biz.ownerName && (
           <div className="flex items-center">
             <User className="w-5 h-5 text-blue-500 mr-2" />
@@ -113,7 +145,7 @@ const BusinessCard = ({ biz }) => {
 
         {biz.address && (
           <div className="flex items-center p-3 bg-orange-50 rounded-lg shadow">
-            <Hash className="w-5 h-5 text-orange-600 mr-2" />
+            <Home className="w-5 h-5 text-orange-600 mr-2" />
             {biz.address}
           </div>
         )}
@@ -149,29 +181,6 @@ const BusinessCard = ({ biz }) => {
               ))}
             </ul>
           )}
-        </div>
-      )}
-
-      {/* 📷 تصاویر */}
-      {biz.images && biz.images.length > 0 && (
-        <div className="mt-6">
-          <h4 className="font-bold mb-3 flex items-center">
-            <ImageIcon className="w-5 h-5 mr-2 text-gray-600" /> {t("Images")}
-          </h4>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {biz.images.map((img, idx) => (
-              <div
-                key={idx}
-                className="overflow-hidden rounded-lg shadow-md hover:shadow-lg"
-              >
-                <img
-                  src={img}
-                  alt={`Image ${idx + 1}`}
-                  className="object-cover w-full h-32 transform hover:scale-105 transition duration-300"
-                />
-              </div>
-            ))}
-          </div>
         </div>
       )}
 
