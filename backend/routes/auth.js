@@ -83,26 +83,29 @@ router.post(
         }
       }
 
-      // 🏢 Create Business with all fields
-      const business = new Business({
-        owner: newUser._id,
-        businessName,
-        ownerName: fullName,
-        email,
-        phone,
-        city: city || "",
-        address: address || "",
-        website: website || "",
-        logo: logo || null,
-        description: description || "",
-        descriptionGerman: descriptionGerman || "",
-        descriptionPersian: descriptionPersian || "",
-        workingHours: Array.isArray(workingHours) ? workingHours : [],
-        category: category || null,
-        subcategories: Array.isArray(subcategories) ? subcategories : [],
-        isVerified: false,
-        isActive: true,
-      });
+     // 🏢 Create Business with all fields
+const business = new Business({
+  owner: newUser._id,
+  businessName,
+  ownerName: fullName,
+  email,
+  phone,
+  city: city || "",
+  address: address || "",
+  postalCode: req.body.postalCode || "",
+  website: website || "",
+  logo: logo || null,
+  images: Array.isArray(req.body.images) ? req.body.images : [], // ✅ اضافه شد
+  description: description || "",
+  descriptionGerman: descriptionGerman || "",
+  descriptionPersian: descriptionPersian || "",
+  workingHours: Array.isArray(workingHours) ? workingHours : [],
+  category: category || null,
+  subcategories: Array.isArray(subcategories) ? subcategories : [],
+  isVerified: false,
+  isActive: true,
+})
+
       await business.save();
 
       // 🔑 JWT

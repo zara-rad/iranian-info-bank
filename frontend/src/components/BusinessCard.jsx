@@ -1,79 +1,91 @@
-import React from "react";
-import { MapPin, Phone, Mail, Globe, User, Tag } from "lucide-react";
-import { useTranslation } from "react-i18next";
+import React, { useState } from "react"
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Globe,
+  User,
+  Tag,
+  Clock,
+  ChevronDown,
+  Hash,
+  Image as ImageIcon,
+} from "lucide-react"
+import { useTranslation } from "react-i18next"
 
 const BusinessCard = ({ biz }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
+  const [showHours, setShowHours] = useState(false)
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
-      {/* لوگو و اسم (وسط و بالا) */}
-      <div className="flex flex-col items-center justify-center text-center mb-6">
-        <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center text-2xl font-bold text-gray-600 shadow">
+    <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
+      {/* لوگو و اسم */}
+      <div className="flex flex-col items-center text-center mb-6">
+        <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center text-3xl font-bold text-gray-600 shadow-md overflow-hidden">
           {biz.logo ? (
             <img
               src={biz.logo}
               alt={biz.businessName}
-              className="w-20 h-20 rounded-full object-cover"
+              className="w-full h-full object-cover"
             />
           ) : (
             biz.businessName?.charAt(0).toUpperCase()
           )}
         </div>
-        <h3 className="text-2xl font-bold mt-3">{biz.businessName}</h3>
+        <h3 className="text-2xl font-bold mt-3 text-gray-800">
+          {biz.businessName}
+        </h3>
       </div>
 
-      {/* توضیحات هر زبان در باکس جدا */}
-<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-  {biz.description && (
-    <div className="p-4 bg-white rounded-lg shadow hover:shadow-lg hover:bg-blue-50 transition duration-300">
-      <p className="font-bold">EN:</p>
-      <p className="text-gray-700">{biz.description}</p>
-    </div>
-  )}
-  {biz.descriptionGerman && (
-    <div className="p-4 bg-white rounded-lg shadow hover:shadow-lg hover:bg-green-50 transition duration-300">
-      <p className="font-bold">DE:</p>
-      <p className="text-gray-700">{biz.descriptionGerman}</p>
-    </div>
-  )}
-  {biz.descriptionPersian && (
-    <div className="p-4 bg-white rounded-lg shadow hover:shadow-lg hover:bg-purple-50 transition duration-300">
-      <p className="font-bold">FA:</p>
-      <p className="text-gray-700 text-right">{biz.descriptionPersian}</p>
-    </div>
-  )}
-</div>
-
+      {/* توضیحات چندزبانه */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {biz.description && (
+          <div className="p-4 rounded-lg shadow bg-blue-50">
+            <p className="font-bold">EN:</p>
+            <p className="text-gray-700">{biz.description}</p>
+          </div>
+        )}
+        {biz.descriptionGerman && (
+          <div className="p-4 rounded-lg shadow bg-green-50">
+            <p className="font-bold">DE:</p>
+            <p className="text-gray-700">{biz.descriptionGerman}</p>
+          </div>
+        )}
+        {biz.descriptionPersian && (
+          <div className="p-4 rounded-lg shadow bg-purple-50">
+            <p className="font-bold">FA:</p>
+            <p className="text-gray-700 text-right">{biz.descriptionPersian}</p>
+          </div>
+        )}
+      </div>
 
       {/* اطلاعات تماس */}
-      <div className="space-y-2 text-gray-700">
+      <div className="space-y-3 text-gray-700 mt-6">
         {biz.ownerName && (
           <div className="flex items-center">
             <User className="w-5 h-5 text-blue-500 mr-2" />
             <strong>{t("Owner")}:</strong> {biz.ownerName}
           </div>
         )}
+
         {biz.phone && (
           <a
             href={`tel:${biz.phone}`}
-            className="block p-4 bg-white rounded-lg shadow hover:shadow-lg hover:bg-green-50 transition duration-300"
+            className="flex items-center p-3 bg-green-50 rounded-lg shadow hover:shadow-md transition"
           >
-            <p className="font-bold flex items-center">📞 Phone:</p>
-            <p className="text-gray-700">{biz.phone}</p>
+            <Phone className="w-5 h-5 text-green-600 mr-2" /> {biz.phone}
           </a>
         )}
 
         {biz.email && (
           <a
             href={`mailto:${biz.email}`}
-            className="block p-4 bg-white rounded-lg shadow hover:shadow-lg hover:bg-blue-50 transition duration-300"
+            className="flex items-center p-3 bg-blue-50 rounded-lg shadow hover:shadow-md transition"
           >
-            <p className="font-bold flex items-center">📧 Email:</p>
-            <p className="text-gray-700">{biz.email}</p>
+            <Mail className="w-5 h-5 text-blue-600 mr-2" /> {biz.email}
           </a>
         )}
-        {/* 🌍 وبسایت */}
+
         {biz.website && (
           <a
             href={
@@ -83,27 +95,89 @@ const BusinessCard = ({ biz }) => {
             }
             target="_blank"
             rel="noopener noreferrer"
-            className="block p-4 bg-white rounded-lg shadow hover:shadow-lg hover:bg-purple-50 transition duration-300"
+            className="flex items-center p-3 bg-purple-50 rounded-lg shadow hover:shadow-md transition"
           >
-            <p className="font-bold flex items-center">🌍 Website:</p>
-            <p className="text-gray-700">{biz.website}</p>
+            <Globe className="w-5 h-5 text-purple-600 mr-2" /> {biz.website}
           </a>
         )}
-        {biz.city && (
-          <div className="flex items-center">
-            <MapPin className="w-5 h-5 text-purple-500 mr-2" /> {biz.city}
+
+        {(biz.city || biz.postalCode) && (
+          <div className="flex items-center p-3 bg-gray-50 rounded-lg shadow">
+            <MapPin className="w-5 h-5 text-red-500 mr-2" />
+            {biz.city && <span>{biz.city}</span>}
+            {biz.postalCode && (
+              <span className="ml-2 text-gray-500">({biz.postalCode})</span>
+            )}
           </div>
         )}
+
         {biz.address && (
-          <div className="flex items-center">
-            <Globe className="w-5 h-5 text-orange-500 mr-2" /> {biz.address}
+          <div className="flex items-center p-3 bg-orange-50 rounded-lg shadow">
+            <Hash className="w-5 h-5 text-orange-600 mr-2" />
+            {biz.address}
           </div>
         )}
       </div>
 
+      {/* 🕒 ساعات کاری با آکاردئون */}
+      {biz.workingHours && biz.workingHours.length > 0 && (
+        <div className="mt-6 border rounded-lg overflow-hidden">
+          <button
+            onClick={() => setShowHours(!showHours)}
+            className="flex justify-between items-center w-full p-4 text-left font-bold bg-gray-100 hover:bg-gray-200 transition"
+          >
+            <span className="flex items-center">
+              <Clock className="w-5 h-5 mr-2 text-gray-600" />
+              {t("Working Hours")}
+            </span>
+            <ChevronDown
+              className={`w-5 h-5 transform transition-transform ${
+                showHours ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {showHours && (
+            <ul className="p-4 space-y-1 text-gray-700 bg-white">
+              {biz.workingHours.map((wh, idx) => (
+                <li key={idx}>
+                  <strong className="capitalize">{wh.day}:</strong>{" "}
+                  {wh.isClosed
+                    ? t("Closed")
+                    : `${wh.open || "--"} - ${wh.close || "--"}`}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      {/* 📷 تصاویر */}
+      {biz.images && biz.images.length > 0 && (
+        <div className="mt-6">
+          <h4 className="font-bold mb-3 flex items-center">
+            <ImageIcon className="w-5 h-5 mr-2 text-gray-600" /> {t("Images")}
+          </h4>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {biz.images.map((img, idx) => (
+              <div
+                key={idx}
+                className="overflow-hidden rounded-lg shadow-md hover:shadow-lg"
+              >
+                <img
+                  src={img}
+                  alt={`Image ${idx + 1}`}
+                  className="object-cover w-full h-32 transform hover:scale-105 transition duration-300"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* زیر دسته‌ها */}
       {biz.subcategories?.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-6">
           <div className="flex items-center mb-2">
             <Tag className="w-5 h-5 text-pink-500 mr-2" />
             <strong>{t("Subcategories")}:</strong>
@@ -116,7 +190,7 @@ const BusinessCard = ({ biz }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default BusinessCard;
+export default BusinessCard

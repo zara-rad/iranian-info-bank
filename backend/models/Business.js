@@ -37,7 +37,10 @@ const businessSchema = new mongoose.Schema(
     address: { type: String },
     city: { type: String },
     state: { type: String },
-    zipCode: { type: String },
+
+    // ✅ تغییر دادم به postalCode
+    postalCode: { type: String },
+
     coordinates: {
       latitude: { type: Number },
       longitude: { type: Number },
@@ -76,6 +79,7 @@ const businessSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 
 // ایندکس‌ها
 businessSchema.index({ businessName: "text", description: "text" });

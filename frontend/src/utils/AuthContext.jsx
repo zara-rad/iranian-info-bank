@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const API_BASE = "/api"; // ✅ proxy استفاده کن
+  const API_BASE = "/api"; // ✅ با proxy
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -65,19 +65,7 @@ export const AuthProvider = ({ children }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          fullName: userData.fullName,
-          email: userData.email,
-          password: userData.password,
-          confirmPassword: userData.confirmPassword,
-          businessName: userData.businessName,
-          phone: userData.phone,
-          category: userData.category,
-          subcategories: userData.subcategories,
-          description: userData.description,
-          descriptionGerman: userData.descriptionGerman,
-          descriptionPersian: userData.descriptionPersian,
-          city: userData.city || "",
-          address: userData.address || "",
+          ...userData, // 👈 همه فیلدها فرستاده میشه
         }),
       });
 
@@ -111,7 +99,14 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, login, register, logout, loading, isAuthenticated: !!user }}
+      value={{
+        user,
+        login,
+        register,
+        logout,
+        loading,
+        isAuthenticated: !!user,
+      }}
     >
       {!loading && children}
     </AuthContext.Provider>

@@ -71,9 +71,10 @@ router.post(
   [
     body("businessName").trim().isLength({ min: 2 }),
     body("email").isEmail(),
-    body("phone").trim().isLength({ min: 10 }),
+    body("phone").trim().isLength({ min: 5 }),
     body("address").trim().isLength({ min: 2 }),
     body("city").trim().isLength({ min: 2 }),
+    body("postalCode").trim().isLength({ min: 3 }),
     body("category").isMongoId(),
 
     // optional fields
@@ -84,6 +85,7 @@ router.post(
     body("descriptionGerman").optional().isString(),
     body("descriptionPersian").optional().isString(),
     body("workingHours").optional().isArray(),
+    body("paymentMethod").optional().isString(),
   ],
   async (req, res) => {
     try {
@@ -94,23 +96,11 @@ router.post(
       const category = await Category.findById(req.body.category);
       if (!category) return res.status(400).json({ message: "Invalid category" });
 
+      // ✅ همه فیلدهای فرانت رو ذخیره کن
       const business = new Business({
+        ...req.body,
         owner: req.user._id,
-        businessName: req.body.businessName,
         ownerName: req.user.fullName,
-        email: req.body.email,
-        phone: req.body.phone,
-        website: req.body.website || "",
-        description: req.body.description || "",
-        descriptionGerman: req.body.descriptionGerman || "",
-        descriptionPersian: req.body.descriptionPersian || "",
-        address: req.body.address || "",
-        city: req.body.city || "",
-        category: req.body.category,
-        subcategories: req.body.subcategories || [],
-        workingHours: req.body.workingHours || [],
-        logo: req.body.logo || null,
-        images: req.body.images || [],
       });
 
       await business.save();
@@ -135,11 +125,13 @@ router.put("/:id", authenticate, async (req, res) => {
     if (!isOwner && !isAdmin)
       return res.status(403).json({ message: "Access denied" });
 
+    // ✅ merge مستقیم
     Object.assign(business, req.body);
-    await business.save();
 
+    await business.save();
     res.json(business);
   } catch (err) {
+    console.error("Error updating business:", err);
     res.status(500).json({ message: "Error updating business" });
   }
 });
