@@ -68,6 +68,8 @@ app.use("/api/business-owner", businessOwnerRoutes);
 
 // ✅ مسیر آپلود
 app.use("/api/upload", uploadRoutes);
+// برای سرو فایل‌ها
+app.use("/uploads", express.static("uploads"))
 
 // ----------------------------------
 // 📂 Static files with CORS headers

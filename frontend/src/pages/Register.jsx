@@ -42,9 +42,13 @@ const Register = () => {
     descriptionPersian: "",
     // 🌐 اطلاعات اضافی
     logo: null,
+      images: [], // 👈 اضافه بشه
+
     website: "",
     address: "",
     city: "",
+      postalCode: "",
+
     workingHours: [], // ✅ اضافه شد
     // 💳 پرداخت
     paymentMethod: "stripe",

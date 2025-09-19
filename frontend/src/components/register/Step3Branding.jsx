@@ -8,28 +8,54 @@ const Step3Branding = ({ formData, setFormData }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleLogoUpload = async (e) => {
-    const file = e.target.files[0]
-    if (!file) return
+ // آپلود لوگو
+const handleLogoUpload = async (e) => {
+  const file = e.target.files[0]
+  if (!file) return
 
-    const formDataUpload = new FormData()
-    formDataUpload.append("logo", file)
+  const formDataUpload = new FormData()
+  formDataUpload.append("logo", file)
 
-    try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formDataUpload,
-      })
-      const data = await res.json()
-      if (data.imageUrl) {
-        setFormData((prev) => ({ ...prev, logo: data.imageUrl }))
-      } else {
-        console.error("Upload failed:", data)
-      }
-    } catch (err) {
-      console.error("❌ Upload error:", err)
+  try {
+    const res = await fetch("http://localhost:5000/api/upload/logo", {
+      method: "POST",
+      body: formDataUpload,
+    })
+    const data = await res.json()
+    if (data.imageUrl) {
+      setFormData((prev) => ({ ...prev, logo: data.imageUrl }))
     }
+  } catch (err) {
+    console.error("❌ Upload error:", err)
   }
+}
+
+// 📌 آپلود عکس‌های نمونه کار (max 3)
+const handleImagesUpload = async (e) => {
+  const files = Array.from(e.target.files).slice(0, 3) // نهایت ۳ تا
+  if (!files.length) return
+
+  const formDataUpload = new FormData()
+  files.forEach((file) => {
+    formDataUpload.append("images", file) // 👈 چندتا فایل اضافه میشه
+  })
+
+  try {
+    const res = await fetch("http://localhost:5000/api/upload/images", {
+      method: "POST",
+      body: formDataUpload,
+    })
+    const data = await res.json()
+    if (data.imageUrls) {
+      setFormData((prev) => ({
+        ...prev,
+        images: data.imageUrls, // 👉 همه عکس‌ها میاد
+      }))
+    }
+  } catch (err) {
+    console.error("❌ Upload error:", err)
+  }
+}
 
   return (
     <div className="space-y-6">
@@ -40,7 +66,7 @@ const Step3Branding = ({ formData, setFormData }) => {
         <p className="text-gray-600">{t("register.branding.subtitle")}</p>
       </div>
 
-      {/* 📌 آپلود لوگو */}
+      {/* 📌 آپلود لوگو (اختیاری) */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           {t("register.branding.logo")}
@@ -53,6 +79,29 @@ const Step3Branding = ({ formData, setFormData }) => {
             className="mt-4 h-20 rounded border"
           />
         )}
+      </div>
+
+      {/* 📌 آپلود عکس‌های نمونه کار */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t("register.branding.images")}
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleImagesUpload}
+        />
+        <div className="mt-4 flex gap-4">
+          {formData.images?.map((img, i) => (
+            <img
+              key={i}
+              src={img}
+              alt={`Work ${i + 1}`}
+              className="h-20 rounded border"
+            />
+          ))}
+        </div>
       </div>
 
       {/* 📌 توضیحات انگلیسی */}

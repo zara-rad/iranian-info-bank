@@ -5,13 +5,22 @@ const fs = require("fs");
 
 const router = express.Router();
 
-// 📂 مسیر ذخیره لوگوها
-const uploadDir = path.join(process.cwd(), "uploads", "logos");
+// 📂 مسیر ذخیره عکس‌ها (لوگو + تصاویر)
+const uploadDir = path.join(process.cwd(), "uploads");
 fs.mkdirSync(uploadDir, { recursive: true });
 
+// ✅ ساختار نام‌گذاری و مسیر ذخیره
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadDir);
+    // جدا کردن مسیر لوگو و تصاویر
+    let subDir = "others";
+    if (file.fieldname === "logo") subDir = "logos";
+    if (file.fieldname === "images") subDir = "images";
+
+    const finalDir = path.join(uploadDir, subDir);
+    fs.mkdirSync(finalDir, { recursive: true });
+
+    cb(null, finalDir);
   },
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname || "");
@@ -46,25 +55,49 @@ const upload = multer({
 });
 
 // ✅ آپلود لوگو
-router.post("/", upload.single("logo"), (req, res) => {
+router.post("/logo", upload.single("logo"), (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-    // آدرس کامل بسازیم
     const baseUrl = `${req.protocol}://${req.get("host")}`;
     const imageUrl = `${baseUrl}/uploads/logos/${req.file.filename}`;
 
     res.json({
       success: true,
-      imageUrl, // 👉 حالا URL کامل میاد
+      type: "logo",
+      imageUrl,
       filename: req.file.filename,
       mimetype: req.file.mimetype,
       size: req.file.size,
     });
   } catch (err) {
-    console.error("Upload error:", err);
+    console.error("Upload error (logo):", err);
+    res.status(500).json({ success: false, message: "Upload failed" });
+  }
+});
+
+// ✅ آپلود عکس‌های نمونه کار (حداکثر ۳ تا)
+router.post("/images", upload.array("images", 3), (req, res) => {
+  try {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ message: "No files uploaded" });
+    }
+
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const imageUrls = req.files.map(
+      (file) => `${baseUrl}/uploads/images/${file.filename}`
+    );
+
+    res.json({
+      success: true,
+      type: "images",
+      count: req.files.length,
+      imageUrls,
+    });
+  } catch (err) {
+    console.error("Upload error (images):", err);
     res.status(500).json({ success: false, message: "Upload failed" });
   }
 });
