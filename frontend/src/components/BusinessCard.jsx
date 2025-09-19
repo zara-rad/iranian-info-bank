@@ -9,7 +9,6 @@ import {
   Clock,
   ChevronDown,
   Home,
-  Image as ImageIcon,
 } from "lucide-react"
 import { useTranslation } from "react-i18next"
 import { Swiper, SwiperSlide } from "swiper/react"
@@ -45,9 +44,6 @@ const BusinessCard = ({ biz }) => {
       {/* 📷 تصاویر (Carousel) */}
       {biz.images && biz.images.length > 0 && (
         <div className="mb-6">
-          <h4 className="font-bold mb-3 flex items-center">
-            <ImageIcon className="w-5 h-5 mr-2 text-gray-600" /> {t("Images")}
-          </h4>
           <Swiper
             modules={[Navigation, Pagination]}
             navigation
@@ -72,19 +68,19 @@ const BusinessCard = ({ biz }) => {
       {/* توضیحات چندزبانه */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {biz.description && (
-          <div className="p-4 rounded-lg shadow bg-blue-50">
+          <div className="p-4 rounded-lg shadow bg-blue-50 hover:shadow-lg transition">
             <p className="font-bold">EN:</p>
             <p className="text-gray-700">{biz.description}</p>
           </div>
         )}
         {biz.descriptionGerman && (
-          <div className="p-4 rounded-lg shadow bg-green-50">
+          <div className="p-4 rounded-lg shadow bg-green-50 hover:shadow-lg transition">
             <p className="font-bold">DE:</p>
             <p className="text-gray-700">{biz.descriptionGerman}</p>
           </div>
         )}
         {biz.descriptionPersian && (
-          <div className="p-4 rounded-lg shadow bg-purple-50">
+          <div className="p-4 rounded-lg shadow bg-purple-50 hover:shadow-lg transition">
             <p className="font-bold">FA:</p>
             <p className="text-gray-700 text-right">{biz.descriptionPersian}</p>
           </div>
@@ -94,7 +90,7 @@ const BusinessCard = ({ biz }) => {
       {/* اطلاعات تماس */}
       <div className="space-y-3 text-gray-700">
         {biz.ownerName && (
-          <div className="flex items-center">
+          <div className="flex items-center p-3 bg-gray-50 rounded-lg shadow hover:shadow-md transition">
             <User className="w-5 h-5 text-blue-500 mr-2" />
             <strong>{t("Owner")}:</strong> {biz.ownerName}
           </div>
@@ -134,7 +130,7 @@ const BusinessCard = ({ biz }) => {
         )}
 
         {(biz.city || biz.postalCode) && (
-          <div className="flex items-center p-3 bg-gray-50 rounded-lg shadow">
+          <div className="flex items-center p-3 bg-gray-50 rounded-lg shadow hover:shadow-md transition">
             <MapPin className="w-5 h-5 text-red-500 mr-2" />
             {biz.city && <span>{biz.city}</span>}
             {biz.postalCode && (
@@ -144,7 +140,7 @@ const BusinessCard = ({ biz }) => {
         )}
 
         {biz.address && (
-          <div className="flex items-center p-3 bg-orange-50 rounded-lg shadow">
+          <div className="flex items-center p-3 bg-orange-50 rounded-lg shadow hover:shadow-md transition">
             <Home className="w-5 h-5 text-orange-600 mr-2" />
             {biz.address}
           </div>
