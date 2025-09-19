@@ -7,7 +7,7 @@ const Category = require("../models/Category");
 
 const router = express.Router();
 
-// 🔑 JWT
+// 🔑 JWT Generator
 const generateToken = (userId, role = "business_owner") => {
   return jwt.sign({ userId, role }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
@@ -83,28 +83,28 @@ router.post(
         }
       }
 
-     // 🏢 Create Business with all fields
-const business = new Business({
-  owner: newUser._id,
-  businessName,
-  ownerName: fullName,
-  email,
-  phone,
-  city: city || "",
-  address: address || "",
-  postalCode: req.body.postalCode || "",
-  website: website || "",
-  logo: logo || null,
-  images: Array.isArray(req.body.images) ? req.body.images : [], // ✅ اضافه شد
-  description: description || "",
-  descriptionGerman: descriptionGerman || "",
-  descriptionPersian: descriptionPersian || "",
-  workingHours: Array.isArray(workingHours) ? workingHours : [],
-  category: category || null,
-  subcategories: Array.isArray(subcategories) ? subcategories : [],
-  isVerified: false,
-  isActive: true,
-})
+      // 🏢 Create Business
+      const business = new Business({
+        owner: newUser._id,
+        businessName,
+        ownerName: fullName,
+        email,
+        phone,
+        city: city || "",
+        address: address || "",
+        postalCode: req.body.postalCode || "",
+        website: website || "",
+        logo: logo || null,
+        images: Array.isArray(req.body.images) ? req.body.images : [],
+        description: description || "",
+        descriptionGerman: descriptionGerman || "",
+        descriptionPersian: descriptionPersian || "",
+        workingHours: Array.isArray(workingHours) ? workingHours : [],
+        category: category || null,
+        subcategories: Array.isArray(subcategories) ? subcategories : [],
+        isVerified: false,
+        isActive: true,
+      });
 
       await business.save();
 
@@ -120,6 +120,59 @@ const business = new Business({
     } catch (error) {
       console.error("❌ Registration error:", error);
       res.status(500).json({ message: error.message || "Server error" });
+    }
+  }
+);
+
+/**
+ * 🔑 LOGIN
+ */
+router.post(
+  "/login",
+  [
+    body("email").isEmail().withMessage("Invalid email"),
+    body("password").notEmpty().withMessage("Password is required"),
+  ],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      const { email, password } = req.body;
+
+      // 🧑 پیدا کردن یوزر
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(400).json({ message: "User not found" });
+      }
+
+      // 🔐 بررسی پسورد
+      const isMatch = await user.comparePassword(password);
+      if (!isMatch) {
+        // شمارش لاگین‌های ناموفق
+        await user.incLoginAttempts();
+        return res.status(400).json({ message: "Invalid credentials" });
+      }
+
+      // آپدیت لاگین موفق
+      user.loginAttempts = 0;
+      user.lockUntil = null;
+      user.lastLogin = new Date();
+      await user.save();
+
+      // 🎟 ساخت توکن
+      const token = generateToken(user._id, user.role);
+
+      res.json({
+        message: "Login successful",
+        token,
+        user: { id: user._id, email: user.email, fullName: user.fullName, role: user.role },
+      });
+    } catch (err) {
+      console.error("❌ Login error:", err);
+      res.status(500).json({ message: "Server error" });
     }
   }
 );
