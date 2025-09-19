@@ -34,8 +34,9 @@ const LocationForm = ({ formData, handleInputChange, editMode }) => {
           <label className="block text-sm font-medium text-gray-700 mb-2">ZIP Code *</label>
           <input
             type="text"
-            name="zipCode"
-            value={formData.zipCode || ""}
+                  name="postalCode"   // 🔥 اینجا عوض شد (قبلا zipCode بود)
+
+             value={formData.postalCode || ""}
             onChange={handleInputChange}
             disabled={!editMode}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500 disabled:bg-gray-100"
@@ -43,17 +44,7 @@ const LocationForm = ({ formData, handleInputChange, editMode }) => {
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">State</label>
-        <input
-          type="text"
-          name="state"
-          value={formData.state || ""}
-          onChange={handleInputChange}
-          disabled={!editMode}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-persian-500 focus:border-persian-500 disabled:bg-gray-100"
-        />
-      </div>
+    
     </div>
   );
 };
