@@ -41,7 +41,7 @@ const BusinessDashboard = () => {
   const [categories, setCategories] = useState([]);
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
 
-  // Analytics data (later fetched from backend)
+  // Analytics data
   const [analytics, setAnalytics] = useState({
     views: 0,
     clicksPhone: 0,
@@ -57,7 +57,6 @@ const BusinessDashboard = () => {
       return;
     }
 
-    // اول categories رو لود کن → بعد business رو
     const loadAll = async () => {
       await loadCategories();
       await loadBusinessData();
@@ -66,7 +65,7 @@ const BusinessDashboard = () => {
     loadAll();
   }, [user, navigate]);
 
-  // ✅ Fetch business info from backend
+  // ✅ Fetch business info
   const loadBusinessData = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -87,7 +86,7 @@ const BusinessDashboard = () => {
 
       const data = await res.json();
 
-      // 🔥 normalize category + subcategories to string IDs
+      // فقط ID ها رو نگه داریم
       const normalizedCategory =
         data.category?._id?.toString() || data.category?.toString() || "";
 
@@ -95,26 +94,10 @@ const BusinessDashboard = () => {
         (s) => s?._id?.toString() || s.toString()
       );
 
-      // 🔥 پیدا کردن اسم‌های category و subcategories برای نمایش
-      let categoryObj = null;
-      let subcategoryObjs = [];
-
-      if (categories.length > 0) {
-        categoryObj = categories.find(
-          (cat) => cat._id?.toString() === normalizedCategory
-        );
-
-        if (categoryObj) {
-          subcategoryObjs = categoryObj.subcategories.filter((sub) =>
-            normalizedSubcategories.includes(sub._id.toString())
-          );
-        }
-      }
-
       setBusinessData({
         ...data,
-        categoryObj,
-        subcategoryObjs,
+        category: normalizedCategory,
+        subcategories: normalizedSubcategories,
       });
 
       setFormData({
@@ -147,7 +130,46 @@ const BusinessDashboard = () => {
     }
   };
 
-  // ✅ Input field handler
+  // ✅ وقتی categories و businessData آماده شدند → sync categoryObj & subcategoryObjs
+  useEffect(() => {
+    if (!businessData || categories.length === 0) return;
+
+    const normalizedCategory =
+      businessData.category?._id?.toString() ||
+      businessData.category?.toString() ||
+      "";
+
+    const normalizedSubcategories = (businessData.subcategories || []).map(
+      (s) => s?._id?.toString() || s.toString()
+    );
+
+    const categoryObj = categories.find(
+      (cat) => cat._id?.toString() === normalizedCategory
+    );
+
+    let subcategoryObjs = [];
+    if (categoryObj) {
+      subcategoryObjs = categoryObj.subcategories.filter((sub) =>
+        normalizedSubcategories.includes(sub._id.toString())
+      );
+    }
+
+    setBusinessData((prev) => {
+      if (
+        prev?.categoryObj?._id === categoryObj?._id &&
+        JSON.stringify(prev?.subcategoryObjs) === JSON.stringify(subcategoryObjs)
+      ) {
+        return prev;
+      }
+      return {
+        ...prev,
+        categoryObj,
+        subcategoryObjs,
+      };
+    });
+  }, [categories, businessData?.category, businessData?.subcategories]);
+
+  // ✅ Input handler
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -308,8 +330,7 @@ const BusinessDashboard = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+          Authorization: `Bearer ${token}` },
         body: JSON.stringify({ imageUrl }),
       });
       if (!res.ok) throw new Error("Failed to delete image");
@@ -384,7 +405,7 @@ const BusinessDashboard = () => {
                 handleImageUpload={handleImageUpload}
                 handleDeleteLogo={handleDeleteLogo}
                 handleDeleteImage={handleDeleteImage}
-                businessData={businessData}   // ✅ اضافه شد
+                businessData={businessData} // ✅ الان همیشه categoryObj و subcategoryObjs رو داره
               />
             )}
             {activeTab === "working-hours" && (
