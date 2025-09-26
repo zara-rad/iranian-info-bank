@@ -1,9 +1,5 @@
 import React from "react";
-import BusinessInfoHeader from "./BusinessInfoHeader";
-import BasicInfoForm from "./BasicInfoForm";
-import LocationForm from "./LocationForm";
 import CategorySelector from "./CategorySelector";
-import BusinessDescriptions from "./BusinessDescriptions";
 
 const BusinessInfoTab = ({
   formData,
@@ -21,154 +17,213 @@ const BusinessInfoTab = ({
   handleImageUpload,
   handleDeleteLogo,
   handleDeleteImage,
+  businessData,
 }) => {
-  // دسته انتخاب‌شده رو پیدا کن
-  const selectedCategory = categories.find(
-    (c) => c._id?.toString() === formData.category?.toString()
-  );
-
   return (
-    <div className="space-y-6">
-      {/* Header with Save/Cancel/Edit */}
-      <BusinessInfoHeader
-        editMode={editMode}
-        setEditMode={setEditMode}
-        saving={saving}
-        handleSave={handleSave}
-        handleCancel={handleCancel}
-      />
+    <div className="bg-white shadow rounded-xl p-6">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-bold text-gray-800">Business Information</h2>
+        {!editMode ? (
+          <button
+            onClick={() => setEditMode(true)}
+            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+          >
+            Edit Information
+          </button>
+        ) : (
+          <div className="flex gap-2">
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+            >
+              {saving ? "Saving..." : "Save Changes"}
+            </button>
+            <button
+              onClick={handleCancel}
+              className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
+      </div>
 
-      <div className="bg-white rounded-xl shadow-md p-6">
-        {/* Basic Info + Location */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <BasicInfoForm
-            formData={formData}
-            handleInputChange={handleInputChange}
-            editMode={editMode}
-          />
-
-          <LocationForm
-            formData={formData}
-            handleInputChange={handleInputChange}
-            editMode={editMode}
+      {/* Basic Info */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Business Name *
+          </label>
+          <input
+            type="text"
+            name="businessName"
+            value={formData.businessName || ""}
+            onChange={handleInputChange}
+            disabled={!editMode}
+            className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100"
           />
         </div>
 
-        {/* ✅ Logo Upload */}
-        <div className="mt-6 pt-6 border-t">
-          <h4 className="font-medium text-gray-900 mb-4">Business Logo</h4>
-          {formData.logo ? (
-            <div className="mb-3">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Owner Name *
+          </label>
+          <input
+            type="text"
+            name="ownerName"
+            value={formData.ownerName || ""}
+            onChange={handleInputChange}
+            disabled={!editMode}
+            className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Email *</label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email || ""}
+            onChange={handleInputChange}
+            disabled={!editMode}
+            className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Phone *</label>
+          <input
+            type="text"
+            name="phone"
+            value={formData.phone || ""}
+            onChange={handleInputChange}
+            disabled={!editMode}
+            className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100"
+          />
+        </div>
+      </div>
+
+      {/* Logo */}
+      <div className="mb-6">
+        <h3 className="font-medium text-gray-800 mb-2">Business Logo</h3>
+        {formData.logo && (
+          <div className="flex items-center gap-4 mb-3">
+            <img src={formData.logo} alt="logo" className="h-16 rounded-lg shadow" />
+            {editMode && (
+              <button
+                onClick={handleDeleteLogo}
+                className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
+              >
+                Delete
+              </button>
+            )}
+          </div>
+        )}
+        {editMode && (
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => e.target.files && handleLogoUpload(e.target.files[0])}
+          />
+        )}
+      </div>
+
+      {/* Gallery Images */}
+      <div className="mb-6">
+        <h3 className="font-medium text-gray-800 mb-2">Gallery Images</h3>
+        <div className="flex gap-3 flex-wrap">
+          {formData.images?.map((img, idx) => (
+            <div key={idx} className="relative">
               <img
-                src={formData.logo}
-                alt="Business Logo"
-                className="h-24 w-24 rounded-lg object-cover border"
+                src={img}
+                alt={`gallery-${idx}`}
+                className="h-24 w-32 object-cover rounded-lg shadow"
               />
               {editMode && (
                 <button
-                  onClick={handleDeleteLogo}
-                  className="mt-2 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg"
+                  onClick={() => handleDeleteImage(img)}
+                  className="absolute top-1 right-1 px-2 py-1 bg-red-500 text-white rounded-full hover:bg-red-600"
                 >
-                  Delete
+                  ✕
                 </button>
               )}
             </div>
-          ) : (
-            <p className="text-sm text-gray-500 mb-3">No logo uploaded yet</p>
-          )}
-
-          {editMode && (
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleLogoUpload(e.target.files[0])}
-              className="block w-full text-sm text-gray-700 border rounded-lg cursor-pointer"
-            />
-          )}
+          ))}
         </div>
+        {editMode && (
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) => e.target.files && handleImageUpload(e.target.files)}
+            className="mt-2"
+          />
+        )}
+      </div>
 
-        {/* ✅ Gallery Upload */}
-        <div className="mt-6 pt-6 border-t">
-          <h4 className="font-medium text-gray-900 mb-4">Gallery Images</h4>
-          {formData.images && formData.images.length > 0 ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
-              {formData.images.map((img, idx) => (
-                <div key={idx} className="relative group">
-                  <img
-                    src={img}
-                    alt={`Business Image ${idx + 1}`}
-                    className="h-32 w-full object-cover rounded-lg border"
-                  />
-                  {editMode && (
-                    <button
-                      onClick={() => handleDeleteImage(img)}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 text-xs opacity-80 hover:opacity-100"
-                    >
-                      ✕
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-sm text-gray-500 mb-3">
-              No gallery images uploaded yet
-            </p>
-          )}
-
-          {editMode && (
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={(e) => handleImageUpload(e.target.files)}
-              className="block w-full text-sm text-gray-700 border rounded-lg cursor-pointer"
-            />
-          )}
+      {/* Category & Services */}
+      {!editMode ? (
+        <div className="mb-6">
+          <h3 className="font-medium text-gray-800 mb-2">Category & Services</h3>
+          <p>
+            <strong>Category:</strong>{" "}
+            {businessData?.categoryObj?.name || "Not selected"}
+          </p>
+          <p>
+            <strong>Subcategories:</strong>{" "}
+            {businessData?.subcategoryObjs?.length > 0
+              ? businessData.subcategoryObjs.map((s) => s.name).join(", ")
+              : "Not selected"}
+          </p>
         </div>
-
-        {/* ✅ Category & Services */}
-        <div className="mt-6 pt-6 border-t">
-          <h4 className="font-medium text-gray-900 mb-4">Category & Services</h4>
-
-          {editMode ? (
-            <CategorySelector
-              categories={categories}
-              selectedCategoryId={formData.category}
-              setSelectedCategoryId={(id) =>
-                setFormData((prev) => ({ ...prev, category: id }))
-              }
-              selectedSubcategories={selectedSubcategories}
-              handleSubcategoryToggle={handleSubcategoryToggle}
-            />
-          ) : (
-            <div className="space-y-2">
-              <p className="text-gray-700">
-                <strong>Category: </strong>
-                {selectedCategory?.name || "Not selected"}
-              </p>
-              <p className="text-gray-700">
-                <strong>Subcategories: </strong>
-                {selectedCategory
-                  ? selectedCategory.subcategories
-                      .filter((sub) =>
-                        selectedSubcategories
-                          .map((s) => s.toString())
-                          .includes(sub._id?.toString())
-                      )
-                      .map((sub) => sub.name)
-                      .join(", ") || "Not selected"
-                  : "Not selected"}
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* ✅ Descriptions */}
-        <BusinessDescriptions
-          formData={formData}
-          handleInputChange={handleInputChange}
+      ) : (
+        <CategorySelector
+          categories={categories}
+          selectedCategoryId={formData.category}
+          setSelectedCategoryId={(id) =>
+            setFormData((prev) => ({ ...prev, category: id, subcategories: [] }))
+          }
+          selectedSubcategories={selectedSubcategories}
+          handleSubcategoryToggle={handleSubcategoryToggle}
           editMode={editMode}
+        />
+      )}
+
+      {/* Business Descriptions */}
+      <div className="mt-6">
+        <label className="block text-sm font-medium text-gray-700">
+          Description (English)
+        </label>
+        <textarea
+          name="description"
+          value={formData.description || ""}
+          onChange={handleInputChange}
+          disabled={!editMode}
+          className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100"
+        />
+
+        <label className="block text-sm font-medium text-gray-700 mt-4">
+          Description (German)
+        </label>
+        <textarea
+          name="descriptionGerman"
+          value={formData.descriptionGerman || ""}
+          onChange={handleInputChange}
+          disabled={!editMode}
+          className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100"
+        />
+
+        <label className="block text-sm font-medium text-gray-700 mt-4">
+          Description (Persian)
+        </label>
+        <textarea
+          name="descriptionPersian"
+          value={formData.descriptionPersian || ""}
+          onChange={handleInputChange}
+          disabled={!editMode}
+          className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100 text-right"
         />
       </div>
     </div>

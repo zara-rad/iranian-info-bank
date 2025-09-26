@@ -57,8 +57,13 @@ const BusinessDashboard = () => {
       return;
     }
 
-    loadBusinessData();
-    loadCategories();
+    // اول categories رو لود کن → بعد business رو
+    const loadAll = async () => {
+      await loadCategories();
+      await loadBusinessData();
+    };
+
+    loadAll();
   }, [user, navigate]);
 
   // ✅ Fetch business info from backend
@@ -69,11 +74,9 @@ const BusinessDashboard = () => {
         navigate("/login");
         return;
       }
-
       const res = await fetch("/api/business-owner/business", {
         headers: { Authorization: `Bearer ${token}` },
       });
-
       if (res.status === 401) {
         localStorage.removeItem("token");
         navigate("/login");
@@ -84,25 +87,44 @@ const BusinessDashboard = () => {
 
       const data = await res.json();
 
-      // 🔥 Normalize category & subcategories to IDs
+      // 🔥 normalize category + subcategories to string IDs
       const normalizedCategory =
         data.category?._id?.toString() || data.category?.toString() || "";
+
       const normalizedSubcategories = (data.subcategories || []).map(
-        (s) => s._id?.toString() || s.toString()
+        (s) => s?._id?.toString() || s.toString()
       );
 
-      setBusinessData(data);
+      // 🔥 پیدا کردن اسم‌های category و subcategories برای نمایش
+      let categoryObj = null;
+      let subcategoryObjs = [];
+
+      if (categories.length > 0) {
+        categoryObj = categories.find(
+          (cat) => cat._id?.toString() === normalizedCategory
+        );
+
+        if (categoryObj) {
+          subcategoryObjs = categoryObj.subcategories.filter((sub) =>
+            normalizedSubcategories.includes(sub._id.toString())
+          );
+        }
+      }
+
+      setBusinessData({
+        ...data,
+        categoryObj,
+        subcategoryObjs,
+      });
+
       setFormData({
         ...data,
         category: normalizedCategory,
         subcategories: normalizedSubcategories,
         workingHours:
-          data.workingHours?.length > 0
-            ? data.workingHours
-            : defaultWorkingHours,
+          data.workingHours?.length > 0 ? data.workingHours : defaultWorkingHours,
       });
       setSelectedSubcategories(normalizedSubcategories);
-
       setLoading(false);
     } catch (error) {
       console.error("Error loading business data:", error);
@@ -188,22 +210,24 @@ const BusinessDashboard = () => {
       toast.error("No business data to restore");
       return;
     }
+
+    const normalizedSubcategories = (businessData.subcategories || []).map(
+      (s) => s?._id?.toString() || s.toString()
+    );
+
     setFormData({
       ...businessData,
-      category: businessData.category?._id?.toString() || businessData.category,
-      subcategories: (businessData.subcategories || []).map(
-        (s) => s._id?.toString() || s.toString()
-      ),
+      category:
+        businessData.category?._id?.toString() ||
+        businessData.category?.toString() ||
+        "",
+      subcategories: normalizedSubcategories,
       workingHours:
         businessData?.workingHours?.length > 0
           ? businessData.workingHours
           : defaultWorkingHours,
     });
-    setSelectedSubcategories(
-      (businessData.subcategories || []).map(
-        (s) => s._id?.toString() || s.toString()
-      )
-    );
+    setSelectedSubcategories(normalizedSubcategories);
     setEditMode(false);
   };
 
@@ -360,6 +384,7 @@ const BusinessDashboard = () => {
                 handleImageUpload={handleImageUpload}
                 handleDeleteLogo={handleDeleteLogo}
                 handleDeleteImage={handleDeleteImage}
+                businessData={businessData}   // ✅ اضافه شد
               />
             )}
             {activeTab === "working-hours" && (
@@ -373,9 +398,7 @@ const BusinessDashboard = () => {
                 handleCancel={handleCancel}
               />
             )}
-            {activeTab === "analytics" && (
-              <AnalyticsTab analytics={analytics} />
-            )}
+            {activeTab === "analytics" && <AnalyticsTab analytics={analytics} />}
           </div>
         </div>
       </section>

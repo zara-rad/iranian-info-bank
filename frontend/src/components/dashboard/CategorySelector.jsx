@@ -6,8 +6,9 @@ const CategorySelector = ({
   setSelectedCategoryId,
   selectedSubcategories,
   handleSubcategoryToggle,
-  editMode,
+  editMode = true,
 }) => {
+  // ✅ پیدا کردن کتگوری انتخاب‌شده
   const selectedCategory = categories.find(
     (cat) => cat._id?.toString() === selectedCategoryId?.toString()
   );
@@ -44,19 +45,27 @@ const CategorySelector = ({
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {selectedCategory.subcategories.map((subcategory) => {
-              const id = subcategory._id || subcategory.id;
+              const subId =
+                subcategory._id?.toString() || subcategory.id?.toString();
+
               return (
                 <label
-                  key={id}
+                  key={subId}
                   className="flex items-center p-3 border rounded-lg hover:bg-gray-50 cursor-pointer"
                 >
                   <input
                     type="checkbox"
-                    disabled={!editMode}
-                    checked={selectedSubcategories.includes(id)}
-                    onChange={() => handleSubcategoryToggle(id)}
+                    checked={selectedSubcategories.includes(
+                      (subcategory._id || subcategory.id || "").toString()
+                    )}
+                    onChange={() =>
+                      handleSubcategoryToggle(
+                        (subcategory._id || subcategory.id || "").toString()
+                      )
+                    }
                     className="w-4 h-4 text-persian-600 border-gray-300 rounded focus:ring-persian-500"
                   />
+
                   <div className="ml-3">
                     <p className="font-medium text-gray-900">
                       {subcategory.name}
