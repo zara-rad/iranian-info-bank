@@ -69,9 +69,11 @@ const BusinessDashboard = () => {
         navigate("/login");
         return;
       }
+
       const res = await fetch("/api/business-owner/business", {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       if (res.status === 401) {
         localStorage.removeItem("token");
         navigate("/login");
@@ -82,14 +84,25 @@ const BusinessDashboard = () => {
 
       const data = await res.json();
 
-      // ✅ Ensure workingHours always has defaults
+      // 🔥 Normalize category & subcategories to IDs
+      const normalizedCategory =
+        data.category?._id?.toString() || data.category?.toString() || "";
+      const normalizedSubcategories = (data.subcategories || []).map(
+        (s) => s._id?.toString() || s.toString()
+      );
+
       setBusinessData(data);
       setFormData({
         ...data,
+        category: normalizedCategory,
+        subcategories: normalizedSubcategories,
         workingHours:
-          data.workingHours?.length > 0 ? data.workingHours : defaultWorkingHours,
+          data.workingHours?.length > 0
+            ? data.workingHours
+            : defaultWorkingHours,
       });
-      setSelectedSubcategories(data.subcategories || []);
+      setSelectedSubcategories(normalizedSubcategories);
+
       setLoading(false);
     } catch (error) {
       console.error("Error loading business data:", error);
@@ -177,12 +190,20 @@ const BusinessDashboard = () => {
     }
     setFormData({
       ...businessData,
+      category: businessData.category?._id?.toString() || businessData.category,
+      subcategories: (businessData.subcategories || []).map(
+        (s) => s._id?.toString() || s.toString()
+      ),
       workingHours:
         businessData?.workingHours?.length > 0
           ? businessData.workingHours
           : defaultWorkingHours,
     });
-    setSelectedSubcategories(businessData.subcategories || []);
+    setSelectedSubcategories(
+      (businessData.subcategories || []).map(
+        (s) => s._id?.toString() || s.toString()
+      )
+    );
     setEditMode(false);
   };
 
@@ -210,6 +231,25 @@ const BusinessDashboard = () => {
     }
   };
 
+  // ✅ Delete logo
+  const handleDeleteLogo = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("/api/business-owner/business/logo", {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) throw new Error("Failed to delete logo");
+      const data = await res.json();
+      setBusinessData(data);
+      setFormData(data);
+      toast.success("Logo deleted successfully!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Error deleting logo");
+    }
+  };
+
   // ✅ Upload gallery images
   const handleImageUpload = async (files) => {
     try {
@@ -233,6 +273,29 @@ const BusinessDashboard = () => {
     } catch (error) {
       console.error("Image upload failed:", error);
       toast.error("Error uploading images");
+    }
+  };
+
+  // ✅ Delete gallery image
+  const handleDeleteImage = async (imageUrl) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("/api/business-owner/business/images", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ imageUrl }),
+      });
+      if (!res.ok) throw new Error("Failed to delete image");
+      const data = await res.json();
+      setBusinessData(data);
+      setFormData(data);
+      toast.success("Image deleted successfully!");
+    } catch (err) {
+      console.error(err);
+      toast.error("Error deleting image");
     }
   };
 
@@ -295,6 +358,8 @@ const BusinessDashboard = () => {
                 handleSubcategoryToggle={handleSubcategoryToggle}
                 handleLogoUpload={handleLogoUpload}
                 handleImageUpload={handleImageUpload}
+                handleDeleteLogo={handleDeleteLogo}
+                handleDeleteImage={handleDeleteImage}
               />
             )}
             {activeTab === "working-hours" && (
@@ -308,7 +373,9 @@ const BusinessDashboard = () => {
                 handleCancel={handleCancel}
               />
             )}
-            {activeTab === "analytics" && <AnalyticsTab analytics={analytics} />}
+            {activeTab === "analytics" && (
+              <AnalyticsTab analytics={analytics} />
+            )}
           </div>
         </div>
       </section>
