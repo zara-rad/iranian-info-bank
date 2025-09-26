@@ -17,8 +17,44 @@ import "swiper/css/navigation"
 import "swiper/css/pagination"
 import { Navigation, Pagination } from "swiper/modules"
 
-const BusinessCard = ({ biz }) => {
-  const { t } = useTranslation()
+// ✅ helper برای پیدا کردن اسم ساب‌کتگوری
+const getSubcategoryName = (idOrObj, categories, lang) => {
+  // اگه کل آبجکت ساب‌کتگوری اومده بود
+  if (idOrObj && typeof idOrObj === "object" && (idOrObj.name || idOrObj.nameGerman || idOrObj.namePersian)) {
+    switch (lang) {
+      case "de":
+        return idOrObj.nameGerman || idOrObj.name
+      case "fa":
+        return idOrObj.namePersian || idOrObj.name
+      default:
+        return idOrObj.name
+    }
+  }
+
+  // اگه فقط ID باشه
+  const id = idOrObj?.toString()
+  for (const cat of categories) {
+    for (const sub of cat.subcategories) {
+      if (
+        sub._id?.toString() === id ||   // MongoDB ObjectId
+        sub.id?.toString() === id       // id عددی استاتیک
+      ) {
+        switch (lang) {
+          case "de":
+            return sub.nameGerman
+          case "fa":
+            return sub.namePersian
+          default:
+            return sub.name
+        }
+      }
+    }
+  }
+  return id // fallback → اگه پیدا نشد همون ID رو نشون بده
+}
+
+const BusinessCard = ({ biz, categories = [] }) => {
+  const { t, i18n } = useTranslation()
   const [showHours, setShowHours] = useState(false)
 
   return (
@@ -41,7 +77,7 @@ const BusinessCard = ({ biz }) => {
         </h3>
       </div>
 
-      {/* 📷 تصاویر (Carousel) */}
+      {/* 📷 تصاویر */}
       {biz.images && biz.images.length > 0 && (
         <div className="mb-6">
           <Swiper
@@ -147,7 +183,7 @@ const BusinessCard = ({ biz }) => {
         )}
       </div>
 
-      {/* 🕒 ساعات کاری با آکاردئون */}
+      {/* 🕒 ساعات کاری */}
       {biz.workingHours && biz.workingHours.length > 0 && (
         <div className="mt-6 border rounded-lg overflow-hidden">
           <button
@@ -189,7 +225,9 @@ const BusinessCard = ({ biz }) => {
           </div>
           <ul className="list-disc list-inside text-gray-600">
             {biz.subcategories.map((sub, idx) => (
-              <li key={idx}>{sub.name || sub}</li>
+              <li key={idx}>
+                {getSubcategoryName(sub, categories, i18n.language)}
+              </li>
             ))}
           </ul>
         </div>

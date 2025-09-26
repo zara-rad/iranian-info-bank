@@ -81,9 +81,10 @@ const SubcategoryPage = () => {
       {/* ✅ استفاده از BusinessCard */}
      <section className="py-16 bg-gray-50">
   <div className="max-w-4xl mx-auto space-y-6">
-    {businesses.map((biz) => (
-      <BusinessCard key={biz._id} biz={biz} />
-    ))}
+   {businesses.map((biz) => (
+  <BusinessCard key={biz._id} biz={biz} categories={[category]} />
+))}
+
   </div>
 </section>
     </div>
