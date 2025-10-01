@@ -105,26 +105,26 @@ const BusinessCard = ({ biz, categories = [] }) => {
         </div>
       )}
 
-      {/* توضیحات چندزبانه */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        {biz.description && (
-          <div className="p-4 rounded-lg shadow bg-blue-50 hover:shadow-lg transition">
-            <p className="font-bold">EN:</p>
-            <p className="text-gray-700">{biz.description}</p>
-          </div>
-        )}
-        {biz.descriptionGerman && (
+      {/* توضیحات چندزبانه فقط بر اساس زبان انتخابی */}
+      <div className="mb-6">
+        {i18n.language === "de" && biz.descriptionGerman && (
           <div className="p-4 rounded-lg shadow bg-green-50 hover:shadow-lg transition">
-            <p className="font-bold">DE:</p>
             <p className="text-gray-700">{biz.descriptionGerman}</p>
           </div>
         )}
-        {biz.descriptionPersian && (
+
+        {i18n.language === "fa" && biz.descriptionPersian && (
           <div className="p-4 rounded-lg shadow bg-purple-50 hover:shadow-lg transition">
-            <p className="font-bold">FA:</p>
             <p className="text-gray-700 text-right">{biz.descriptionPersian}</p>
           </div>
         )}
+
+        {(i18n.language === "en" || !["de", "fa"].includes(i18n.language)) &&
+          biz.description && (
+            <div className="p-4 rounded-lg shadow bg-blue-50 hover:shadow-lg transition">
+              <p className="text-gray-700">{biz.description}</p>
+            </div>
+          )}
       </div>
 
       {/* اطلاعات تماس */}
