@@ -88,6 +88,18 @@ router.put("/business", authenticate, async (req, res) => {
     });
 
     await business.save();
+    const User = require("../models/User");
+
+await User.findByIdAndUpdate(
+  business.owner,
+  {
+    fullName: business.ownerName || req.user.fullName,
+    email: business.email,
+    phone: business.phone,
+  },
+  { new: true }
+);
+
 
     const updatedBusiness = await populateBusiness(
       Business.findById(business._id)

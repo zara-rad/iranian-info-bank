@@ -192,6 +192,19 @@ router.put("/:id", authenticate, async (req, res) => {
     });
 
     await business.save();
+    // ✅ بعد از ذخیره business، user رو هم sync کن
+const User = require("../models/User");
+
+await User.findByIdAndUpdate(
+  business.owner,
+  {
+    fullName: business.ownerName || req.user.fullName,
+    email: business.email,
+    phone: business.phone,
+  },
+  { new: true }
+);
+
 
     const fullBusiness = await Business.findById(business._id)
       .populate("category", "name nameGerman namePersian icon")
