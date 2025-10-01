@@ -1,6 +1,7 @@
-
 import CategorySelector from "./CategorySelector";
-import LocationForm from "./LocationForm"
+import LocationForm from "./LocationForm";
+import BasicInfoForm from "./BasicInfoForm";
+
 const BusinessInfoTab = ({
   formData,
   setFormData,
@@ -51,65 +52,18 @@ const BusinessInfoTab = ({
       </div>
 
       {/* Basic Info */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Business Name *
-          </label>
-          <input
-            type="text"
-            name="businessName"
-            value={formData.businessName || ""}
-            onChange={handleInputChange}
-            disabled={!editMode}
-            className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100"
-          />
-        </div>
+      <BasicInfoForm
+        formData={formData}
+        handleInputChange={handleInputChange}
+        editMode={editMode}
+      />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Owner Name *
-          </label>
-          <input
-            type="text"
-            name="ownerName"
-            value={formData.ownerName || ""}
-            onChange={handleInputChange}
-            disabled={!editMode}
-            className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Email *</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email || ""}
-            onChange={handleInputChange}
-            disabled={!editMode}
-            className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Phone *</label>
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone || ""}
-            onChange={handleInputChange}
-            disabled={!editMode}
-            className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100"
-          />
-        </div>
-        <LocationForm
-  formData={formData}
-  handleInputChange={handleInputChange}
-  editMode={editMode}
-/>
-
-      </div>
+      {/* Location Info */}
+      <LocationForm
+        formData={formData}
+        handleInputChange={handleInputChange}
+        editMode={editMode}
+      />
 
       {/* Logo */}
       <div className="mb-6">
