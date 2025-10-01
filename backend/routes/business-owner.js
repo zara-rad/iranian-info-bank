@@ -8,7 +8,7 @@ const Business = require("../models/Business");
 const router = express.Router();
 
 // =========================
-// 📂 Multer config برای آپلود
+// 📂 Multer config
 // =========================
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -24,23 +24,28 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix + path.extname(file.originalname));
   },
 });
-
 const upload = multer({ storage });
 
 // =========================
-// 📌 گرفتن اطلاعات بیزنس
+// 🛠 helper → همیشه populate کن
+// =========================
+const populateBusiness = (query) => {
+  return query
+    .populate("category", "name nameGerman namePersian icon")
+    .populate("subcategories", "name nameGerman namePersian")
+    .populate("owner", "fullName email");
+};
+
+// =========================
+// 📌 GET business (owner dashboard)
 // =========================
 router.get("/business", authenticate, async (req, res) => {
   try {
-    const business = await Business.findOne({ owner: req.user._id })
-      .populate("category", "name nameGerman namePersian icon")
-      .populate("subcategories", "name nameGerman namePersian")
-      .populate("owner", "fullName email");
+    const business = await populateBusiness(
+      Business.findOne({ owner: req.user._id })
+    );
 
-    if (!business) {
-      return res.status(404).json({ message: "Business not found" });
-    }
-
+    if (!business) return res.status(404).json({ message: "Business not found" });
     res.json(business);
   } catch (err) {
     console.error("❌ Error fetching business owner data:", err);
@@ -49,14 +54,13 @@ router.get("/business", authenticate, async (req, res) => {
 });
 
 // =========================
-// 📌 آپدیت اطلاعات بیزنس
+// 📌 UPDATE business
 // =========================
 router.put("/business", authenticate, async (req, res) => {
   try {
-    const business = await Business.findOne({ owner: req.user._id });
+    let business = await Business.findOne({ owner: req.user._id });
     if (!business) return res.status(404).json({ message: "Business not found" });
 
-    // ✅ فقط فیلدهای مجاز آپدیت میشن
     const allowedFields = [
       "businessName",
       "ownerName",
@@ -85,11 +89,9 @@ router.put("/business", authenticate, async (req, res) => {
 
     await business.save();
 
-    const updatedBusiness = await Business.findById(business._id)
-      .populate("category", "name nameGerman namePersian icon")
-      .populate("subcategories", "name nameGerman namePersian")
-      .populate("owner", "fullName email");
-
+    const updatedBusiness = await populateBusiness(
+      Business.findById(business._id)
+    );
     res.json(updatedBusiness);
   } catch (err) {
     console.error("❌ Error updating business owner data:", err);
@@ -98,23 +100,22 @@ router.put("/business", authenticate, async (req, res) => {
 });
 
 // =========================
-// 📌 حذف کل بیزنس
+// 📌 DELETE business
 // =========================
 router.delete("/business", authenticate, async (req, res) => {
   try {
     const business = await Business.findOneAndDelete({ owner: req.user._id });
-    if (!business) {
-      return res.status(404).json({ message: "Business not found" });
-    }
+    if (!business) return res.status(404).json({ message: "Business not found" });
+
     res.json({ message: "Business deleted successfully" });
   } catch (err) {
-    console.error("❌ Error deleting business owner data:", err);
+    console.error("❌ Error deleting business:", err);
     res.status(500).json({ message: "Failed to delete business data" });
   }
 });
 
 // =========================
-// 📌 آپلود لوگو
+// 📌 UPLOAD logo
 // =========================
 router.post(
   "/business/logo",
@@ -124,18 +125,19 @@ router.post(
     try {
       if (!req.file) return res.status(400).json({ message: "No logo uploaded" });
 
-      const logoPath = `/${req.file.path.replace(/\\/g, "/")}`;
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      const logoPath = `${baseUrl}/uploads/logos/${req.file.filename}`;
 
-      const business = await Business.findOneAndUpdate(
+      await Business.findOneAndUpdate(
         { owner: req.user._id },
-        { logo: logoPath },
-        { new: true }
-      )
-        .populate("category", "name nameGerman namePersian icon")
-        .populate("subcategories", "name nameGerman namePersian")
-        .populate("owner", "fullName email");
+        { logo: logoPath }
+      );
 
-      res.json(business);
+      const updatedBusiness = await populateBusiness(
+        Business.findOne({ owner: req.user._id })
+      );
+
+      res.json(updatedBusiness);
     } catch (err) {
       console.error("❌ Error uploading logo:", err);
       res.status(500).json({ message: "Failed to upload logo" });
@@ -144,7 +146,7 @@ router.post(
 );
 
 // =========================
-// 📌 آپلود تصاویر گالری
+// 📌 UPLOAD gallery images
 // =========================
 router.post(
   "/business/images",
@@ -156,23 +158,20 @@ router.post(
         return res.status(400).json({ message: "No images uploaded" });
       }
 
-      const imagePaths = req.files.map((file) =>
-        `/${file.path.replace(/\\/g, "/")}`
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      const imagePaths = req.files.map(
+        (file) => `${baseUrl}/uploads/images/${file.filename}`
       );
 
       const business = await Business.findOne({ owner: req.user._id });
-      if (!business) {
-        return res.status(404).json({ message: "Business not found" });
-      }
+      if (!business) return res.status(404).json({ message: "Business not found" });
 
       business.images = [...(business.images || []), ...imagePaths];
       await business.save();
 
-      const updatedBusiness = await Business.findById(business._id)
-        .populate("category", "name nameGerman namePersian icon")
-        .populate("subcategories", "name nameGerman namePersian")
-        .populate("owner", "fullName email");
-
+      const updatedBusiness = await populateBusiness(
+        Business.findById(business._id)
+      );
       res.json(updatedBusiness);
     } catch (err) {
       console.error("❌ Error uploading images:", err);
@@ -182,7 +181,7 @@ router.post(
 );
 
 // =========================
-// 📌 حذف عکس از گالری
+// 📌 DELETE image from gallery
 // =========================
 router.delete("/business/images", authenticate, async (req, res) => {
   try {
@@ -192,26 +191,19 @@ router.delete("/business/images", authenticate, async (req, res) => {
     }
 
     const business = await Business.findOne({ owner: req.user._id });
-    if (!business) {
-      return res.status(404).json({ message: "Business not found" });
-    }
+    if (!business) return res.status(404).json({ message: "Business not found" });
 
-    // حذف از آرایه در دیتابیس
     business.images = (business.images || []).filter((img) => img !== imageUrl);
 
-    // حذف فایل فیزیکی (اختیاری)
-    const filePath = path.join(__dirname, "..", imageUrl);
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
+    const relativePath = imageUrl.replace(`${req.protocol}://${req.get("host")}`, "");
+    const filePath = path.join(process.cwd(), relativePath);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
 
     await business.save();
 
-    const updatedBusiness = await Business.findById(business._id)
-      .populate("category", "name nameGerman namePersian icon")
-      .populate("subcategories", "name nameGerman namePersian")
-      .populate("owner", "fullName email");
-
+    const updatedBusiness = await populateBusiness(
+      Business.findById(business._id)
+    );
     res.json(updatedBusiness);
   } catch (err) {
     console.error("❌ Error deleting image:", err);

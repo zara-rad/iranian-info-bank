@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState } from "react";
 import {
   MapPin,
   Phone,
@@ -9,53 +9,57 @@ import {
   Clock,
   ChevronDown,
   Home,
-} from "lucide-react"
-import { useTranslation } from "react-i18next"
-import { Swiper, SwiperSlide } from "swiper/react"
-import "swiper/css"
-import "swiper/css/navigation"
-import "swiper/css/pagination"
-import { Navigation, Pagination } from "swiper/modules"
+} from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Navigation, Pagination } from "swiper/modules";
 
 // ✅ helper برای پیدا کردن اسم ساب‌کتگوری
 const getSubcategoryName = (idOrObj, categories, lang) => {
   // اگه کل آبجکت ساب‌کتگوری اومده بود
-  if (idOrObj && typeof idOrObj === "object" && (idOrObj.name || idOrObj.nameGerman || idOrObj.namePersian)) {
+  if (
+    idOrObj &&
+    typeof idOrObj === "object" &&
+    (idOrObj.name || idOrObj.nameGerman || idOrObj.namePersian)
+  ) {
     switch (lang) {
       case "de":
-        return idOrObj.nameGerman || idOrObj.name
+        return idOrObj.nameGerman || idOrObj.name;
       case "fa":
-        return idOrObj.namePersian || idOrObj.name
+        return idOrObj.namePersian || idOrObj.name;
       default:
-        return idOrObj.name
+        return idOrObj.name;
     }
   }
 
   // اگه فقط ID باشه
-  const id = idOrObj?.toString()
+  const id = idOrObj?.toString();
   for (const cat of categories) {
     for (const sub of cat.subcategories) {
       if (
-        sub._id?.toString() === id ||   // MongoDB ObjectId
-        sub.id?.toString() === id       // id عددی استاتیک
+        sub._id?.toString() === id || // MongoDB ObjectId
+        sub.id?.toString() === id // id عددی استاتیک
       ) {
         switch (lang) {
           case "de":
-            return sub.nameGerman
+            return sub.nameGerman;
           case "fa":
-            return sub.namePersian
+            return sub.namePersian;
           default:
-            return sub.name
+            return sub.name;
         }
       }
     }
   }
-  return id // fallback → اگه پیدا نشد همون ID رو نشون بده
-}
+  return id; // fallback → اگه پیدا نشد همون ID رو نشون بده
+};
 
 const BusinessCard = ({ biz, categories = [] }) => {
-  const { t, i18n } = useTranslation()
-  const [showHours, setShowHours] = useState(false)
+  const { t, i18n } = useTranslation();
+  const [showHours, setShowHours] = useState(false);
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition">
@@ -226,14 +230,18 @@ const BusinessCard = ({ biz, categories = [] }) => {
           <ul className="list-disc list-inside text-gray-600">
             {biz.subcategories.map((sub, idx) => (
               <li key={idx}>
-                {getSubcategoryName(sub, categories, i18n.language)}
+                {i18n.language === "de"
+                  ? sub.nameGerman || sub.name
+                  : i18n.language === "fa"
+                  ? sub.namePersian || sub.name
+                  : sub.name}
               </li>
             ))}
           </ul>
         </div>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default BusinessCard
+export default BusinessCard;

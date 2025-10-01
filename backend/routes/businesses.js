@@ -31,6 +31,7 @@ router.get("/", async (req, res) => {
 
     const businesses = await Business.find(query)
       .populate("category", "name nameGerman namePersian icon")
+      .populate("subcategories", "name nameGerman namePersian")
       .populate("owner", "fullName email")
       .skip(skip)
       .limit(parseInt(limit));
@@ -49,18 +50,40 @@ router.get("/", async (req, res) => {
 // =========================
 router.get("/:id", async (req, res) => {
   try {
+ 
+
     const business = await Business.findById(req.params.id)
       .populate("category", "name nameGerman namePersian icon")
+      .populate("subcategories", "name nameGerman namePersian")
       .populate("owner", "fullName email");
 
     if (!business) return res.status(404).json({ message: "Business not found" });
-
+   console.log("📌 Business fetched:", business);
     await Business.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } });
     res.json(business);
   } catch (err) {
     res.status(500).json({ message: "Error fetching business" });
   }
 });
+// =========================
+// TEST populate subcategories
+// =========================
+router.get("/test/:id", async (req, res) => {
+  try {
+    const biz = await Business.findById(req.params.id)
+      .populate({
+        path: "subcategories",
+        model: "Subcategory",
+        select: "name nameGerman namePersian"
+      });
+
+    res.json(biz);
+  } catch (err) {
+    console.error("❌ Populate test failed:", err);
+    res.status(500).json({ message: "Populate test failed" });
+  }
+});
+
 
 // =========================
 // CREATE
@@ -89,6 +112,11 @@ router.post(
   ],
   async (req, res) => {
     try {
+            console.log("📥 Incoming business POST body:", req.body);  // 👈 اینجا اضافه کن
+ // ✅ اطمینان از آرایه بودن subcategories
+      if (req.body.subcategories && !Array.isArray(req.body.subcategories)) {
+        req.body.subcategories = [req.body.subcategories];
+      }
       const errors = validationResult(req);
       if (!errors.isEmpty())
         return res.status(400).json({ errors: errors.array() });
@@ -96,7 +124,6 @@ router.post(
       const category = await Category.findById(req.body.category);
       if (!category) return res.status(400).json({ message: "Invalid category" });
 
-      // ✅ همه فیلدهای فرانت رو ذخیره کن
       const business = new Business({
         ...req.body,
         owner: req.user._id,
@@ -104,7 +131,13 @@ router.post(
       });
 
       await business.save();
-      res.status(201).json(business);
+
+      const fullBusiness = await Business.findById(business._id)
+        .populate("category", "name nameGerman namePersian icon")
+        .populate("subcategories", "name nameGerman namePersian")
+        .populate("owner", "fullName email");
+
+      res.status(201).json(fullBusiness);
     } catch (err) {
       console.error("Error creating business:", err);
       res.status(500).json({ message: "Error creating business" });
@@ -117,6 +150,12 @@ router.post(
 // =========================
 router.put("/:id", authenticate, async (req, res) => {
   try {
+        console.log("📥 Incoming business UPDATE body:", req.body);  // 👈 اینجا اضافه کن
+ // ✅ اطمینان از آرایه بودن subcategories
+    if (req.body.subcategories && !Array.isArray(req.body.subcategories)) {
+      req.body.subcategories = [req.body.subcategories];
+    }
+
     const business = await Business.findById(req.params.id);
     if (!business) return res.status(404).json({ message: "Business not found" });
 
@@ -125,11 +164,41 @@ router.put("/:id", authenticate, async (req, res) => {
     if (!isOwner && !isAdmin)
       return res.status(403).json({ message: "Access denied" });
 
-    // ✅ merge مستقیم
-    Object.assign(business, req.body);
+    // فقط فیلدهای مجاز آپدیت بشن
+    const allowedFields = [
+      "businessName",
+      "ownerName",
+      "email",
+      "phone",
+      "website",
+      "address",
+      "city",
+      "state",
+      "postalCode",
+      "description",
+      "descriptionGerman",
+      "descriptionPersian",
+      "workingHours",
+      "category",
+      "subcategories",
+      "logo",
+      "images",
+    ];
+
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        business[field] = req.body[field];
+      }
+    });
 
     await business.save();
-    res.json(business);
+
+    const fullBusiness = await Business.findById(business._id)
+      .populate("category", "name nameGerman namePersian icon")
+      .populate("subcategories", "name nameGerman namePersian")
+      .populate("owner", "fullName email");
+
+    res.json(fullBusiness);
   } catch (err) {
     console.error("Error updating business:", err);
     res.status(500).json({ message: "Error updating business" });

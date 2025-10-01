@@ -69,7 +69,7 @@ app.use("/api/business-owner", require("./routes/business-owner"));
 app.use("/api/upload", require("./routes/upload"));
 
 // برای سرو فایل‌ها
-app.use("/uploads", express.static("uploads"));
+
 
 // ----------------------------------
 // 📂 Static files with CORS headers
