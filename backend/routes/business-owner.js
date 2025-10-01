@@ -83,23 +83,30 @@ router.put("/business", authenticate, async (req, res) => {
 
     allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {
-        business[field] = req.body[field];
+        if (field === "subcategories") {
+          // ✅ فقط اگر آرایه خالی نباشه
+          if (Array.isArray(req.body.subcategories) && req.body.subcategories.length > 0) {
+            business.subcategories = req.body.subcategories;
+          }
+        } else {
+          business[field] = req.body[field];
+        }
       }
     });
 
     await business.save();
+
+    // ✅ sync user
     const User = require("../models/User");
-
-await User.findByIdAndUpdate(
-  business.owner,
-  {
-    fullName: business.ownerName || req.user.fullName,
-    email: business.email,
-    phone: business.phone,
-  },
-  { new: true }
-);
-
+    await User.findByIdAndUpdate(
+      business.owner,
+      {
+        fullName: business.ownerName || req.user.fullName,
+        email: business.email,
+        phone: business.phone,
+      },
+      { new: true }
+    );
 
     const updatedBusiness = await populateBusiness(
       Business.findById(business._id)

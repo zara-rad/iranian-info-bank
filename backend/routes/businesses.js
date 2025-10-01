@@ -150,11 +150,7 @@ router.post(
 // =========================
 router.put("/:id", authenticate, async (req, res) => {
   try {
-        console.log("📥 Incoming business UPDATE body:", req.body);  // 👈 اینجا اضافه کن
- // ✅ اطمینان از آرایه بودن subcategories
-    if (req.body.subcategories && !Array.isArray(req.body.subcategories)) {
-      req.body.subcategories = [req.body.subcategories];
-    }
+    console.log("📥 Incoming business UPDATE body:", req.body);
 
     const business = await Business.findById(req.params.id);
     if (!business) return res.status(404).json({ message: "Business not found" });
@@ -164,7 +160,6 @@ router.put("/:id", authenticate, async (req, res) => {
     if (!isOwner && !isAdmin)
       return res.status(403).json({ message: "Access denied" });
 
-    // فقط فیلدهای مجاز آپدیت بشن
     const allowedFields = [
       "businessName",
       "ownerName",
@@ -187,24 +182,30 @@ router.put("/:id", authenticate, async (req, res) => {
 
     allowedFields.forEach((field) => {
       if (req.body[field] !== undefined) {
-        business[field] = req.body[field];
+        if (field === "subcategories") {
+          // ✅ فقط اگر آرایه خالی نباشه، آپدیت کن
+          if (Array.isArray(req.body.subcategories) && req.body.subcategories.length > 0) {
+            business.subcategories = req.body.subcategories;
+          }
+        } else {
+          business[field] = req.body[field];
+        }
       }
     });
 
     await business.save();
-    // ✅ بعد از ذخیره business، user رو هم sync کن
-const User = require("../models/User");
 
-await User.findByIdAndUpdate(
-  business.owner,
-  {
-    fullName: business.ownerName || req.user.fullName,
-    email: business.email,
-    phone: business.phone,
-  },
-  { new: true }
-);
-
+    // ✅ sync user
+    const User = require("../models/User");
+    await User.findByIdAndUpdate(
+      business.owner,
+      {
+        fullName: business.ownerName || req.user.fullName,
+        email: business.email,
+        phone: business.phone,
+      },
+      { new: true }
+    );
 
     const fullBusiness = await Business.findById(business._id)
       .populate("category", "name nameGerman namePersian icon")
@@ -217,6 +218,7 @@ await User.findByIdAndUpdate(
     res.status(500).json({ message: "Error updating business" });
   }
 });
+
 
 // =========================
 // DELETE
