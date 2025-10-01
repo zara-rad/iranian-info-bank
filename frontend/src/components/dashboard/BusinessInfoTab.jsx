@@ -1,6 +1,6 @@
-import React from "react";
-import CategorySelector from "./CategorySelector";
 
+import CategorySelector from "./CategorySelector";
+import LocationForm from "./LocationForm"
 const BusinessInfoTab = ({
   formData,
   setFormData,
@@ -103,6 +103,12 @@ const BusinessInfoTab = ({
             className="mt-1 block w-full border rounded-lg p-2 disabled:bg-gray-100"
           />
         </div>
+        <LocationForm
+  formData={formData}
+  handleInputChange={handleInputChange}
+  editMode={editMode}
+/>
+
       </div>
 
       {/* Logo */}
