@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const Category = require("../models/Category");
+const Category = require("./models/Category");
 require("dotenv").config();
 
-const { categories } = require("../data/categories"); // مسیر درست
+const { categories } = require("./data/categories"); // مسیر درست
 
 const toSlug = (text) =>
   text

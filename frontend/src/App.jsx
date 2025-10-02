@@ -35,7 +35,7 @@ function App() {
             {/* ✅ Use slug instead of categoryId */}
             <Route path="/category/:slug" element={<CategoryPage />} />
             <Route
-              path="/category/:slug/subcategory/:subcategoryId"
+              path="/category/:slug/subcategory/:subcategorySlug"
               element={<SubcategoryPage />}
             />
 

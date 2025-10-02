@@ -86,7 +86,9 @@ const CategoryPage = () => {
           {category.subcategories.map((sub) => (
             <Link
               key={sub._id}
-              to={`/category/${slug}/subcategory/${sub._id}`}
+              to={`/category/${slug}/subcategory/${sub.slug}`}
+              // key={sub._id}
+              // to={`/category/${slug}/subcategory/${sub._id}`}
               className="group bg-white rounded-xl shadow-md hover:shadow-lg p-6"
             >
               <div className="flex justify-between mb-4">

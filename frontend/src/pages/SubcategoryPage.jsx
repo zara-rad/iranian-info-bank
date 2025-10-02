@@ -4,32 +4,42 @@ import { useTranslation } from "react-i18next";
 import Breadcrumb from "../components/Breadcrumb";
 import GlobalSearch from "../components/global-search/GlobalSearch.jsx";
 import { getLocalizedNumber } from "../utils/numberUtils";
-import BusinessCard from "../components/BusinessCard"; // ✅ اضافه کن
+import BusinessCard from "../components/BusinessCard";
 
 const SubcategoryPage = () => {
-  const { slug, subcategoryId } = useParams();
+  const { slug, subcategorySlug } = useParams(); // از URL میاد
   const { t, i18n } = useTranslation();
 
   const [subcategory, setSubcategory] = useState(null);
   const [category, setCategory] = useState(null);
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
+console.log("Params:", slug, subcategorySlug);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // گرفتن category با slug
         const catRes = await fetch(`/api/categories/slug/${slug}`);
         if (!catRes.ok) throw new Error("Failed to fetch category");
         const catData = await catRes.json();
         setCategory(catData);
 
+        // پیدا کردن subcategory با slug
         const foundSub = catData.subcategories.find(
-          (sub) => sub._id === subcategoryId
+          (sub) => sub.slug === subcategorySlug
         );
         setSubcategory(foundSub);
 
+        if (!foundSub) {
+          console.warn("Subcategory not found for slug:", subcategorySlug);
+          setBusinesses([]);
+          return;
+        }
+
+        // گرفتن بیزنس‌ها با ObjectId
         const bizRes = await fetch(
-          `/api/businesses?businessCategory=${catData._id}&businessSubcategories=${subcategoryId}`
+          `/api/businesses?businessCategory=${catData._id}&businessSubcategories=${foundSub._id}`
         );
         if (!bizRes.ok) throw new Error("Failed to fetch businesses");
         const bizData = await bizRes.json();
@@ -43,7 +53,7 @@ const SubcategoryPage = () => {
     };
 
     fetchData();
-  }, [slug, subcategoryId]);
+  }, [slug, subcategorySlug]);
 
   if (loading) return <p className="p-20">{t("subcategory.loading")}</p>;
   if (!category || !subcategory)
@@ -51,12 +61,14 @@ const SubcategoryPage = () => {
 
   return (
     <div className="min-h-screen pt-20">
+      {/* 🔍 Search */}
       <section className="bg-gradient-to-br from-persian-600 via-persian-700 to-navy-800 text-white py-16">
         <div className="max-w-7xl mx-auto">
           <GlobalSearch />
         </div>
       </section>
 
+      {/* 📌 Breadcrumb */}
       <Breadcrumb
         items={[
           { label: category.name, link: `/category/${slug}` },
@@ -64,6 +76,7 @@ const SubcategoryPage = () => {
         ]}
       />
 
+      {/* 🏷️ Subcategory info */}
       <section className="bg-white py-12 text-center">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold">{subcategory.name}</h1>
@@ -78,15 +91,14 @@ const SubcategoryPage = () => {
         </div>
       </section>
 
-      {/* ✅ استفاده از BusinessCard */}
-     <section className="py-16 bg-gray-50">
-  <div className="max-w-4xl mx-auto space-y-6">
-   {businesses.map((biz) => (
-  <BusinessCard key={biz._id} biz={biz} categories={[category]} />
-))}
-
-  </div>
-</section>
+      {/* 📋 لیست بیزنس‌ها */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-4xl mx-auto space-y-6">
+          {businesses.map((biz) => (
+            <BusinessCard key={biz._id} biz={biz} categories={[category]} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 };
