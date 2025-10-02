@@ -7,25 +7,33 @@ import { getLocalizedNumber } from "../utils/numberUtils";
 import BusinessCard from "../components/BusinessCard";
 
 const SubcategoryPage = () => {
-  const { slug, subcategorySlug } = useParams(); // از URL میاد
+  const { slug, subcategorySlug } = useParams(); // از URL
   const { t, i18n } = useTranslation();
 
   const [subcategory, setSubcategory] = useState(null);
   const [category, setCategory] = useState(null);
+  const [categories, setCategories] = useState([]); // ✅ همه‌ی کتگوری‌ها
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
-console.log("Params:", slug, subcategorySlug);
+
+  console.log("Params:", slug, subcategorySlug);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // گرفتن category با slug
+        // ✅ گرفتن همه کتگوری‌ها
+        const catsRes = await fetch("/api/categories");
+        if (!catsRes.ok) throw new Error("Failed to fetch categories");
+        const catsData = await catsRes.json();
+        setCategories(catsData);
+
+        // پیدا کردن category فعلی
         const catRes = await fetch(`/api/categories/slug/${slug}`);
         if (!catRes.ok) throw new Error("Failed to fetch category");
         const catData = await catRes.json();
         setCategory(catData);
 
-        // پیدا کردن subcategory با slug
+        // پیدا کردن subcategory
         const foundSub = catData.subcategories.find(
           (sub) => sub.slug === subcategorySlug
         );
@@ -37,7 +45,7 @@ console.log("Params:", slug, subcategorySlug);
           return;
         }
 
-        // گرفتن بیزنس‌ها با ObjectId
+        // گرفتن بیزنس‌ها
         const bizRes = await fetch(
           `/api/businesses?businessCategory=${catData._id}&businessSubcategories=${foundSub._id}`
         );
@@ -95,7 +103,8 @@ console.log("Params:", slug, subcategorySlug);
       <section className="py-16 bg-gray-50">
         <div className="max-w-4xl mx-auto space-y-6">
           {businesses.map((biz) => (
-            <BusinessCard key={biz._id} biz={biz} categories={[category]} />
+            // ✅ پاس دادن همه categories
+            <BusinessCard key={biz._id} biz={biz} categories={categories} />
           ))}
         </div>
       </section>
